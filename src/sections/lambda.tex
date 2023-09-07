@@ -1,0 +1,27 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+Para entender melhor o que motiva a criação da teoria dos tipos, essas notas serão iniciadas com o cálculo $\lambda$ não tipado.
+
+\subsection{Definições}
+
+O cálculo lambda serve como uma abstração em cima do conceito de função. Uma função é algo que pega um \emph{input} e retorna um \emph{output}, por exemplo a função $f(x) = x^2$ pega um input $x$ e retorna seu quadrado $x^2$. No cálculo lambda, essa função é denotada por $\lambda x. x^2$, onde $\lambda x .$ simboliza que essa função espera receber como entrada $x$. Quando queremos receber uma resposta específica de uma função, usamos números no lugar das variáveis, como por exemplo $f(3) = 3^2 = 9$. No cálculo lambda, isso é feito na forma de $(\lambda x. x^2)(3)$. 
+
+Esses dois principrios de construção são definidos como:
+
+\begin{definition}
+    \hfill
+    \begin{itemize}
+        \item \textbf{Abstração}: Seja $M$ uma expressão e $x$ uma variável, podemos construir uma nova expressão $\lambda x . M$. Essa expressão é chamada de Abstração de $x$ sobre $M$
+        \item \textbf{Aplicação}: Sejam $M$ e $N$ duas es expressões, podemos construir uma expressão $M N$. Essa expressão é chamada de Aplicação de $M$ em $N$.
+    \end{itemize}
+\end{definition}
+
+Dadas essas definições, precisamos também de uma definição que dê conta do processo de encontrar o resultado após a aplicação em uma função. Esse processo é chamado de $\beta$-redução. Ela faz uso da substituição e usa como notação os colchetes.
+
+\begin{definition}[$\beta$-redução]
+    A $\beta$-redução é o processo de resscrita de uma expressão da forma $(\lambda x . M)N$ em outra expressão $M[x := N]$, ou seja, a expressão $M$ na qual todo $x$ foi substituido por $N$.    
+\end{definition}
+
+\end{document}

@@ -1,0 +1,33 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{subfiles}
+\usepackage{bookmark}
+\usepackage{amsthm}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\title{Notas em Teoria dos Tipos}
+\author{Mateus Galdino}
+\date{Recife, 2023}
+
+\begin{document}
+    \maketitle
+
+    \tableofcontents
+
+    \newpage
+
+        \subfile{sections/prefacio}
+
+    \newpage
+
+    \section{Introdução à Teoria dos Tipos}
+        \subfile{sections/introducao}
+    \newpage
+
+    \section{Cálculo Lambda não-tipado ($\lambda_{\beta\eta}$)}
+        \subfile{sections/lambda}
+    \newpage
+\end{document}
