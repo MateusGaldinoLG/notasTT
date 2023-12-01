@@ -9,19 +9,171 @@ Para entender melhor o que motiva a criação da teoria dos tipos, essas notas s
 O cálculo lambda serve como uma abstração em cima do conceito de função. Uma função é algo que pega um \emph{input} e retorna um \emph{output}, por exemplo a função $f(x) = x^2$ pega um input $x$ e retorna seu quadrado $x^2$. No cálculo lambda, essa função é denotada por $\lambda x. x^2$, onde $\lambda x .$ simboliza que essa função espera receber como entrada $x$. Quando queremos receber uma resposta específica de uma função, usamos números no lugar das variáveis, como por exemplo $f(3) = 3^2 = 9$. No cálculo lambda, isso é feito na forma de $(\lambda x. x^2)(3)$. 
 
 Esses dois principrios de construção são definidos como:
+\begin{itemize}
+    \item \textbf{Abstração}: Seja $M$ uma expressão e $x$ uma variável, podemos construir uma nova expressão $\lambda x . M$. Essa expressão é chamada de Abstração de $x$ sobre $M$
+    \item \textbf{Aplicação}: Sejam $M$ e $N$ duas es expressões, podemos construir uma expressão $M N$. Essa expressão é chamada de Aplicação de $M$ em $N$.
+\end{itemize}
 
-\begin{definition}
-    \hfill
-    \begin{itemize}
-        \item \textbf{Abstração}: Seja $M$ uma expressão e $x$ uma variável, podemos construir uma nova expressão $\lambda x . M$. Essa expressão é chamada de Abstração de $x$ sobre $M$
-        \item \textbf{Aplicação}: Sejam $M$ e $N$ duas es expressões, podemos construir uma expressão $M N$. Essa expressão é chamada de Aplicação de $M$ em $N$.
-    \end{itemize}
-\end{definition}
-
-Dadas essas definições, precisamos também de uma definição que dê conta do processo de encontrar o resultado após a aplicação em uma função. Esse processo é chamado de $\beta$-redução. Ela faz uso da substituição e usa como notação os colchetes.
+Dadas essas operações, precisamos também de uma definição que dê conta do processo de encontrar o resultado após a aplicação em uma função. Esse processo é chamado de $\beta$-redução. Ela faz uso da substituição e usa como notação os colchetes.
 
 \begin{definition}[$\beta$-redução]
     A $\beta$-redução é o processo de resscrita de uma expressão da forma $(\lambda x . M)N$ em outra expressão $M[x := N]$, ou seja, a expressão $M$ na qual todo $x$ foi substituido por $N$.    
 \end{definition}
+
+\subsection{Sintáxe do Cálculo Lambda}
+
+É interessante definir a sintaxe do cálculo lambda de forma mais formal. Para isso, são utilizados métodos que podem ser familiares para aqueles que já trabalharam com lógica proposicional, lógica de primeira ordem ou teoria de modelos.
+
+\begin{definition}
+    (i) Os \emph{termos lambda} são palavras em cima do seguinte alfabeto:
+    \begin{itemize}
+        \item variáveis: $v_0, v_1, \dots$ 
+        \item abstrator: $\lambda$ 
+        \item parentesis: $( , )$ 
+    \end{itemize}
+    (ii) O conjunto de $\lambda$-termos $\Lambda$ é definido de forma indutiva da seguinte forma:
+    \begin{itemize}
+        \item Se $x$ é uma variável, então $x \in \Lambda$
+        \item $M \in \Lambda \to (\lambda x . M) \in \Lambda$
+        \item $M, N \in \Lambda \to M N \in \Lambda$
+    \end{itemize}
+\end{definition}
+
+Na teoria dos tipos e no cálculo lambda, é utilizada uma forma concisa de definir esses termos chamada de Formalismo de Backus-Naur ou Forma Normal de Backus (BNF, em inglês). Nessa forma, a definição anterior é reduzida à:
+$$\Lambda = V | (\Lambda \Lambda) | (\lambda V \Lambda)$$
+Onde $V$ é o conjunto de variáveis $V = \{x, y, z, \dots\}$
+
+Para expressar igualdade entre dois termos de $\Lambda$ utilizamos o simbolo $\equiv$.
+
+Algumas definições indutivas podem ser formadas a partir da definição dos $\lambda$-termos.
+
+\begin{definition}[Multiconjunto de subtermos]
+    \hfill
+    \begin{enumerate}
+        \item (Base) $Sub(x) = \{x\}$, para todo $x \in V$
+        \item (Aplicação) $Sub((M N)) = Sub(M) \cup Sub(N) \cup \{ (M N) \}$
+        \item (Abstração) $Sub((\lambda x . M)) = Sub(M) \cup \{ (\lambda x . M) \}$
+    \end{enumerate}
+
+\end{definition}
+
+Observações:\\
+(i) Um subtermo pode ocorrer múltiplas vezes, por isso é escolhido chamar de multiconjunto
+
+\begin{lemma}[Propriedades de $Sub$]
+    \hfill
+    \begin{itemize}
+        \item (Reflexividade) Para todo $\lambda$-termo $M$, temos que $M \in Sub(M)$
+        \item (Transitividade)Se $L \in Sub(M)$ e $M \in Sub(N)$, então $L \in Sub(N)$.
+    \end{itemize}
+\end{lemma}
+
+\begin{definition}[Subtermo próprio]
+    $L$ é um subtermo próprio de $M$ se $L$ é subtermo de $M$ e $L \not\equiv M$
+\end{definition}
+
+Exemplos: 
+
+\begin{enumerate}
+    \item Seja o termo $\lambda x . \lambda y . xy$, vamos calcular seus subtermos:
+    \begin{equation*}
+        \begin{split}
+            Sub(\lambda x . \lambda y . xy) & = \{\lambda x . \lambda y . xy\} \cup Sub(\lambda y . xy)
+                                         \\ & = \{\lambda x . \lambda y . xy\} \cup \{\lambda y . xy\} \cup Sub(xy)
+                                         \\ & = \{\lambda x . \lambda y . xy\} \cup \{\lambda y . xy\} \cup Sub(x) \cup Sub(y)
+                                         \\ & = \{\lambda x . \lambda y . xy, \lambda y . xy, x, y\}
+        \end{split}
+    \end{equation*}
+    \item Seja o termo $(y (\lambda x . (xyz)))$, vamos calcular os seus subtermos:
+    \begin{equation*}
+        \begin{split}
+            Sub(y (\lambda x . (xyz))) & = Sub(y) \cup Sub((\lambda x . (xyz)))
+                                    \\ & = \{y\} \cup \{(\lambda x . (xyz))\} \cup Sub((xyz))
+                                    \\ & = \{y\} \cup \{(\lambda x . (xyz))\} \cup Sub(x) \cup Sub(y) \cup Sub(z)
+                                    \\ & = \{y\} \cup \{(\lambda x . (xyz))\} \cup \{x\} \cup \{y\} \cup \{z\} = \{y,(\lambda x . (xyz)), x, y, z \}
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+Outro conjunto importante para a sintaxe do cálculo lambda é o de variáveis livres. Uma variável é dita \emph{ligante} se está do lado do $\lambda$. Em um termo $\lambda x . M$, $x$ é uma variável ligante e toda aparição de $x$ em $M$ é chamada de \emph{ligada}. Se existir uma variável em $M$ que não é ligante, então dizemos que ela é livre. Por exemplo, em $\lambda x . xy$, o primeiro $x$ é ligante, o segundo $x$ é ligado e $y$ é livre. 
+
+O conjunto de todas as variáveis livres em um termo é denotado por $FV$ e definido da seguinte forma:
+
+\begin{definition}[Multiconjunto de variáveis livres]
+    \hfill
+    \begin{enumerate}
+        \item (Base) $FV(x) = \{x\}$, para todo $x \in V$
+        \item (Aplicação) $FV((M N)) = FV(M) \cup FV(N) \cup \{ (M N) \}$
+        \item (Abstração) $FV((\lambda x . M)) = FV(M) \setminus \{x\}$
+    \end{enumerate}
+
+\end{definition}
+
+Exemplos:
+
+\begin{enumerate}
+    \item Seja o termo $\lambda x . \lambda y . xyz$, vamos calcular seus subtermos:
+    \begin{equation*}
+        \begin{split}
+            FV(\lambda x . \lambda y . xyz) & = FV(\lambda y . xyz) \setminus \{x\} 
+                                         \\ & = FV(xyz) \setminus \{y\} \setminus \{x\}
+                                         \\ & = FV(x) \cup FV(y) \cup FV(z) \setminus \{y\}  \setminus \{x\} 
+                                         \\ & = \{x, y, z\} \setminus \{y\}  \setminus \{x\}
+                                         \\ & = \{z\}
+        \end{split}
+    \end{equation*}
+    \item 
+\end{enumerate}
+
+Vamos definir os termos fechados da seguinte forma:
+
+\begin{definition}
+    O $\lambda$-termo $M$ é dito \emph{fechado} se $FV(M) = \emptyset$. Um $\lambda$-termo fechado também é chamado de \emph{combinador}. O conjunto de todos os $\lambda$-termos fechados é chamado de $\Lambda^0$.
+\end{definition}
+
+Os combinadores são muito utilizados na \emph{Lógica Combinatória}, mas vamos explorá-los mais a frente.
+
+\subsection{Conversão}
+
+No cálculo Lambda, é possível renomear variáveis ligantes/ligadas, pois a mudança dos nomes dessas variáveis não muda na sua renomeação. Por exemplo, $\lambda x. x^2$ e $\lambda u . u^2$ podem ser utilizadas de forma igual, mesmo que com nomes diferentes. Podemos definir então essa renomeação
+
+\begin{definition}
+    Seja $M^{x \to y}$ o resultado da troca de todas as livre-ocorrencias de $x$ em $M$ por $y$. A relação de renomeação é expressa pelo símbolo $=_{\alpha}$ e é definida como: $\lambda x . M =_{\alpha} \lambda y . M^{x \to y}$, dado que $y \not\in FV(M)$ e $y$ não seja ligante em $M$.
+\end{definition}
+
+Podemos extender essa definição para a definição do renomeamento, chamado de $\alpha$-conversão.
+
+\begin{definition}[$\alpha$-conversão]
+    \hfill
+    \begin{enumerate}
+        \item (Renomeamento) $\lambda x. M =_ {\alpha} \lambda y . M^{x \to y}$
+        \item (Compatibilidade) Sejam $M, N, L$ termos. Se $M =_ {\alpha} N$, então $ML =_ {\alpha} NL$, $LM =_ {\alpha} LN$ e, para um $z$ qualquer, $\lambda z . M = \lambda z . N$
+        \item (Reflexividade) $M =_ {\alpha} M$
+        \item (Simetria) Se $M =_ {\alpha} N$, então $N =_ {\alpha} M$
+        \item (Transitividade) Se $L =_ {\alpha} M$ e $M =_ {\alpha} N$, então $L =_ {\alpha} N$
+    \end{enumerate}
+\end{definition}
+
+A partir dos pontos (3), (4) e (5) dessa definição, é possível dizer que a $\alpha$-conversão é uma relação de equivalência, chamada de $\alpha$-equivalência.
+
+\subsection{Substituição}
+
+Podemos definir agora a substituição de um termo por outro da seguinte forma:
+
+\begin{definition}[Substituição]
+    \hfill
+    \begin{enumerate}
+        \item $x [x := N] \equiv N$
+        \item $y [y := x] \equiv y$, se $x \not\equiv y$
+        \item $(PQ)[x := N] \equiv (P[x := N])(Q[x := N])$
+        \item $(\lambda y . P)[x := N] \equiv (\lambda z . P^{y \to z})[x := N]$ se $\lambda z P^{y \to z}$ é $\alpha$-equivalente a $\lambda y P$ e $z \not\in FV(N)$
+    \end{enumerate}
+\end{definition}
+
+A notação $[x := N]$ é uma meta-notação, pois não está definida na sintaxe do cálculo lambda.
+
+\subsection{Beta redução}
+
+
 
 \end{document}
