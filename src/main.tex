@@ -5,6 +5,7 @@
 \usepackage{bookmark}
 \usepackage{amsthm}
 \usepackage{mathtools}
+\usepackage{amssymb}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definição}[section]
@@ -12,6 +13,11 @@
 \theoremstyle{lemma}
 \newtheorem{lemma}{Lemma}[section]
 
+\theoremstyle{theorem}
+\newtheorem{theorem}{Teorema}[section]
+
+\theoremstyle{corollary}
+\newtheorem{corollary}{Corolário}[section]
 
 \title{Notas em Teoria dos Tipos}
 \author{Mateus Galdino}
@@ -28,11 +34,11 @@
 
     \newpage
 
-    \section{Introdução à Teoria dos Tipos}
-        \subfile{sections/introducao}
-    \newpage
-
-    \section{Cálculo Lambda não-tipado ($\lambda_{\beta\eta}$)}
+        \section{Cálculo Lambda não-tipado ($\lambda_{\beta\eta}$)}
         \subfile{sections/lambda}
+
+    \newpage
+        \section{Teoria dos Tipos Simples}
+        \subfile{sections/simple.tex}
     \newpage
 \end{document}

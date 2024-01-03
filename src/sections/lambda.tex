@@ -2,11 +2,15 @@
 
 \begin{document}
 
-Para entender melhor o que motiva a criação da teoria dos tipos, essas notas serão iniciadas com o cálculo $\lambda$ não tipado.
+A teoria dos tipos possui como história de origem algumas tentativas falhas. O conceito de tipos pode ser mapeado para dois matemáticos importantes que fizeram usos bem diferentes dele: Bertrand Russel (e Walfred North Whitehead) na Principia Mathematica e Alonzo Church no seu Cálculo $\lambda$ simplesmente tipado (ST$\lambda$C).
+
+A teoria dos tipos que é usada hoje, provém do segundo autor e de outros autores que vêm dessa tradição. Por isso, o início dessas notas se propõe a começar do básico, definindo o que é o Cálculo $\lambda$ não tipado e quais questões levaram Church a desenvolver a teoria dos tipos em cima dele.
+
+Aqui, será traduzido "$\lambda$-calculus" como "Cálculo $\lambda$", decisão que perde a estética do hífen, mas que mantém a unidade com outras traduções de  "X calculus" no corpo matemático brasileiro, como o "Cálculo Diferencial e Integral", o "Cálculo de sequentes", o "Cálculo de variações", etc.
 
 \subsection{Definições}
 
-O cálculo lambda serve como uma abstração em cima do conceito de função. Uma função é algo que pega um \emph{input} e retorna um \emph{output}, por exemplo a função $f(x) = x^2$ pega um input $x$ e retorna seu quadrado $x^2$. No cálculo lambda, essa função é denotada por $\lambda x. x^2$, onde $\lambda x .$ simboliza que essa função espera receber como entrada $x$. Quando queremos receber uma resposta específica de uma função, usamos números no lugar das variáveis, como por exemplo $f(3) = 3^2 = 9$. No cálculo lambda, isso é feito na forma de $(\lambda x. x^2)(3)$. 
+O cálculo lambda serve como uma abstração em cima do conceito de função. Uma função é uma estrutura que pega um \emph{input} e retorna um \emph{output}, por exemplo a função $f(x) = x^2$ pega um input $x$ e retorna seu valor ao quadrado $x^2$. No cálculo lambda, essa função pode ser denotada por $\lambda x. x^2$, onde $\lambda x .$ simboliza que essa função espera receber como entrada $x$. Quando se quer saber qual valor a função retorna para uma entrada específica, são usados números no lugar das variáveis, como por exemplo $f(3) = 3^2 = 9$. No cálculo lambda, isso é feito na forma de $(\lambda x. x^2)(3)$. 
 
 Esses dois principrios de construção são definidos como:
 \begin{itemize}
@@ -14,7 +18,7 @@ Esses dois principrios de construção são definidos como:
     \item \textbf{Aplicação}: Sejam $M$ e $N$ duas es expressões, podemos construir uma expressão $M N$. Essa expressão é chamada de Aplicação de $M$ em $N$.
 \end{itemize}
 
-Dadas essas operações, precisamos também de uma definição que dê conta do processo de encontrar o resultado após a aplicação em uma função. Esse processo é chamado de $\beta$-redução. Ela faz uso da substituição e usa como notação os colchetes.
+Dadas essas operações, é preciso também de uma definição que dê conta do processo de encontrar o resultado após a aplicação em uma função. Esse processo é chamado de $\beta$-redução. Ela faz uso da substituição e usa como notação os colchetes.
 
 \begin{definition}[$\beta$-redução]
     A $\beta$-redução é o processo de resscrita de uma expressão da forma $(\lambda x . M)N$ em outra expressão $M[x := N]$, ou seja, a expressão $M$ na qual todo $x$ foi substituido por $N$.    
@@ -23,6 +27,8 @@ Dadas essas operações, precisamos também de uma definição que dê conta do 
 \subsection{Sintáxe do Cálculo Lambda}
 
 É interessante definir a sintaxe do cálculo lambda de forma mais formal. Para isso, são utilizados métodos que podem ser familiares para aqueles que já trabalharam com lógica proposicional, lógica de primeira ordem ou teoria de modelos.
+
+Primeiro, precisamos definir a linguagem do Cálculo $\lambda$.
 
 \begin{definition}
     (i) Os \emph{termos lambda} são palavras em cima do seguinte alfabeto:
@@ -59,6 +65,7 @@ Algumas definições indutivas podem ser formadas a partir da definição dos $\
 
 Observações:\\
 (i) Um subtermo pode ocorrer múltiplas vezes, por isso é escolhido chamar de multiconjunto
+(ii) A abstração de vários termos ao mesmo tempo pode ser escrita como $\lambda x . (\lambda y . x)$ ou como $\lambda x y . x$.
 
 \begin{lemma}[Propriedades de $Sub$]
     \hfill
@@ -95,7 +102,7 @@ Exemplos:
     \end{equation*}
 \end{enumerate}
 
-Outro conjunto importante para a sintaxe do cálculo lambda é o de variáveis livres. Uma variável é dita \emph{ligante} se está do lado do $\lambda$. Em um termo $\lambda x . M$, $x$ é uma variável ligante e toda aparição de $x$ em $M$ é chamada de \emph{ligada}. Se existir uma variável em $M$ que não é ligante, então dizemos que ela é livre. Por exemplo, em $\lambda x . xy$, o primeiro $x$ é ligante, o segundo $x$ é ligado e $y$ é livre. 
+Outro conjunto importante para a sintaxe do cálculo lambda é o de variáveis livres. Uma variável é dita \emph{ligante} se está do lado do $\lambda$. Em um termo $\lambda x . M$, $x$ é uma variável ligante e toda aparição de $x$ em $M$ é chamada de \emph{ligada}. Se existir uma variável em $M$ que não é ligante, então dizemos que ela é \emph{livre}. Por exemplo, em $\lambda x . xy$, o primeiro $x$ é ligante, o segundo $x$ é ligado e $y$ é livre. 
 
 O conjunto de todas as variáveis livres em um termo é denotado por $FV$ e definido da seguinte forma:
 
@@ -122,7 +129,6 @@ Exemplos:
                                          \\ & = \{z\}
         \end{split}
     \end{equation*}
-    \item 
 \end{enumerate}
 
 Vamos definir os termos fechados da seguinte forma:
@@ -135,7 +141,7 @@ Os combinadores são muito utilizados na \emph{Lógica Combinatória}, mas vamos
 
 \subsection{Conversão}
 
-No cálculo Lambda, é possível renomear variáveis ligantes/ligadas, pois a mudança dos nomes dessas variáveis não muda na sua renomeação. Por exemplo, $\lambda x. x^2$ e $\lambda u . u^2$ podem ser utilizadas de forma igual, mesmo que com nomes diferentes. Podemos definir então essa renomeação
+No cálculo Lambda, é possível renomear variáveis ligantes/ligadas, pois a mudança dos nomes dessas variáveis não muda a sua interpretação. Por exemplo, $\lambda x. x^2$ e $\lambda u . u^2$ podem ser utilizadas de forma igual, mesmo que com nomes diferentes. A Renomeação será definida da seguinte forma:
 
 \begin{definition}
     Seja $M^{x \to y}$ o resultado da troca de todas as livre-ocorrencias de $x$ em $M$ por $y$. A relação de renomeação é expressa pelo símbolo $=_{\alpha}$ e é definida como: $\lambda x . M =_{\alpha} \lambda y . M^{x \to y}$, dado que $y \not\in FV(M)$ e $y$ não seja ligante em $M$.
@@ -147,7 +153,8 @@ Podemos extender essa definição para a definição do renomeamento, chamado de
     \hfill
     \begin{enumerate}
         \item (Renomeamento) $\lambda x. M =_ {\alpha} \lambda y . M^{x \to y}$
-        \item (Compatibilidade) Sejam $M, N, L$ termos. Se $M =_ {\alpha} N$, então $ML =_ {\alpha} NL$, $LM =_ {\alpha} LN$ e, para um $z$ qualquer, $\lambda z . M = \lambda z . N$
+        \item (Compatibilidade) Sejam $M, N, L$ termos. Se $M =_ {\alpha} N$, então $ML =_ {\alpha} NL$, $LM =_ {\alpha} LN$ 
+        \item (Regra $\xi$) Para um $z$ qualquer, $\lambda z . M = \lambda z . N$
         \item (Reflexividade) $M =_ {\alpha} M$
         \item (Simetria) Se $M =_ {\alpha} N$, então $N =_ {\alpha} M$
         \item (Transitividade) Se $L =_ {\alpha} M$ e $M =_ {\alpha} N$, então $L =_ {\alpha} N$
@@ -155,6 +162,13 @@ Podemos extender essa definição para a definição do renomeamento, chamado de
 \end{definition}
 
 A partir dos pontos (3), (4) e (5) dessa definição, é possível dizer que a $\alpha$-conversão é uma relação de equivalência, chamada de $\alpha$-equivalência.
+
+Exemplos: 
+
+\begin{enumerate}
+    \item $(\lambda x . x (\lambda z . xy)) =_ {\alpha} (\lambda u . u (\lambda z . uy))$
+    \item $(\lambda x . xy) \neq_{\alpha} (\lambda y . yy)$
+\end{enumerate}
 
 \subsection{Substituição}
 
@@ -166,14 +180,344 @@ Podemos definir agora a substituição de um termo por outro da seguinte forma:
         \item $x [x := N] \equiv N$
         \item $y [y := x] \equiv y$, se $x \not\equiv y$
         \item $(PQ)[x := N] \equiv (P[x := N])(Q[x := N])$
-        \item $(\lambda y . P)[x := N] \equiv (\lambda z . P^{y \to z})[x := N]$ se $\lambda z P^{y \to z}$ é $\alpha$-equivalente a $\lambda y P$ e $z \not\in FV(N)$
+        \item $(\lambda y . P)[x := N] \equiv (\lambda z . P^{y \to z})[x := N]$ se $(\lambda z . P^{y \to z})$ é $\alpha$-equivalente a $(\lambda y . P)$ e $z \not\in FV(N)$
     \end{enumerate}
 \end{definition}
 
-A notação $[x := N]$ é uma meta-notação, pois não está definida na sintaxe do cálculo lambda.
+A notação $[x := N]$ é uma meta-notação, pois não está definida na sintaxe do cálculo lambda. Na literatura também é possível ver a notação $[N / x]$ para definir a substituição.
 
 \subsection{Beta redução}
 
+Voltando à aplicação, agora com a substituição em mente, podemos dizer que a aplicação de um termo $N$ em $\lambda x . M$, na forma de $(\lambda x . M)N$ é a mesma coisa que $M [x := N]$. Nesse caso, essa única substituição entre termos pode ser descrita na seguinte definição:
 
+\begin{definition}[$\beta$-redução para único passo]
+    \hfill
+    \begin{enumerate}
+        \item (Base) $(\lambda x . M)N \to_{\beta} M [x := N]$
+        \item (Compatibilidade) Se $M \to_{\beta} N$, então $ML \to_{\beta} NL$, $LM \to_{\beta} LN$ e $\lambda x . M \to_{\beta} \lambda x . N$
+    \end{enumerate}
+\end{definition}
+
+O termo $(\lambda x . M)N$ é chamado de \emph{redex}, vindo do ingles "reducible expression" (expressão reduzível), e o subtermo $M [x := N]$ é chamado de \emph{contractum} do redex.
+
+Exemplos: 
+
+\begin{enumerate}
+    \item $(\lambda x . x (xy))N \to_{\beta} N (Ny)$
+    \item $(\lambda x . xx)(\lambda x . xx) \to_{\beta} (\lambda x . xx)(\lambda x . xx)$
+    \item $(\lambda x . (\lambda y . yx)z)v \to_{\beta} (\lambda y . yv)z \to_{\beta} zv$
+\end{enumerate}
+
+Os exemplos 2 e 3 são importantes por duas razões:
+
+\begin{itemize}
+    \item Com o exemplo 3 é possível ver que é possível concatenar várias reduções seguindas, vamos colocar uma definição mais geral a diante que lide com isso.
+    \item Com o exemplo 2 é possível ver que existem termos que, quando beta-reduzidos, retornam eles mesmos. Isso faz com que cálculo lámbda não tipado tenha propriedades interessantes, pois muitas vezes a simplificação não termina. Ou seja, é possível haver cadeias de beta redução que não possuem termo mais simples.
+\end{itemize}
+
+\begin{definition}[$\beta$-redução para zero ou mais passos]
+    $M \twoheadrightarrow_{\beta} N$ (lê-se: M beta reduz para N em vários passos) se existe um $n \geq 0$ e existem termos $M_0$ até $M_n$ tais que $M_0 \equiv M$, $M_n \equiv N$ e para todo $i$ tal que $0 \leq i < n$: $$M_i \to_{\beta} M_{i+1}$$
+\end{definition}
+
+Ou Seja: $$M \equiv M_0 \to_{\beta} M_1 \to_{\beta} \dots \to_{\beta} M_{n-1} \to_{\beta} M_n \equiv N$$
+
+\begin{lemma}
+    \hfill
+    \begin{enumerate}
+        \item $\twoheadrightarrow_{\beta}$ é uma extensão de $\to_{\beta}$, ou seja: se $M \to_{\beta} N$, então $M \twoheadrightarrow_{\beta} N$
+        \item $\twoheadrightarrow_{\beta}$ é reflexivo e transitivo, ou seja:
+        \begin{itemize}
+            \item (reflexividade) Para todo $M$, $M \twoheadrightarrow_{\beta} M$
+            \item (transitividade) Para todo $L$, $M$, e $N$. Se $L \twoheadrightarrow_{\beta} M$ e $M \twoheadrightarrow_{\beta} N$, então $L \twoheadrightarrow_{\beta} N$
+        \end{itemize}
+    \end{enumerate}
+\end{lemma}
+
+\emph{Prova}
+\begin{enumerate}
+    \item Na definição 1.11, seja $n = 1$, então $M \equiv M_0 \to_{\beta} M_1 \equiv N$, que é a mesma coisa que $M \to_{\beta} N$
+    \item Se $n = 0$, $M \equiv M_0 \equiv N$
+    \item A transitividade também segue da definição
+\end{enumerate}
+
+Uma extensão dessa $\beta$-redução geral é a $\beta$- conversão, definida como:
+
+\begin{definition}[$\beta$-conversão]
+    $M =_{\beta} N$ (lê-se: $M$  e $N$ são $\beta$-convertíveis) se existe um $n \geq 0$ e existem termos $M_0$ até $M_n$ tais que $M_0 \equiv M$, $M_n \equiv N$ e para todo $i$ tal que $0 \leq i < n$: Ou $M_i \to_{\beta} M_{i+1}$ ou $M_{i+1} \to_{\beta} M_i$
+\end{definition}
+
+\begin{lemma}
+    \hfill
+    \begin{enumerate}
+        \item $=_{\beta}$ é uma extensão de $\twoheadrightarrow_{\beta}$ em ambas as direções, ou seja: se $M \twoheadrightarrow_{\beta} N$ ou $N \twoheadrightarrow_{\beta} M$, então $M =_{\beta} N$
+        \item $=_{\beta}$ é uma relação de equivalência, ou seja, possui reflexividade, simetria e transitividade
+        \begin{itemize}
+            \item (reflexividade) Para todo $M$, $M =_{\beta} M$
+            \item (Simetria) Para todo $M$ e $N$, se $M =_{\beta} N$, então $N =_{\beta} M$
+            \item (transitividade) Para todo $L$, $M$, e $N$. Se $L =_{\beta} M$ e $M =_{\beta} N$, então $L =_{\beta} N$
+        \end{itemize}
+    \end{enumerate}
+\end{lemma}
+
+\subsection{Forma Normal}
+
+Podemos definir a hora de parar de reduzir, para isso vamos introduzir o conceito de forma Normal
+
+\begin{definition}[ Forma normal $\beta$ ou $\beta$-normalização]
+    \hfill
+    \begin{enumerate}
+        \item $M$ está na forma normal $\beta$ se $M$ não possui nenhum redex
+        \item $M$ possui uma formal normal $\beta$, ou é $\beta$-normalizável, se existe um $N$ na forma normal $\beta$ tal que $M =_{\beta} N$. $N$ é chamado de a \emph{forma normal $\beta$} de $M$.
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    Se $M$ está em sua forma normal $\beta$, então $M \twoheadrightarrow_{\beta} N$ implica em $M \equiv N$
+\end{lemma}
+
+Exemplos:
+
+\begin{enumerate}
+    \item $(\lambda x . (\lambda y . yx)z)v$ tem como formal normal $\beta$ $zv$, pois $(\lambda x . (\lambda y . yx)z)v \to_{\beta} zv$ (como visto nos exemplos anteriores) e $zv$ está na forma normal $\beta$
+    \item Vamos definir um termo $\Omega := (\lambda x . xx)(\lambda x . xx)$, $\Omega$ não está na forma normal $\beta$, pois pode ser $\beta$-reduzido, mas não possui também forma normal $\beta$, pois ele sempre é $\beta$-reduzido para ele mesmo.
+    \item Seja $\Delta := (\lambda x . xxx)$, então $\Delta \Delta \to_{\beta} \Delta \Delta \Delta \to_{\beta} \Delta \Delta \Delta \Delta \to_{\beta} \dots $. Logo $\Delta \Delta$ não possui forma normal. 
+\end{enumerate}
+
+\begin{definition}[Caminho de Redução]
+    \hfill\\
+    Um caminho de redução finito de $M$ é uma sequência finita de termos $N_0, N_1, \dots, N_n$ tais que $N_0 \equiv M$ e $N_i \to_{\beta} N_{i+1}$, para todo $0 \leq i < n$.
+    \\
+    Um caminho de redução infinito de $M$ é uma sequência infinita de termos $N_0, N_1, \dots$ tais que $N_0 \equiv M$ e $N_i \to_{\beta} N_{i+1}$, para todo $i \in \mathbb{N}$
+\end{definition}
+
+Considerando esses dois tipos de caminhos de redução, vamos definir dois tipos de normalização
+
+\begin{definition}[Normalização Fraca e Forte]
+    \hfill
+    \begin{enumerate}
+        \item $M$ é \emph{fracamente normalizável} se existe um $N$ na forma normal $\beta$ tal que $M \twoheadrightarrow_{\beta} N$ 
+        \item $M$ é \emph{fortemente normalizável} se não existem caminhos de requção infinitos começando de $M$.
+    \end{enumerate}
+\end{definition}
+
+Todo termo $M$ que é fortemente normalizável é fracamente normalizável.
+
+Os termos $\Omega$ e $\Delta$ não são nem fortemente normalizáveis, nem fracamente normalizáveis. 
+
+É possível relacionar a normalização fraca com a forma normal $\beta$ usando a intuição que, se $M$ reduz para ambos $N_1$ e $N_2$, então existe um termo $N_3$ que exista no caminho de redução de ambos $N_1$ e $N_2$.
+
+\begin{theorem}[Teorema de Church-Rosser ou Teorema da Confluência]
+    \hfill\\
+    Suponha que para um $\lambda$-termo $M$, tanto $M \twoheadrightarrow_{\beta} N_1$ e $M \twoheadrightarrow_{\beta} N_2$. Então existe um $\lambda$-termo $N_3$ tal que $N_1 \twoheadrightarrow_{\beta} N_3$ e $N_2 \twoheadrightarrow_{\beta} N_3$
+\end{theorem}
+
+A prova desse teorema pode ser encontrada no Livro de Barendregt.
+
+Uma consequência importante desse teorema é que o resultado do calculo feito em cima do termo não depende da ordem que esses cálculos são feitos. A escolha dos redexes não interfere no resultado final.
+
+\begin{corollary}
+    \hfill\\
+    Suponha que $M =_{\beta} N$. Então existe um termo $L$ tal que $M \twoheadrightarrow_{\beta} L$ e $N \twoheadrightarrow_{\beta} L$.
+\end{corollary}
+
+\emph{prova}. Como $M =_{\beta} N$, então, pela definição, existe um $n \in \mathbb{N}$ tal que: $$M \equiv M_0 \rightleftarrows_{\beta} M_1 \dots M_{n-1} \rightleftarrows_{\beta} M_n \equiv N$$. Onde $M_i \rightleftarrows_{\beta} M_{i+1}$ significa que ou $M_i \to_{\beta} M_{i+1}$ ou $M_{i+1} \to_{\beta} M_i$.
+Vamos provar por indução em $n$:
+\begin{enumerate}
+    \item Quando $n = 0$: $M \equiv N$. Então sendo $L \equiv M$, $M \twoheadrightarrow_{\beta} L$ e $N \twoheadrightarrow_{\beta} L$ (por zero passsos)
+    \item Quando $n = k > 0$, entao existe $M_{k - 1}$. Logo temos que $M \equiv M_0 \rightleftarrows_{\beta} M_1 \dots M_{k-1} \rightleftarrows_{\beta} M_k \equiv N$.
+    Por indução, existe um $L'$ tal que $M_0 \twoheadrightarrow_{\beta} L'$ e $M_{k-1} \twoheadrightarrow_{\beta} L'$. Vamos dividir $M_{k-1} \rightleftarrows_{\beta} M_k $ em dois casos
+    \begin{enumerate}
+        \item Se  $M_{k-1} \to_{\beta} M_k $, então como $M_{k-1} \to_{\beta} M_k $ e $M_{k-1} \twoheadrightarrow_{\beta} L'$, então, pelo Teorema de Church-Rosser, existe um $L$ tal que $L'\twoheadrightarrow_{\beta} L$ e $M_k \twoheadrightarrow_{\beta} L$. Logo encontramos $L$.
+        \item Se $M_k \to_{\beta} M_{k-1}$, então como $M_0 \twoheadrightarrow_{\beta} L'$ e $M_k \twoheadrightarrow_{\beta} L'$, $L'$ é o próprio $L$.
+    \end{enumerate}
+    $\qed$.
+\end{enumerate}
+
+\begin{lemma}
+    \hfill
+    \begin{enumerate}
+        \item Se $M$ possui forma normal $\beta$ $N$, então $M \twoheadrightarrow_{\beta} N$.
+        \item Um $\lambda$-termo tem no máximo uma forma normal $\beta$
+    \end{enumerate}
+\end{lemma}
+
+\emph{Prova}
+\begin{enumerate}
+    \item Seja $M =_{\beta} N$, com $N$ como formal normal $\beta$. Então, pelo corolário anterior, existe um $L$ tal que $M \twoheadrightarrow_{\beta} L$ e $N \twoheadrightarrow_{\beta} L$. Como $N$ é a forma normal, $N$ não é mais redutível e $N \equiv L$. Então $M \twoheadrightarrow_{\beta} L \equiv N$, logo $M \twoheadrightarrow_{\beta} N$.
+    \item Suponha que $M$ possui duas formas normais $\beta$ $N_1$ e $N_2$. Então por (1), $M \twoheadrightarrow_{\beta} N_1$ e $M \twoheadrightarrow_{\beta} N_2$. Pelo teorema de Church-Rosser, existe um $L$ tal que $N_1 \twoheadrightarrow_{\beta} L$ e $N_2 \twoheadrightarrow_{\beta} L$. Mas como $N_1$ e $N_2$ estão na forma normal, $L \equiv N_1$ e $L \equiv N_2$. Então pela transitividade da equivalência, $N_1 \equiv N_2$.
+    
+    $\qed$.
+\end{enumerate}
+
+
+\subsection{Teorema do ponto fixo}
+
+No Cálculo $\lambda$, todo $\lambda$-termo $L$ possui um \emph{ponto fixo}, ou seja, existe um $\lambda$-termo $M$ tal que $LM =_{\beta} M$. O termo Ponto Fixo vêm da análise funcional: seja $f$ uma função, então $f$ possui um ponto fixo $a$ se $f(a) = a$. 
+
+\begin{theorem}
+    Para todo $L \in \Lambda$, existe um $M \in \Lambda$ tal que $LM =_{\beta} M$.
+\end{theorem}
+
+\emph{prova}: Seja $L$ um $\lambda$-termo e defina $M := (\lambda x . L (xx))(\lambda x . L (xx))$. $M$ é um redex, logo: 
+
+\begin{equation*}
+    \begin{split}
+        M & \equiv (\lambda x . L (xx))(\lambda x . L (xx))
+     \\   & \to_{\beta} L((\lambda x . L (xx))(\lambda x . L (xx)))
+     \\   & \equiv LM
+    \end{split}
+\end{equation*}
+
+Logo $LM =_{\beta} M$. $\qed$
+
+Pela prova anterior, podemos perceber que $M$ pode ser generalizado para todo $\lambda$-termo. Esse $M$ será denominado de \emph{Combinador de ponto fixo} e escrito na forma: $$Y \equiv \lambda y . (\lambda x . y(xx))(\lambda x . y(xx)) $$
+
+\subsection{Eta redução}
+
+A junção da definição 0.8 com as definições de $\beta$-redução gera uma teoria que será chamada aqui de $\lambda_{\beta}$. Para essa teoria, faltam alguns detalhes que podem, ou não, ser introduzidos a depender do que se precisa.
+
+A $\eta$-redução é a segunda redução possível dentro do cálculo $\lambda$. Através dela é possível remover uma abstração que não faz nada para o termo interior. Sua definição é:
+
+\begin{definition}[$\eta$-redução]
+    \hfill
+    \begin{enumerate}
+        \item $(\lambda x . M x) \rightarrow_{\eta} M$, onde $x \not\in FV(M)$.
+    \end{enumerate}
+\end{definition}
+
+A junção da teoria $\lambda$ com a $\eta$-redução será chamada aqui de $\lambda_{\beta \eta}$.
+
+Uma outra adição possível à teoria $\lambda$ é chamada de extencionalidade e definida da seguinte forma:
+
+\begin{definition}[extencionalidade \textbf{Ext}]
+    Dados os termos $M$ e $N$, se $M x = N x$, com $x \not\in FV(MN)$, então $M = N$.
+\end{definition}
+
+
+Ou seja, dois termos (ou funções) são iguais caso eles dêem saídas iguais para a mesma aplicação.
+
+A união da teoria $\lambda$ com \textbf{Ext} é chamada de $\lambda + \text{\textbf{Ext}}$. 
+
+
+\begin{theorem}[Teorema de Curry]
+    As teorias $\lambda_{\beta \eta}$ e $\lambda + \text{\textbf{\emph{Ext}}}$ são equivalentes.
+\end{theorem}
+
+\emph{Prova}: Primeiro, é necessário mostrar que $\eta$ é derivável de $\lambda + \text{\textbf{\emph{Ext}}}$. Seja a igualdade $(\lambda x . Mx)x = Mx$, por \textbf{Ext}, $\lambda x . Mx = M$. 
+
+Segundo, é necessário mostrar que dado $Mx = Nx$, é possível derivar $M = N$ em $\lambda_{\beta \eta}$. Para isso, seja $Mx = Nx$, realizando $\xi$-redução, tem-se que $\lambda x . Mx = \lambda x . Nx$. Fazendo $\eta$-redução dos dois lados, $M = N$. $\qed$
+
+Posteriormente, será feito uma discussão de teorias dos tipos que aceitam \textbf{Ext} como um axioma no estilo de $\lambda + \text{\textbf{\emph{Ext}}}$ e outras que conseguem derivar a extencionalidade através de outras propriedades, como $\lambda_{\beta \eta}$. 
+
+
+\subsection{Codificações dentro do Cálculo \texorpdfstring{$\lambda$}.}
+
+O primeiro exemplo de transformação de funções em $\lambda$-termos, $f(x) = x^2$ para $\lambda x . x^2$, pode parecer correto, mas supõe mais que foi definido até então. Pois partindo somente da sintaxe e das transformações vistas nas seções anteriores, não foi definido coisas básicas como o que significa a exponenciação ou o número $2$. Se o cálculo $lambda$ é colocado como um possível substituto para a teoria das funções baseada na teoria dos conjuntos, então ele deve ser capaz de definir todas essas coisas de forma interna. Por isso, foram desenvolvidas as \emph{codificações}, das quais a primeira e mais conhecida é a \emph{Codificação de Church} (Church Encoding).
+
+Primeiro, é necessário definir os números naturais e, para isso, é preciso de combinadores que traduzam os axiomas de Peano para os números naturais. Ou seja, precisamos definir o número $0$ e a função sucessor $suc (x) = x + 1$. Para isso, diferente das outras definições indutivas vistas anteriormente, primeiro serão definidos os números e depois as operações.
+
+\begin{definition}[Numerais de Church]
+    \hfill
+    \begin{enumerate}
+        \item $zero := \lambda fx .x$
+        \item $um := \lambda fx . fx $
+        \item $dois := \lambda fx . f(fx)$
+        \\$\dots$
+        \item $n := \lambda fx . f^n x$
+    \end{enumerate}
+\end{definition}
+
+Onde $f^n x$ é $f(f(f \dots x))$ $n$ vezes.
+
+As operações são descritas na forma:
+
+\begin{definition}[Operações aritméticas]
+    \hfill
+    \begin{enumerate}
+        \item $sum := \lambda m . \lambda n . \lambda fx . m f(nfx)$
+        \item $mult := \lambda m . \lambda n . \lambda fx . m (nf) x$
+        \item $suc := \lambda m . \lambda fx . f (m f x)$
+    \end{enumerate}
+\end{definition}
+
+Nessas definições os primeiros $m$ e $n$ são os números $m$ e $n$, como por exemplo $m + n$, $m \times n$, $m + 1$, etc.
+
+Exemplos:
+
+\begin{enumerate}
+    \item Prova que $\text{\emph{sum one one}} \twoheadrightarrow_{\beta} two$ na codificação:
+    \begin{equation*}
+        \begin{split}
+            \text{\emph{sum one one}} & \equiv (\lambda m . \lambda n . \lambda fx . m f(nfx)) \text{\emph{ one one}}
+                                   \\ & \twoheadrightarrow_{\beta} ( \lambda fx . \text{\emph{one}} f(\text{\emph{one}}fx))
+                                   \\ & \twoheadrightarrow_{\beta} ( \lambda fx . (\lambda gx . gx) f((\lambda gx . gx)fx))
+                                   \\ & \twoheadrightarrow_{\beta} ( \lambda fx . (\lambda x . fx) (fx))
+                                   \\ & \twoheadrightarrow_{\beta} ( \lambda fx . f(fx))
+                                   \\ & \equiv \text{\emph{two}}
+        \end{split}
+    \end{equation*}
+    \item Prova que $\text{\emph{mult two two}} \twoheadrightarrow_{\beta} four$ na codificação:
+    \begin{equation*}
+        \begin{split}
+            \text{\emph{mult two two}} & \equiv (\lambda m . \lambda n . \lambda fx . m (nf) x) \text{\emph{ two two}}
+                                   \\ & \twoheadrightarrow_{\beta} (\lambda fx . \text{\emph{ two}} (\text{\emph{ two }}f) x)
+                                   \\ & \twoheadrightarrow_{\beta} (\lambda fx . (\lambda gy . g(gy) )(\text{\emph{ two }}f) x)
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+Uma vez definida a multiplicação e a soma, é possível definir outras operações como o fatorial e a exponenciação. Isso fica como exercício para o leitor.
+
+Tendo definido operações relacionadas aos números naturais, pode-se perguntar se é possível construir algo lógico dentro do cálculo $\lambda$ não-tipado. Para isso, é necessário definir a noção de "verdadeiro" e "falso", na forma:
+
+\begin{definition}[Booleanos]
+    \hfill
+    \begin{enumerate}
+        \item $\text{\emph{true}} := \lambda xy . x$
+        \item $\text{\emph{false}} := \lambda xy . y$
+        \item $\text{\emph{not}} := \lambda z . z \text{\emph{ false }} \text{\emph{true }}$
+        \item $\text{\emph{'if x then u else v'}} := \lambda x . xuv$
+    \end{enumerate}
+\end{definition}
+
+Exemplos: 
+
+\begin{enumerate}
+    \item Prova que $\text{\emph{not}}(\text{\emph{not }} p)\equiv p$ na codificação:
+    \begin{equation*}
+        \begin{split}
+            \text{\emph{not}}(\text{\emph{not }} p) & \equiv \text{\emph{not}}((\lambda z . z \text{\emph{ false }} \text{\emph{true }}) p)
+                                   \\ & \twoheadrightarrow_{\beta} \text{\emph{not}}(p \text{\emph{ false }} \text{\emph{true }})
+                                   \\ & \twoheadrightarrow_{\beta} \text{\emph{not}}(p (\lambda xy . y) (\lambda xy . x))
+                                   \\ & \twoheadrightarrow_{\beta} (\lambda z . z \text{\emph{ false }} \text{\emph{true }})(p (\lambda xy . y) (\lambda xy . x))
+                                   \\ & \twoheadrightarrow_{\beta} (p (\lambda xy . y) (\lambda xy . x)) \text{\emph{ false }} \text{\emph{true }}
+        \end{split}
+    \end{equation*}
+    Se $p \twoheadrightarrow_{\beta} \text{\emph{true }}$,
+    \begin{equation*}
+        \begin{split}
+            \text{\emph{not}}(\text{\emph{not }} \text{\emph{true }}) & \twoheadrightarrow_{\beta} ((\lambda xy . x) (\lambda xy . y) (\lambda xy . x)) \text{\emph{ false }} \text{\emph{true }} \\ & \twoheadrightarrow_{\beta} ((\lambda xy . y)) \text{\emph{ false }} \text{\emph{true }} \\ & \twoheadrightarrow_{\beta} \text{\emph{true }}
+        \end{split}
+    \end{equation*}
+    Se $p \twoheadrightarrow_{\beta} \text{\emph{false }}$,
+    \begin{equation*}
+        \begin{split}
+            \text{\emph{not}}(\text{\emph{not }} \text{\emph{false }}) & \twoheadrightarrow_{\beta} ((\lambda xy . y) (\lambda xy . y) (\lambda xy . x)) \text{\emph{ false }} \text{\emph{true }} \\ & \twoheadrightarrow_{\beta} ((\lambda xy . x)) \text{\emph{ false }} \text{\emph{true }} \\ & \twoheadrightarrow_{\beta} \text{\emph{false }}
+        \end{split}
+    \end{equation*}
+\end{enumerate}
+
+
+\subsection{Apêndice I - Lógica Combinatória}
+
+...
+
+\subsection{Apêndice II - Construindo o Cálculo $\lambda$ não tipado em Coq}
+
+...
+
+\subsection{Apêndice III - A história do cálculo $\lambda$ não tipado}
+
+...
 
 \end{document}
