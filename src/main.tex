@@ -9,14 +9,8 @@
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definição}[section]
-
-\theoremstyle{lemma}
 \newtheorem{lemma}{Lemma}[section]
-
-\theoremstyle{theorem}
 \newtheorem{theorem}{Teorema}[section]
-
-\theoremstyle{corollary}
 \newtheorem{corollary}{Corolário}[section]
 
 \title{Notas em Teoria dos Tipos}
@@ -34,11 +28,40 @@
 
     \newpage
 
-        \section{Cálculo Lambda não-tipado ($\lambda_{\beta\eta}$)}
-        \subfile{sections/lambda}
+        % PARTE 1
+
+        \part{O Cubo Lambda}
+            \setcounter{section}{0}
+            \renewcommand*{\theHsection}{chX.\the\value{section}}
+
+            \subfile{sections/parte1/lambda.tex}
+            \newpage
+            \subfile{sections/parte1/simple.tex}
 
     \newpage
-        \section{Teoria dos Tipos Simples}
-        \subfile{sections/simple.tex}
+        % PARTE 2
+
+        \part{Construções paralelas ao cubo}
+
+    \newpage
+        % PARTE 3
+
+        \part{Semântica Categorial das teorias do cubo lambda}
+
+    \newpage
+        % PARTE 4
+
+        \part{Teorias Homotópicas de Tipos}
+
+
+    \newpage
+        % PARTE 5
+        \part{Semântica Categorial das teoria homotópicas de tipos}
+
+    \newpage   
+        % PARTE 6
+        \part{Lógica}
+    \newpage
+
     \newpage
 \end{document}

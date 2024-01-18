@@ -2,13 +2,18 @@
 
 \begin{document}
 
+
+\section[Cálculo Lambda não-tipado]{Cálculo Lambda não-tipado ($\lambda_{\beta\eta}$)}
+
 A teoria dos tipos possui como história de origem algumas tentativas falhas. O conceito de tipos pode ser mapeado para dois matemáticos importantes que fizeram usos bem diferentes dele: Bertrand Russel (e Walfred North Whitehead) na Principia Mathematica e Alonzo Church no seu Cálculo $\lambda$ simplesmente tipado (ST$\lambda$C).
 
 A teoria dos tipos que é usada hoje, provém do segundo autor e de outros autores que vêm dessa tradição. Por isso, o início dessas notas se propõe a começar do básico, definindo o que é o Cálculo $\lambda$ não tipado e quais questões levaram Church a desenvolver a teoria dos tipos em cima dele.
 
 Aqui, será traduzido "$\lambda$-calculus" como "Cálculo $\lambda$", decisão que perde a estética do hífen, mas que mantém a unidade com outras traduções de  "X calculus" no corpo matemático brasileiro, como o "Cálculo Diferencial e Integral", o "Cálculo de sequentes", o "Cálculo de variações", etc.
 
-\subsection{Definições}
+\subsection{O Cálculo}
+
+\subsubsection{Definições}
 
 O cálculo lambda serve como uma abstração em cima do conceito de função. Uma função é uma estrutura que pega um \emph{input} e retorna um \emph{output}, por exemplo a função $f(x) = x^2$ pega um input $x$ e retorna seu valor ao quadrado $x^2$. No cálculo lambda, essa função pode ser denotada por $\lambda x. x^2$, onde $\lambda x .$ simboliza que essa função espera receber como entrada $x$. Quando se quer saber qual valor a função retorna para uma entrada específica, são usados números no lugar das variáveis, como por exemplo $f(3) = 3^2 = 9$. No cálculo lambda, isso é feito na forma de $(\lambda x. x^2)(3)$. 
 
@@ -24,7 +29,7 @@ Dadas essas operações, é preciso também de uma definição que dê conta do 
     A $\beta$-redução é o processo de resscrita de uma expressão da forma $(\lambda x . M)N$ em outra expressão $M[x := N]$, ou seja, a expressão $M$ na qual todo $x$ foi substituido por $N$.    
 \end{definition}
 
-\subsection{Sintáxe do Cálculo Lambda}
+\subsubsection{Sintáxe do Cálculo Lambda}
 
 É interessante definir a sintaxe do cálculo lambda de forma mais formal. Para isso, são utilizados métodos que podem ser familiares para aqueles que já trabalharam com lógica proposicional, lógica de primeira ordem ou teoria de modelos.
 
@@ -139,7 +144,7 @@ Vamos definir os termos fechados da seguinte forma:
 
 Os combinadores são muito utilizados na \emph{Lógica Combinatória}, mas vamos explorá-los mais a frente.
 
-\subsection{Conversão}
+\subsubsection{Conversão}
 
 No cálculo Lambda, é possível renomear variáveis ligantes/ligadas, pois a mudança dos nomes dessas variáveis não muda a sua interpretação. Por exemplo, $\lambda x. x^2$ e $\lambda u . u^2$ podem ser utilizadas de forma igual, mesmo que com nomes diferentes. A Renomeação será definida da seguinte forma:
 
@@ -170,7 +175,7 @@ Exemplos:
     \item $(\lambda x . xy) \neq_{\alpha} (\lambda y . yy)$
 \end{enumerate}
 
-\subsection{Substituição}
+\subsubsection{Substituição}
 
 Podemos definir agora a substituição de um termo por outro da seguinte forma:
 
@@ -186,7 +191,7 @@ Podemos definir agora a substituição de um termo por outro da seguinte forma:
 
 A notação $[x := N]$ é uma meta-notação, pois não está definida na sintaxe do cálculo lambda. Na literatura também é possível ver a notação $[N / x]$ para definir a substituição.
 
-\subsection{Beta redução}
+\subsubsection{Beta redução}
 
 Voltando à aplicação, agora com a substituição em mente, podemos dizer que a aplicação de um termo $N$ em $\lambda x . M$, na forma de $(\lambda x . M)N$ é a mesma coisa que $M [x := N]$. Nesse caso, essa única substituição entre termos pode ser descrita na seguinte definição:
 
@@ -259,7 +264,7 @@ Uma extensão dessa $\beta$-redução geral é a $\beta$- conversão, definida c
     \end{enumerate}
 \end{lemma}
 
-\subsection{Forma Normal}
+\subsubsection{Forma Normal}
 
 Podemos definir a hora de parar de reduzir, para isso vamos introduzir o conceito de forma Normal
 
@@ -350,7 +355,7 @@ Vamos provar por indução em $n$:
 \end{enumerate}
 
 
-\subsection{Teorema do ponto fixo}
+\subsubsection{Teorema do ponto fixo}
 
 No Cálculo $\lambda$, todo $\lambda$-termo $L$ possui um \emph{ponto fixo}, ou seja, existe um $\lambda$-termo $M$ tal que $LM =_{\beta} M$. O termo Ponto Fixo vêm da análise funcional: seja $f$ uma função, então $f$ possui um ponto fixo $a$ se $f(a) = a$. 
 
@@ -372,7 +377,7 @@ Logo $LM =_{\beta} M$. $\qed$
 
 Pela prova anterior, podemos perceber que $M$ pode ser generalizado para todo $\lambda$-termo. Esse $M$ será denominado de \emph{Combinador de ponto fixo} e escrito na forma: $$Y \equiv \lambda y . (\lambda x . y(xx))(\lambda x . y(xx)) $$
 
-\subsection{Eta redução}
+\subsubsection{Eta redução}
 
 A junção da definição 0.8 com as definições de $\beta$-redução gera uma teoria que será chamada aqui de $\lambda_{\beta}$. Para essa teoria, faltam alguns detalhes que podem, ou não, ser introduzidos a depender do que se precisa.
 
@@ -390,11 +395,10 @@ A junção da teoria $\lambda$ com a $\eta$-redução será chamada aqui de $\la
 Uma outra adição possível à teoria $\lambda$ é chamada de extencionalidade e definida da seguinte forma:
 
 \begin{definition}[extencionalidade \textbf{Ext}]
-    Dados os termos $M$ e $N$, se $M x = N x$, com $x \not\in FV(MN)$, então $M = N$.
+    Dados os termos $M$ e $N$, se $M x = N x$ para todo $\lambda$-termo $x$, com $x \not\in FV(MN)$, então $M = N$.
 \end{definition}
 
-
-Ou seja, dois termos (ou funções) são iguais caso eles dêem saídas iguais para a mesma aplicação.
+\textbf{Ext} introduz no cálculo $\lambda$ a noção presente na teoria dos conjuntos de igualdade entre funções. Na teoria dos conjuntos, duas funções $f : A \to B$ e $g : A \to B$ são iguais se, para todo $x \in A$, $f(x) = g(x)$. 
 
 A união da teoria $\lambda$ com \textbf{Ext} é chamada de $\lambda + \text{\textbf{Ext}}$. 
 
@@ -407,10 +411,18 @@ A união da teoria $\lambda$ com \textbf{Ext} é chamada de $\lambda + \text{\te
 
 Segundo, é necessário mostrar que dado $Mx = Nx$, é possível derivar $M = N$ em $\lambda_{\beta \eta}$. Para isso, seja $Mx = Nx$, realizando $\xi$-redução, tem-se que $\lambda x . Mx = \lambda x . Nx$. Fazendo $\eta$-redução dos dois lados, $M = N$. $\qed$
 
+Existe uma outra formulação da extencionalidade dentro do cálculo $\lambda$ chamado de regra $\omega$. É necessário um equivalente à \textbf{Ext} para restrições do cálculo $\lambda$ que só possuem termos fechados, para isso, é desenvolvida a regra $\omega$:
+
+\begin{definition}[Regra $\omega$]
+    Dados os termos $M$ e $N$, se $MQ = NQ$ para todo termo fechado $Q$, então $M = N$.
+\end{definition}
+
+Da regra $\omega$ é possível deduzir \textbf{Ext}, mas não o oposto. A prova dessa dedução não será mostrada.
+
 Posteriormente, será feito uma discussão de teorias dos tipos que aceitam \textbf{Ext} como um axioma no estilo de $\lambda + \text{\textbf{\emph{Ext}}}$ e outras que conseguem derivar a extencionalidade através de outras propriedades, como $\lambda_{\beta \eta}$. 
 
 
-\subsection{Codificações dentro do Cálculo \texorpdfstring{$\lambda$}.}
+\subsubsection{Codificações dentro do Cálculo \texorpdfstring{$\lambda$}.}
 
 O primeiro exemplo de transformação de funções em $\lambda$-termos, $f(x) = x^2$ para $\lambda x . x^2$, pode parecer correto, mas supõe mais que foi definido até então. Pois partindo somente da sintaxe e das transformações vistas nas seções anteriores, não foi definido coisas básicas como o que significa a exponenciação ou o número $2$. Se o cálculo $lambda$ é colocado como um possível substituto para a teoria das funções baseada na teoria dos conjuntos, então ele deve ser capaz de definir todas essas coisas de forma interna. Por isso, foram desenvolvidas as \emph{codificações}, das quais a primeira e mais conhecida é a \emph{Codificação de Church} (Church Encoding).
 
@@ -507,17 +519,11 @@ Exemplos:
     \end{equation*}
 \end{enumerate}
 
+\subsection{Modelos}
 
-\subsection{Apêndice I - Lógica Combinatória}
+\subsection{Codificação em Coq}
 
-...
-
-\subsection{Apêndice II - Construindo o Cálculo $\lambda$ não tipado em Coq}
-
-...
-
-\subsection{Apêndice III - A história do cálculo $\lambda$ não tipado}
-
+\subsection[A História do Cálculo Lambda]{A História do cálculo $\lambda$}
 ...
 
 \end{document}

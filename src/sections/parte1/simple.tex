@@ -1,0 +1,67 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+
+\section{Teoria dos Tipos Simples}
+
+O cálculo $\lambda$ não-tipado possui alguns entraves ao tentar traduzir as funções matemáticas para seus termos. Um desses entraves é o fato que as funções matemáticas são mapeamentos entre dois conjuntos. Ou seja, essas funções possuem em sua definição os valores que vão esperar e os possíveis valores que vão retornar. A função soma $+:\mathbb{N} \to \mathbb{N}$ não pode aceitar os valores $true$ ou $false$. Porém, nas codificações do cálculo $\lambda$ descrito até então (Sem contar com os modelos), isso é possível. Por exemplo, é possível perceber que $false$ e $0$ são definidos pelo mesmo termo $\lambda xy . y$ (a definição de $0$ é $\alpha$-equivalente a essa), o que pode gerar confusão em sua aplicação.
+
+Outro problema do Cálculo $\lambda$ não-tipado é o fato de poder existir recursões infinitas através de termos como $\Omega$ e $\Delta$. A tipagem dos termos faz com que esse tipo de fenômeno não ocorra. O que retira a Turing-completude, mas facilita outras coisas.
+
+Para fazer essa descrição ser mais detalhada e evitar esse tipo de erro, Church introduziu tipos.
+
+\subsection[Cálculo lambda simplesmente tipado (STLC)]{Cálculo $\lambda$ simplesmente tipado (ST$\lambda$C)}
+
+\subsubsection{Tipos simples}
+
+Uma forma simples de começar a tipagem dos $\lambda$-termos é considerando uma coleção de variáveis de tipos e uma forma de produzir mais tipos através dessa coleção, chamado de \emph{tipo funcional}
+
+Seja $\mathbb{V}$ a coleção infinita de variáveis de tipos $\mathbb{V} = \{ \alpha, \beta, \gamma, \dots \}$, então:
+
+\begin{definition}[A coleção de todos os tipos simples]
+    A coleção dos tipos simples $\mathbb{T}$ é definida por:
+    \begin{enumerate}
+        \item (Variável de tipos) Se $\alpha \in \mathbb{V}$,  então $\alpha \in \mathbb{T}$
+        \item (Tipo funcional) Se $\sigma, \tau \in \mathbb{T}$, então $(\sigma \to \tau) \in \mathbb{T}$.
+    \end{enumerate}
+    Na BNF, $\mathbb{T} = \mathbb{V} | \mathbb{T} \to \mathbb{T}$
+\end{definition}
+
+Os parenteses no tipo funcional são associativos à direita, ou seja o tipo $\alpha_1 \to \alpha_2 \to \alpha_3 \to \alpha_4$ é $(\alpha_1 \to (\alpha_2 \to (\alpha_3 \to \alpha_4)))$
+
+Tipos simples arbitrários serão escritos com letras gregas minúsculas (Com excessão do $\lambda$) como $\sigma, \tau, \dots$, mas também podem ser escrito como letras latinas maiúsculas $A, B, \dots$ na literatura.
+
+
+As variáveis de tipos são representações abstratas de tipos básicos como os números naturais $\mathbb{N}$ ou a coleção de todas as listas $\mathbb{L}$. Esses tipos serão explorados mais à frente. Já os tipos funcionais representam funções na matemática como por exemplo $\mathbb{N} \to \mathbb{N}$, o conjunto de funções que leva dos naturais para os naturais, ou $(\mathbb{N} \to \mathbb{Z}) \to \mathbb{Z} \to \mathbb{N}$, o conjunto de funções que recebem como entrada uma função que leva dos naturais aos inteiros e um inteiro e retorna um natural.
+
+A sentença "O termo $M$ possui tipo $\sigma$" é escrita na forma $M : \sigma$. Todo termo possui um tipo único, logo se $x$ é um termo e $x : \sigma$ e $x : \tau$, então $\sigma \equiv \tau$.
+
+Como os tipos foram introduzidos para lidar com o cálculo $\lambda$, eles devem ter regras para lidar com as operações de aplicação e abstração.
+
+\begin{enumerate}
+    \item (\emph{Aplicação}): No cálculo $\lambda$, sejam $M$ e $N$ termos, podemos fazer uma aplicação entre eles no estilo $MN$. Para entender como entram os tipos, é possível recordar de onde surge a intuição para a aplicação. Seja $f : \mathbb{N} \to \mathbb{N}$ a função $f(x) = x^2$, então, a aplicação de $3$ em $f$ é $f(3) = 3^2$. Nesse exemplo, omite-se o fato que para aplicar $3$ a $f$, $3$ tem que estar no domínio de $f$, ou seja, $3 \in \mathbb{N}$. No caso do cálculo $\lambda$, para aplicar $N$ em $M$, $M$ deve ter um tipo funcional, na forma $M : \sigma \to \tau$, e $N$ deve ter como tipo o primeiro tipo que aparece em $M$, ou seja $N : \sigma$. 
+    \item (\emph{Abstração}): No cálculo $\lambda$, seja $M$ um termo, podemos escrever um termo $\lambda x . M$. A abstração "constroi" a função. Para a tipagem, seja $M : \tau$ e $x : \sigma$, então $\lambda x : \sigma . M : \sigma \to \tau$. É possível omitir o tipo da variável, escrevendo no estilo: $\lambda x . M : \sigma \to \tau$.
+\end{enumerate}
+
+
+Alguns exemplos:
+
+\begin{enumerate}
+    \item Seja $x$ do tipo $\sigma$, a função identidade é escrita na forma $\lambda x . x : \sigma \to \sigma$.
+    \item O combinador $\text{\textbf{B}} \equiv \lambda xyz . x(yz)$ é tipado na forma $\text{\textbf{B}} : (\sigma \to \tau) \to (\rho \to \sigma) \to \rho \to \tau$.
+    \item O combinador $\Delta \equiv \lambda x . xxx$ não possui tipagem. Isso ocorre pois, na aplicação $xx$, $x$ precisa ter como tipo $\sigma \to \tau$ e $\sigma$, mas como $x$ só pode ter um tipo, então $\sigma \to \tau \equiv \sigma$. O que não é possível em $\mathbb{T}$. Logo $\Delta$ (e $\Omega$ por motivos similares), não faz parte da teoria dos tipos simples.
+\end{enumerate}
+
+O último exemplo mostra que o teorema do ponto fixo não ocorre para todos os termos na teoria dos tipos simples e que não existe recursão infinita, fazendo com que a teoria dos tipos simples deixe de ser turing-completa.
+
+\subsubsection{Abordagens para a tipagem}
+
+Existem duas formas de tipar um $\lambda$-termo:
+
+\begin{enumerate}
+    \item (\emph{Tipagem à la Church} / \emph{Tipagem explícita} / \emph{Tipagem extrínseca} / \emph{Tipagem ontológica}) Pode-se prescrever um tipo único à cada variável quando ela for introduzida. Nesse estilo de tipagem, só termos que podem ser bem formados são aceitos. 
+    \item (\emph{Tipagem à la Curry} / \emph{Tipagem implícita} / \emph{Tipagem intrínseca} / \emph{Tipagem semântica}) Pode-se não definir o tipo do termo na sua introdução, mas deixá-lo aberto. Os tipos são buscados para o termo, por tentativa e erro.
+\end{enumerate}
+
+\end{document}
