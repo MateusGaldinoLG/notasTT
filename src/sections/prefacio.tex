@@ -4,13 +4,31 @@
 
 \section{Prefácio}
 
-Esse conjunto de notas reunidas aqui estão relacionadas à Teoria dos Tipos, suas subáreas (Por exemplo, a Teoria dos Tipos Homotópica) e suas áreas irmãs (Teoria das Categorias, etc). Para isso, vou me basear nos seguintes textos:
 
-Para algumas sitações que eu queria explicitar, usarei as seguintes abreviações:
+A Teoria dos Tipos é uma área nova crescente de ampla interseção com outras áreas também novas ou áreas já consolidadas. Essa interseção dá frutos práticos interessantes para as áreas envolvidas. Por exemplo: no campo da computação, a maioria das linguagens de programação possui tipagem e, sem entrar no mérito das diferentes abordagens de tipagem para cada linguagem, é possível descrever a tipagem delas utilizando uma teoria dos tipos adequada. Já no campo da matemática, é possível perceber que as teorias dos tipos descritas aqui possuem modelos conhecidos na teoria das categorias que permitem formulações de objetos matemáticos já conhecidos (como Grupos, Espaços Topológicos, etc). No meio desses dois exemplos, existe a tentativa de aproximar a computação dos fundamentos da matemática a partir de assistentes de prova. 
 
-\noindent[HoTT] = Homotopy Type Theory: Univalent foundations of mathematics. Voevodsky et al. \newline
-[TTFP] = Type Theory and Formal Proof. Geuvers e Nederpelt \newline
-[TPL] = Types and Programming Languages. Benjamin Pierce \newline
-[IHoTT] = Introduction to Homotopy Type Theory. Egbert Rijke \newline
+Essas notas foram escritas por dois fins. O primeiro é expor em lingua portuguesa a vasta gama de conceitos explorados na teoria dos tipos, deixando essa área da matemática e da computação o mais acessível possível para iniciantes vindos de diversos ambientes. Em lingua inglesa, já existem várias fontes possíveis para adentrar essa teoria, que serão referenciadas a partir dessas notas, mas em português as poucas fontes que existem estão em dissertações acadêmicas pouco preocupadas com a difusão das ideias para fora de seus nichos. O segundo fim é, em certa medida, conseguir, através dessa exposição, que mais e mais pessoas tenham interesse pelo assunto e começem a pesquisar, visto que nos centros e depertamentos brasileiros, sejan de matemática ou de computação, essa área recebe pouca a nenhuma atenção, já que os professores especializados nesses assuntos já não estão comprometidos a ensinar os alunos de graduação essa área. Dessa forma, essas notas também se colocam como um desafio: ensinar o máximo de teoria dos tipos possível para alunos de graduação. 
+
+Essas notas então podem ser utilizadas sem dúvida por professores que queiram se aventurar no ensino da teoria dos tipos.
+
+A primeira parte tenta desenvolver as diversas teorias de tipos denominadas de $\lambda$-cubo. Essa primeira parte usa como base (o primeiro subcapítulo de cada capítulo) o livro \emph{Type Theory and Formal Proof} de Nederpelt e Geuvers, mas adentra tópicos mais profundos em cada teoria. 
+
+Já a segunda parte desenvolve outras construções paralelas ao $\lambda$-cubo, derivadas do $\lambda$-calculo não-tipado, como o $\lambda\mu$-cálculo e o $\kappa$-cálculo. Cada cálculo é retirado de artigos diferentes e compilados no mesmo lugar.
+
+A parte três desenvolve a teoria das categorias necessária para a semântica de cada uma das teorias dos tipos desenvolvidas nas partes I e II, desenvolvendo o conceito de categorias até a teoria dos Topos e construções paralelas. Essa parte é bastante influenciada pelo livro \emph{Introduction to Higher Order Categorical Logic} de Lambek e Scott.
+
+A parte IV entra nas diversas teorias homotópicas de tipos, desde sua precursora, a \emph{Teoria dos Tipos de Martin-Löf}, e a original do livro \emph{Homotopy Type Theory} até construções mais recentes. A maioria dessas teorias está espalhada em diversos artigos, então o trabalho aqui se torna compilá-las em um único lugar de forma a criar um fio condutor entre elas.
+
+A parte V dessenvolve a semântica categorial das HoTT utilizando conceitos da teoria das $\infty$-categorias, teoria das homotopias (em suas versões simpliciais e cúbicas) e conceitos já trabalhados na parte III. 
+
+A parte VI é a parte final e serve como apêndice para colocar definições voltadas para a lógica e a teoria da prova, com a exposição do cálculo de sequêntes, da dedução natural e de outras áreas correlatas. Essa parte trás inspiração no livro \emph{Logic and Structure} do Dirk van Dalen e \emph{An Introduction to Proof Theory} de Galvan et al.
+
+Links importantes:
+
+\begin{itemize}
+    \item Caso o leitor encontre algum erro ou problema nas notas, por favor avisar em \url{https://github.com/MateusGaldinoLG/notasTT/issues}.
+    \item Caso o leitor queira contribuir no geral com adição ou escrita de temas: \url{https://github.com/MateusGaldinoLG/notasTT}
+    \item Para verificar o progresso da escrita do livro: \url{https://github.com/MateusGaldinoLG/notasTT/blob/main/README.md}
+\end{itemize}
 
 \end{document}

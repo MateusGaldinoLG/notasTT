@@ -6,6 +6,7 @@ Esse repositório serve para a escrita de um conjunto de notas que quero faze re
 [TTFP] = Type Theory and Formal Proof. Geuvers e Nederpelt  
 [TPL] = Types and Programming Languages. Benjamin Pierce  
 [IHoTT] = Introduction to Homotopy Type Theory. Egbert Rijke  
+etc.
 
 
 ## O que foi feito até agora e os planos para os próximos passos
@@ -35,10 +36,15 @@ Parte I - O Cubo Lambda
 2.1 O cálculo Lambda simplesmente tipado  
 [x] Motivação  
 [x] Sintaxe     
-[ ] Abordagens para a tipagem   
-[ ] Cálculo de sequêntes  
-[ ] Problemas possíveis     
-[ ] Propriedades    
+[x] Abordagens para a tipagem   
+[x] Cálculo de sequêntes  
+[x] Problemas possíveis     
+[x] Bem-tipagem  
+[x] Checagem de tipos  
+[x] Encontrar o termo  
+[ ] Propriedades   
+[ ] Redução  
+[ ] [Fazer a ND fitch funcionar]  
 2.2. Construções em cima do STLC  
 [ ] O tipo de produto [Currying]  
 [ ] O Sistema T de Gödel  
@@ -93,14 +99,17 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 
 
 Parte II - Construções paralelas ao cubo
-1. O cálculo Kappa  
+1. O cálculo lambda-mu  
+[ ] Sintaxe  
+[ ] Modelagem da lógica clássica  
+2. O cálculo Kappa  
 [ ] Sintaxe  
 (hasegawa - decomposing)   
 2. O cálculo Zeta  
 [ ] Teoria dos tipos em computadores quânticos  
 
 
-Parte II - Semântica categorica do cubo  
+Parte III - Semântica categorica do cubo  
 1. Um resumo de teoria das categorias  
 [ ] Categorias  
 [ ] Categorias novas de antigas  
@@ -127,9 +136,9 @@ Parte II - Semântica categorica do cubo
 [ ] A semântica categorial da teoria dos tipos modal  
 
 
-Parte III - As várias teorias homotópicas de tipos  
+Parte IV - As várias teorias homotópicas de tipos  
 1. Teoria dos Tipos Dependentes novamente, no estilo de Martin-Löf  
-[ ] Intuicionismo e Construtivismo  
+[ ] Intuicionismo e Construtivismo  (Interpretação BHK)  
 [ ] Dedução natural e cálculo de sequêntes revisitados  
 [ ] Tipos Pi revisitados  
 [ ] Tipos Sigma  
@@ -175,3 +184,34 @@ Parte III - As várias teorias homotópicas de tipos
 [ ] Apêndice I - ...  
 [ ] Apêndice II - DTT em agda    
 [ ] Apêndice III - História de H.O.T.T e DTT
+
+Parte V - Semântica categorial de HOTT
+
+Parte VI - Lógica
+1. Dedução natural   
+[ ] Regras   
+[ ] Fragmento mínimo, fragmento intuicionista, fragmento clássico  
+[ ] Fragmento dual-intuicionista
+2. Cálculo de Sequêntes  
+[ ] Regras  
+[ ] Fragmento mínimo, fragmento intuicionista, fragmento clássico  
+[ ] Fragmento dual-intuicionista  
+3. Algebras de Heyting  
+[ ] Definição  
+[ ] Topos gerado  
+4. Semântica de Kripke  
+[ ] Definição  
+5. Lógica modal  
+[ ] Definição  
+6. Lógica paraconsistente  
+[ ] Definição  
+[ ] Cálculo de sequêntes  
+7. Lógica linear  
+[ ] Definição  
+[ ] Cálculo de sequêntes
+8. Teorema da incompletude de Gödel  
+[ ] Definição  
+
+Coisas que precisam ser feitas a nível estético/literário:  
+[ ] Corrigir erros de digitação e de primeira/terceira pessoa  
+[ ] Transformar as citações em ABNT

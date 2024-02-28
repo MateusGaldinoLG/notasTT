@@ -60,8 +60,504 @@ O último exemplo mostra que o teorema do ponto fixo não ocorre para todos os t
 Existem duas formas de tipar um $\lambda$-termo:
 
 \begin{enumerate}
-    \item (\emph{Tipagem à la Church} / \emph{Tipagem explícita} / \emph{Tipagem extrínseca} / \emph{Tipagem ontológica}) Pode-se prescrever um tipo único à cada variável quando ela for introduzida. Nesse estilo de tipagem, só termos que podem ser bem formados são aceitos. 
-    \item (\emph{Tipagem à la Curry} / \emph{Tipagem implícita} / \emph{Tipagem intrínseca} / \emph{Tipagem semântica}) Pode-se não definir o tipo do termo na sua introdução, mas deixá-lo aberto. Os tipos são buscados para o termo, por tentativa e erro.
+    \item (\emph{Tipagem à la Church} / \emph{Tipagem explícita} / \emph{Tipagem intrínseca} / \emph{Tipagem ontológica}) Nesse estilo de tipagem, só termos que possuem tipagem que satisfaz a construção de tipos interna à teoria são aceitos. Cada termo possui um tipo único.
+    \item (\emph{Tipagem à la Curry} / \emph{Tipagem implícita} / \emph{Tipagem extrínseca} / \emph{Tipagem semântica}) Nesse estilo de tipagem, os termos são os mesmos do cálculo $\lambda$ não tipado e pode-se não definir o tipo do termo na sua introdução, mas deixá-lo aberto. Os tipos são buscados para o termo, por tentativa e erro.
 \end{enumerate}
+
+
+\textbf{Exemplos}
+
+\begin{enumerate}
+    \item (Tipagem intrínseca): Seja $x$ do tipo $\alpha \to \alpha$ e $y$ do tipo $(\alpha \to \alpha) \to \beta$, então $yx$ possui o tipo $\beta$. Se $z$ possuit tipo $\beta$ e $u$ possuir tipo $\gamma$, então $\lambda zu . z$ tem tipo $\beta \to \gamma \to \beta$ e a aplicação $(\lambda zu . z)(yx)$ é permitida pois o tipo $\beta$ de $yx$ equivale ao tipo $\beta$ que $\lambda zu . z$ recebe.
+    \item (Tipagem extrínseca): Nessa tipagem, começa-se com o termo $M \equiv (\lambda zu . z)(yx)$ e tenta-se adivinhar qual seu tipo e o tipo de suas variáveis. É possível notar que $(\lambda zu . z)(yx)$ é uma aplicação, então $(\lambda zu . z)$ precisa ter um tipo $A \to B$, $yx$ precisa ter um tipo $A$ e $M$ terá um tipo $B$. Mas se $\lambda zu . z$ possui o tipo $A \to B$, então $\lambda u . z$ possui o tipo $B$ e, como o termo é uma abstração, $B$ precisa ser um tipo funcional, ou seja $B \equiv C \to D$. Logo $u : C$ e $z : D$. Já no caso de $yx : A$, $y$ precisa ter um tipo funcional para ser aplicado a $x$, logo sendo $x : E$, $y : E \to F$. Logo temos que $x : E, y : E \to A, z : A, u : C$. Só é necessário então substituir $A, C, E$ com tipos variáveis como $\alpha, \beta, \gamma$: $x : \alpha, y : \alpha \to \beta, z : \beta, u : \gamma$.
+\end{enumerate}
+
+No caso do exemplo 2, é possível escrever $x : \alpha, y : \alpha \to \beta, z : \beta, u : \gamma \vdash (\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$. A lista à esquerda da $\vdash$ (lê-se catraca) é chamada de \emph{contexto}.
+
+\subsubsection{Regras de derivação e Cálculo de sequêntes}
+
+É necessário, na tipagem intrínseca, definir a coleção de todos os $\lambda$-termos tipados:
+
+\begin{definition}[$\lambda$-termos pré-tipados]
+    A coleção $\Lambda_{\mathbb{T}}$ de $\lambda$-termos pré-tipados é definida pela BNF: \\
+    $\Lambda_{\mathbb{T}} = V | (\Lambda_{\mathbb{T}} \Lambda_{\mathbb{T}}) | (\lambda V :  \mathbb{T} . \Lambda_{\mathbb{T}})$
+\end{definition}
+
+Para expressar as tipagens dos $\lambda$-termos, é necessário desenvolver um conjunto de definições que ainda não foram mostradas:
+
+\begin{definition}
+    \hfil
+    \begin{enumerate}
+        \item Uma \emph{sentença} é $M : \sigma$, onde $M \in \Lambda_{\mathbb{T}}$ e $\sigma \in \mathbb{T}$. Nessa sentença, $M$ é chamado de \emph{sujeito} e $\sigma$ de \emph{tipo}
+        \item  Uma \emph{declaração} é uma sentença com uma \emph{variável} como sujeito
+        \item Um \emph{Contexto} é uma lista, possivelmente nula, de declarações com diferentes sujeitos
+        \item Um \emph{Juizo} possui a forma $\Gamma \vdash M : \sigma$, onde $\Gamma$ é o contexto e $M : \sigma$ é uma sentença.
+    \end{enumerate}
+\end{definition}
+
+Para estudar a tipagem, será utilizado um sistema de derivações trazido da lógica chamado de \emph{Cálculo de sequêntes}. O cálculo de sequêntes dá a possibilidade de gerar juizos de forma formal utilizando árvores de derivação no estilo: 
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$\text{premissa } 1$}
+
+    \AxiomC{$\text{premissa } 2$}
+
+    \AxiomC{$\dots$}
+
+    \AxiomC{$\text{premissa } n$}
+
+    \RightLabel{}
+    \QuaternaryInfC{$\text{Conclusão}$}
+\end{prooftree}
+
+
+Acima da linha horizontal estão as premissas, que são cada uma um juizo, e abaixo da linha horizontal está a conclusão, que é em si um juizo também. A linha marca uma regra de derivação específica da teoria que se está trabalhando.
+
+\begin{definition}[Regras de derivação para o ST$\lambda$C]
+    \hfil
+    \begin{itemize}
+        \item (\emph{var}) $\Gamma \vdash x : \sigma$, dado que $x : \sigma \in \Gamma$.
+        \item (\emph{appl}) \begin{prooftree}
+            \def\fCenter{\mbox{\ $\vdash$\ }}
+            \AxiomC{$\Gamma \vdash M : \sigma \to \tau$}
+            \AxiomC{$\Gamma \vdash N : \sigma$}
+            \RightLabel{appl}
+            \BinaryInfC{$\Gamma \vdash MN : \tau$}
+        \end{prooftree}
+        \item (\emph{abst}) \begin{prooftree}
+            \def\fCenter{\mbox{\ $\vdash$\ }}
+            \AxiomC{$\Gamma, x : \sigma \vdash M : \tau$}
+            \RightLabel{abst}
+            \UnaryInfC{$\Gamma \vdash \lambda x : \sigma . M : \sigma \to \tau$}
+        \end{prooftree}
+    \end{itemize}
+\end{definition}
+
+A regra \emph{(var)} não possui premissas e possui como conclusão o fato que dado um contexto $\Gamma$, se existe uma declaração em $\Gamma$, essa declaração é derivável através de $\Gamma$. Essa primeira regra é tratada como axioma em (Hindley, 1997), pois, assim como todo axioma, ela é derivável sem precisar de premissas. Na construção da árvore de dedução, essa regra está no topo como uma "raiz".
+
+A regra \emph{(appl)} é equivalente no cálculo ao que foi feito antes. Essa regra também é chamada na literatura de $\to - elim$ ou $\to E$
+
+A regra \emph{(abs)} é equivalente no cálculo à abstração e pode ser chamada na literatura de $\to - intro$ ou $\to I$.
+
+\textbf{Exemplo:}
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{(1) $y : \alpha \to \beta, z : \alpha \vdash y : \alpha \to \beta$}
+    \AxiomC{(2) $y : \alpha \to \beta, z : \alpha \vdash z : \beta$}
+    \RightLabel{appl}
+    \BinaryInfC{(3) $ y : \alpha \to \beta, z : \alpha \vdash yz : \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{(4) $ y : \alpha \to \beta \vdash \lambda z : \alpha . yz : \alpha \to \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{(5) $\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : (\alpha \to \beta) \to \alpha \to \beta$}
+\end{prooftree}
+
+Dada a derivação já montada, sua leitura pode ser feita de baixo para cima, feito levando em conta as premissas mais fundamentais até a conclusão final, de forma a adicionar informação aos juízos a cada passo, ou de cima para baixo, feito para entender qual caminho leva até o objetivo final.
+
+\begin{enumerate}
+    \item Os passos (1) e (2) usam a regra (\emph{var})
+    \item O passo (3) usa a regra (\emph{app}) usando (1) e (2) como premissas
+    \item O passo (4) usa a regra (\emph(abs)) com (3) como premissa
+    \item O passo (5) usa a regra (\emph(abs)) com (4) como premissa
+\end{enumerate}
+
+As regras de derivação podem ser entendidas em outros contextos:
+
+\emph{Matemática}: Seja $A \to B$ o conjunto de todas as funções de $A$ para $B$, então as regras se tornam:
+\begin{enumerate}
+    \item (\emph{aplicação funcional}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{se $f$ é um membro de $A \to B$}
+        \AxiomC{e se $c \in A$}
+        \BinaryInfC{então $f(c) \in B$}
+    \end{prooftree}
+    \item (\emph{abstração funcional}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{Se para $x \in A$ segue-se que $f(x) \in B$}
+        \UnaryInfC{então $f$ é membro de $A \to B$}
+    \end{prooftree}
+\end{enumerate}
+
+\emph{Lógica}: Seja $A \Rightarrow B$ "$A$ implica em $B$", então pode-se ler $A \to B$ como $A \Rightarrow B$. As regras se tornam:
+
+\begin{enumerate}
+    \item ($\Rightarrow - elim$) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$A \to B$}
+        \AxiomC{$A$}
+        \BinaryInfC{$B$}
+    \end{prooftree}
+    \item ($\Rightarrow - intro$) \begin{prooftree}
+        \alwaysNoLine
+        \AxiomC{$A$}
+        \UnaryInfC{$\vdots$}
+        \alwaysSingleLine
+        \UnaryInfC{$B$}
+    \end{prooftree}
+\end{enumerate}
+
+
+A regra de eliminação é denominada de \emph{Modus Ponens}. Ambas as regras como estão escritas aí são parte das regras definidas na \emph{Dedução Natural}, um cálculo análogo ao cálculo de sequêntes (Toda árvore definida na dedução natural possui um equivalente no cálculo de sequêntes). Esse estilo de dedução natural é chamado de \emph{Dedução natural no estilo de Gentzen}, para diferenciá-lo da \emph{Dedução natural no estilo de Fitch} que é escrito como:
+
+% \begin{equation*}
+%     \begin{fitch}
+%     \fh A A A & Assumption \\
+%     \fa B B B & Main Proof Step \\
+%     \fa C C C & Another Main Proof Step\\
+%     \fa \fh D D D & New Assumption \\
+%     \fa \fa E E E & Subproof Step \\
+%     \fa \fa F F F & Another Subproof Step \\
+%     \fa G G G & Main Proof Step \\
+%     \fa H H H & Main Proof Step
+%     \end{fitch}
+%     \end{equation*}
+
+\begin{definition}[$\lambda_\to$-termos legais]
+    Um termo $M$ pré-tipado em $\lambda_\to$ é chamado \emph{legal} se existe um contexto $\Gamma$ e um tipo $\rho$ tal que $\Gamma \vdash M : \rho$.
+\end{definition}
+
+\subsubsection{Problemas resolvidos no STLC}
+
+No geral, existem três tipos de problemas relacionados a julgamentos na teoria dos tipos:
+
+\begin{enumerate}
+    \item \emph{Bem-tipagem} (\emph{Well-typedness}) ou \emph{Tipabilidade}: esse problema surge da questão $$? \vdash \text{termo } : ?$$ Ou seja, saber se um termo é legal e, se não é, mostrar onde sua contrução falha. \\
+    (1a) \emph{Atribuição de tipos}, que surge da questão: $$\text{contexto } \vdash \text{termo } : ?$$. Ou seja, dado um contexto e um termo, derive seu tipo.
+    \item \emph{Checagem de tipos}, que surge da questão $$\text{contexto } \vdash^{?} \text{termo } : \text{tipo}$$. Ou seja, se é realmente verdadeiro que o termo possui o tipo no determinado contexto.
+    \item \emph{Encontrar o termo}, que surge da questão: $$\text{contexto } \vdash ? : \text{tipo}$$. Um tipo particular desse problema é quando o contexto é vazio, ou seja $$\emptyset \vdash ? : \text{tipo}$$. 
+\end{enumerate}
+
+Todos esses problemas são \emph{decidíveis} em $\lambda_\to$. Ou seja, para cada um deles existe um \emph{algoritmo} (um conjunto de passos) que produz a resposta. Em outros sistemas, encontar um termo se torna \emph{indecidível}.
+
+\subsubsection{Bem-tipagem em $\lambda_\to$}
+
+Para exemplificar os passos necessários para resolver a bem-tipagem em $\lambda_\to$, será utilizado o exemplo descrito em 1.1.3, dessa vez passo a passo.
+
+O objetivo é mostrar que o termo $M \equiv \lambda y : \alpha \to \beta . \lambda z : \alpha . yz$ é um termo legal. Logo, precisamos encontrar um contexto $\Gamma$ e um tipo $\rho$ tal que $\Gamma \vdash M : \rho$.
+
+Primeiro, como não existem variáveis livres em $M$, o contexto inicial pode ser considerado vazio: $\Gamma = \emptyset$.
+
+Inicialmente, o primeiro passo é descobrir qual a premissa, ou premissas, que gera o termo e a regra de dedução:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+Como a primeira parte do termo é um $\lambda y$, a única regra possível inicialmente é a abstração:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+Novamente, a única regra possível é a abstração:
+
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$ y : \alpha \to \beta, z : \alpha  \vdash yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+Sobrou do lado direito da catraca o termo $yz$ que, vendo o contexto, é a aplicação de outros dois termos, logo a única regra possível é a aplicação:
+
+\begin{prooftree}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash y : \alpha \to \beta$}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash z : \beta$}
+    \RightLabel{appl}
+    \BinaryInfC{$ y : \alpha \to \beta, z : \alpha  \vdash yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+Como as premissas mais superiores são geradas de (\emph{var}), não há mais nenhum passo de premissas e a tipagem pode ser realizada de cima para baixo.
+
+\begin{prooftree}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash y : \alpha \to \beta$}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash z : \beta$}
+    \RightLabel{appl}
+    \BinaryInfC{$ y : \alpha \to \beta, z : \alpha  \vdash yz : \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \dots$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+
+\begin{prooftree}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash y : \alpha \to \beta$}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash z : \beta$}
+    \RightLabel{appl}
+    \BinaryInfC{$ y : \alpha \to \beta, z : \alpha  \vdash yz : \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \alpha \to \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : \dots$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash y : \alpha \to \beta$}
+    \AxiomC{$y : \alpha \to \beta, z : \alpha \vdash z : \beta$}
+    \RightLabel{appl}
+    \BinaryInfC{$ y : \alpha \to \beta, z : \alpha  \vdash yz : \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{$ y : \alpha \to \beta  \vdash \lambda z : \alpha . yz : \alpha \to \beta$}
+    \RightLabel{abs}
+    \UnaryInfC{$\emptyset \vdash \lambda y : \alpha \to \beta . \lambda z : \alpha . yz : (\alpha \to \beta) \to \alpha \to \beta$}
+\end{prooftree}
+
+Se existisse algum problema no caso de encontrar variáveis com tipagem incongruente nas últimas premissas ou não ter mais nenhum passo, então o termo não seria bem-tipado.
+
+% \begin{mathpar}
+%     \inferrule
+%         { aa \\ bb }
+%         { cc }
+%     \quad(\textsc { Yop })
+% \end{mathpar}
+
+
+\subsubsection{Checagem de tipos em $\lambda_\to$}
+
+Seja o juizo $$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash (\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$$
+
+é necessário construir uma árvore de inferências que demonstre que $\gamma \to \beta$ é o tipo correto do termo do lado direito.
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash^?(\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$}
+\end{prooftree}
+
+Usando a regra da aplicação, tem-se:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash \lambda z : \beta . \lambda u : \gamma . z : \text{ ? }$}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash yx : \text{ ? }$}
+    \RightLabel{appl}
+    \BinaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash^?(\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$}
+\end{prooftree}
+
+O lado direto se segue da regra da aplicação:
+
+\begin{prooftree}
+    \AxiomC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash x : \alpha \to \alpha$}
+    \AxiomC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash y : (\alpha \to \alpha) \to \beta $}
+    \RightLabel{appl}
+    \BinaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash yx : \text{ ? }$}
+\end{prooftree}
+
+Usando essa subárvore, pode-se ver que $yx$ possui o tipo $yx : \beta$.
+
+O lado esquerdo se segue da abstração:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta \vdash \lambda u : \gamma . z : \text{ ? }$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash \lambda z : \beta . \lambda u : \gamma . z : \text{ ? }$}
+\end{prooftree}
+
+abstraindo novamente:
+
+\begin{prooftree}
+    \AxiomC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta, u : \gamma \vdash z : \beta $}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta \vdash \lambda u : \gamma . z : \text{ ? }$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash \lambda z : \beta . \lambda u : \gamma . z : \text{ ? }$}
+\end{prooftree}
+
+Agora, é possível "descer" novamente "coletando" os tipos que foram deixados para trás:
+
+\begin{prooftree}
+    \AxiomC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta, u : \gamma \vdash z : \beta $}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta \vdash \lambda u : \gamma . z : \gamma \to \beta$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash \lambda z : \beta . \lambda u : \gamma . z : \text{ ? }$}
+\end{prooftree}
+
+e
+
+\begin{prooftree}
+    \AxiomC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta, u : \gamma \vdash z : \beta $}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta, z : \beta \vdash \lambda u : \gamma . z : \gamma \to \beta$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash \lambda z : \beta . \lambda u : \gamma . z : \beta \to \gamma \to \beta$}
+\end{prooftree}
+
+Seja $\Gamma \equiv x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta$, a árvore completa fica:
+
+
+\begin{prooftree}
+    \AxiomC{$\Gamma, z : \beta, u : \gamma \vdash z : \beta $}
+    \RightLabel{abst}
+    \UnaryInfC{$\Gamma, z : \beta \vdash \lambda u : \gamma . z : \gamma \to \beta$}
+    \RightLabel{abst}
+    \UnaryInfC{$\Gamma \vdash \lambda z : \beta . \lambda u : \gamma . z : \beta \to \gamma \to \beta$}
+    
+    \AxiomC{$\Gamma \vdash x : \alpha \to \alpha$}
+    \AxiomC{$\Gamma \vdash y : (\alpha \to \alpha) \to \beta $}
+    \RightLabel{appl}
+    \BinaryInfC{$\Gamma \vdash yx : \beta$}
+
+    \RightLabel{appl}
+    \BinaryInfC{$\Gamma \vdash (\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$}
+\end{prooftree}
+
+Dessa forma, é possível perceber que sim, a aplicação de $\lambda z : \beta . \lambda u : \gamma . z : \beta \to \gamma \to \beta$ com $yx : \beta$ possui o tipo $\gamma \to \beta$. 
+
+
+\subsubsection{Encontrar termos em $\lambda_\to$}
+
+Seja o tipo $A \to B \to A$. A pergunta que fica é: é possível encontrar um termo para esse tipo? Essa pergunta é, vista do ponto da lógica, a mesma coisa que "é possível computar uma prova para essa proposição?" (Isso será visto mais adiante). Isso é a mesma coisa que: $\text{ ? } : A \to B \to A$. Pelas regras de inferência:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$\text{ ? } \vdash \text{ ? } : A \to B \to A$}
+\end{prooftree}
+
+Supondo um termo $x : A$, pode-se escrever a árvore como:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : A \vdash \text { ? } : B \to A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A \vdash \text{ ? } : A \to B \to A$}
+\end{prooftree}
+
+E supondo um outro termo $y : B$, pode-se escrever como:
+
+\begin{prooftree}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$x : A, y : B \vdash \text { ? } : A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \text { ? } : B \to A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \text{ ? } : A \to B \to A$}
+\end{prooftree}
+
+Como já existe um termo de tipo $A$, pode-se substituir o termo desconhecido por $x$:
+
+\begin{prooftree}
+    \AxiomC{$x : A, y : B \vdash x : A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \text { ? } : B \to A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \text{ ? } : A \to B \to A$}
+\end{prooftree}
+
+Usando a regra da abstração:
+
+\begin{prooftree}
+    \AxiomC{$x : A, y : B \vdash x : A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \lambda y . x: B \to A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \text{ ? } : A \to B \to A$}
+\end{prooftree}
+
+
+Novamente:
+
+\begin{prooftree}
+    \AxiomC{$x : A, y : B \vdash x : A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \lambda y . x: B \to A$}
+    \RightLabel{abst}
+    \UnaryInfC{$x : A, y : B \vdash \lambda xy . x : A \to B \to A$}
+\end{prooftree}
+
+\subsubsection[Propriedades gerais do STLC]{Propriedades gerais do ST$\lambda$C}
+
+Ficaram faltando nas definições anteriores a explicação de algumas propriedades gerais da sintaxe do ST$\lambda$C.
+
+Algumas propriedades sobre os contextos:
+
+\begin{definition}[(Domínio, subcontexto, permutação, projeção)]
+\hfill
+\begin{enumerate}
+    \item Se $\Gamma \equiv x_1 : \sigma_1, \dots, x_n : \sigma_n$, então o \emph{domínio} de $\Gamma$ ou $dom(\Gamma)$ é a lista $(x_1, \dots, x_n)$.
+    \item Um contexto $\Gamma'$ é um \emph{subcontexto} do contexto $\Gamma$, ou $\Gamma' \subseteq \Gamma$ se todas as declarações que ocorrem em $\Gamma'$ também ocorrem em $\Gamma$ na mesma ordem.
+    \item Um contexto $\Gamma'$ é uma \emph{permutação} do contexto $\Gamma$, ou $\Gamma' \subseteq \Gamma$ se todas as declarações que ocorrem em $\Gamma'$ também ocorrem em $\Gamma$ e vice-versa
+    \item Se $\Gamma$ é um contexto e $\Phi$ o conjunto de variáveis, então a \emph{projeção} de $\Gamma$ em $\Phi$, ou $ \Gamma \upharpoonright \Phi$, é o subcontexto $\Gamma'$ de $\Gamma$ com $dom(\Gamma') = dom(\Gamma) \cap \Phi$
+\end{enumerate}
+
+Em uma lista, a ordem dos elementos importa.
+    
+\end{definition}
+
+Exemplo: Seja $\Gamma \equiv y : \sigma, x_1 : \rho_1, x_2 : \rho_2, z : \tau, x_3 : \rho_3$, então:
+
+\begin{enumerate}
+    \item $dom(\emptyset) = ()$, onde $\emptyset$ é chamado de lista vazia;
+    \item $dom(\Gamma) = (y, x_1, x_2, z, x_3)$
+    \item $\emptyset \subseteq (x_1 : \rho_1, z : \tau) \subseteq \Gamma$ 
+    \item $\Gamma \upharpoonright \{ z, u, x_1 \} = x_1 : \rho_1, z : \tau$
+\end{enumerate}
+
+Uma propriedade importante de $\lambda_{\rightarrow}$ é a seguinte:
+
+\begin{lemma}(Lemma das variáveis livres)
+    \newline
+    Se $\Gamma \vdash L : \sigma$, então $FV(L) \subseteq dom(\Gamma)$.
+\end{lemma}
+
+Como consequência desse lemma, seja $x$ uma variável livre que ocorre em $L$, então $x$ possui um tipo, o qual é declarado no contexto $\Gamma$. Em um juizo, não é possível ocorrer confusão sobre o tipo de qualquer variável, pois todas as variáveis ligadas possuem seu tipo, antes da ligação $\lambda$.
+
+Para provar esse lemma, é necessário usar uma técnica de prova chamada de \emph{indução estrutural}. Essa indução ocorre da seguinte forma:
+
+Seja $\mathcal{P}$ a propriedade geral que se quer provar para uma expressão arbitrária $\mathcal{E}$, procede-se da seguinte forma:
+
+\begin{itemize}
+    \item Assumindo que $\mathcal{P}$ é verdadeira para toda expressão $\mathcal{E}'$ usada no construto $\mathcal{E}$ (\emph{Hipótese Indutiva}),
+    \item e provando que $\mathcal{P}$ também é verdadeira para $\mathcal{E}$.
+\end{itemize}
+
+\emph{Prova do Lemma:} Seja $\mathcal{J} \equiv \Gamma \vdash L : \sigma$, e suponha que $\mathcal{J}$ é a conclusão final de uma derivação e assuma que o conteudo do Lemma vale para as premissas usadas para inferir a conclusão.
+
+Pela definição das regras de inferência, existem três possibilidades de regra para conclusão: (\emph{var}), (\emph{appl}) e (\emph{abst}). Provando por casos:
+
+\begin{enumerate}
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{var}) \\
+    Então $\mathcal{J}$ possui a forma $\Gamma \vdash x : \sigma$ se seguindo de $x : \sigma \in \Gamma$. O $L$ do lemma é o $x$ e precisamos provar que $FV(x) \subseteq dom(\Gamma)$. Mas isso é consequência direta de $x : \sigma \in \Gamma$.
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{appl}) \\
+    Então $\mathcal{J}$ deve ter a forma $\Gamma \vdash MN : \tau$ e precisa-se provar que $FV(MN) \in dom(\Gamma)$. Por indução, a regra já é válida para as premissas de (\emph{appl}), que são $\Gamma \vdash M : \sigma \to \tau$ e $\Gamma \vdash N : \sigma$. \\
+    Assim, pode-se assumir que $FV(M) \subseteq dom(\Gamma)$ e $FV(N) \subseteq dom(\Gamma)$. Como $FV(MN) = FV(M) \cup FV(N)$, então $FV(MN) \subseteq dom(\Gamma)$.
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{abst}) \\
+    Então $\mathcal{J}$ deve ter a forma $\Gamma \vdash \lambda x : \sigma . M : \sigma \to \tau$ e precisa-se provar que $FV(\lambda x : \sigma . M) \in dom(\Gamma)$. Por indução, a regra já é válida para a premissa de (\emph{abst}), que é $\Gamma, x : \sigma \vdash M : \tau$. \\
+    Assim, pode-se assumir que $FV(M) \subseteq dom(\Gamma) \cup \{ x \}$. Como $FV(\lambda x : \sigma . M) = FV(M) \backslash \{ x \}$, então $FV(M) \backslash \{ x \} \subseteq dom(\Gamma)$.
+\end{enumerate}
+\hfill Outras propriedades também podem ser provadas no mesmo estilo de indução:
+
+\begin{lemma}(Afinamento, Condensação, Permutação)
+    \begin{enumerate}
+        \item (\emph{Afinamento}) Sejam $\Gamma'$ e $\Gamma''$ contextos tais que $\Gamma' \subseteq \Gamma''$. Se $\Gamma' \vdash M : \sigma$, então $\Gamma'' \vdash M : \sigma$
+        \item (\emph{Condensação}) Se $\Gamma \vdash M : \sigma$, então também  $\Gamma \upharpoonright FV(M) \vdash M : \sigma$
+        \item (\emph{Permutação}) Se $\Gamma \vdash M : \sigma$ e $\Gamma'$ é uma permutação de $\Gamma$, então $\Gamma'$ também é um contexto e $\Gamma' \vdash M : \sigma$.
+    \end{enumerate}
+\end{lemma}
 
 \end{document}
