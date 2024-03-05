@@ -23,14 +23,11 @@ Parte I - O Cubo Lambda
 [x] Eta redução    
 [x] Codificações dentro do Cálculo Lambda       
 1.2. Modelos  
+[x] Modelos interpretativos  
+[x] Modelos livres de sintaxe
 [ ] CPOs  
-[ ] Modelos   
-1.3 - Codificação em Coq  
-[ ] Introdução a coq  
-[ ] Codificação  
-1.4 - Resumo histórico  
-[ ] Resumo
-
+[ ] Modelo de Scott D_\infty  
+[ ] Estruturas globais de modelos
 
 2. Teoria dos tipos simples  
 2.1 O cálculo Lambda simplesmente tipado  
@@ -42,17 +39,24 @@ Parte I - O Cubo Lambda
 [x] Bem-tipagem  
 [x] Checagem de tipos  
 [x] Encontrar o termo  
-[ ] Propriedades   
-[ ] Redução  
+[x] Propriedades   
+[x] Redução   
+[ ] Provar a redução do sujeito  
 [ ] [Fazer a ND fitch funcionar]  
-2.2. Construções em cima do STLC  
-[ ] O tipo de produto [Currying]  
-[ ] O Sistema T de Gödel  
-[ ] Igualdade proposicional  
-2.3  STLC em Coq  
-[ ] Codificação  
-2.4 Resumo histórico  
-[ ] Resumo    
+2.2. Extensões do STLC  
+[ ] Tipo unitário (1)  
+[ ] O tipo de produto [Currying] (A X B)  
+[ ] O tipo de produto disjunto  (A + B)  
+[ ] O tipo dos números naturais  
+[ ] O tipo PROP  
+[ ] O Sistema T de Gödel finalmente  
+[ ] A Teoria dos Tipos simples de Church    
+2.3 Maneiras de construir a lógica  
+[ ] Proposições como um tipo (PROP)  
+[ ] Proposições como tipos  
+[ ] Lógica equacional  
+[ ] Lógica de predicados de primeira ordem  
+[ ] Lógica de predicados de ordem superior     
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
 
 3. Cálculo Lambda Polimórfico  
@@ -65,9 +69,7 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [ ] Sistema F  
 3.3 Linguagens de programação  
 [ ] Teoria das PL  
-3.4 Codificação em Coq  
-[ ] Codificação  
-3.5 Resumo Histórico  
+3.4 Resumo Histórico  
 [ ] Resumo  
 
 4. Tipos dependentes de tipos  
@@ -80,22 +82,27 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [ ] Apêndice I - Teoria dos Tipos e Aritmética  
 [ ] Apêndice II - Construindo \lambda \omega em Coq  
 [ ] Apêndice III - A história de \lambda \omega
-5. Teoria dos Tipos Dependentes
+
+5. Teoria dos Tipos Dependentes  
 5.1 Teoria dos tipos dependentes    
 [ ] Calculo de Sequêntes  
 [ ] Lógica a partir da teoria dos tipos  
 [ ] Apêndice II - Construindo a teoria dos tipos dependentes em Coq?  
 [ ] Apêndice III - A história da teoria dos tipos dependentes
+
+
 6. Cálculo de Construções  
 6.1 O cálculo de construções e o cubo lambda  
 [ ] O cubo lambda  
 [ ] Propriedades  
 [ ] Cálculo de Sequêntes  
-[ ] Lógica em \lambda C  
+[ ] Lógica em \lambda C (Predicados como tipos)    
 6.2 Calculo de construções indutivas  
 [ ] Tipos indutivos e CIC  
-6.3 Resumo histórico  
-[ ] Resumo histórico   
+6.3 Definições e \lambda D  
+[ ] Definições    
+[ ] \lambda D  
+
 
 
 Parte II - Construções paralelas ao cubo
@@ -105,7 +112,7 @@ Parte II - Construções paralelas ao cubo
 2. O cálculo Kappa  
 [ ] Sintaxe  
 (hasegawa - decomposing)   
-2. O cálculo Zeta  
+3. O cálculo Zeta  
 [ ] Teoria dos tipos em computadores quânticos  
 
 

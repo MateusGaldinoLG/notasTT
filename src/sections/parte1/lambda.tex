@@ -159,14 +159,14 @@ Podemos extender essa definição para a definição do renomeamento, chamado de
     \begin{enumerate}
         \item (Renomeamento) $\lambda x. M =_ {\alpha} \lambda y . M^{x \to y}$
         \item (Compatibilidade) Sejam $M, N, L$ termos. Se $M =_ {\alpha} N$, então $ML =_ {\alpha} NL$, $LM =_ {\alpha} LN$ 
-        \item (Regra $\xi$) Para um $z$ qualquer, $\lambda z . M = \lambda z . N$
+        \item (Regra $\xi$) Para um $z$ qualquer, se $M =_{\alpha} N$, então $\lambda z . M =_{\alpha} \lambda z . N$
         \item (Reflexividade) $M =_ {\alpha} M$
         \item (Simetria) Se $M =_ {\alpha} N$, então $N =_ {\alpha} M$
         \item (Transitividade) Se $L =_ {\alpha} M$ e $M =_ {\alpha} N$, então $L =_ {\alpha} N$
     \end{enumerate}
 \end{definition}
 
-A partir dos pontos (3), (4) e (5) dessa definição, é possível dizer que a $\alpha$-conversão é uma relação de equivalência, chamada de $\alpha$-equivalência.
+A partir dos pontos (4), (5) e (6) dessa definição, é possível dizer que a $\alpha$-conversão é uma relação de equivalência, chamada de $\alpha$-equivalência.
 
 Exemplos: 
 
@@ -520,6 +520,140 @@ Exemplos:
 \end{enumerate}
 
 \subsection{Modelos}
+
+Na matemática, um \textbf{modelo} é uma forma de dar sentido à estrutura sintática desenvolvida. No Cálculo $\lambda$, os primeiros modelos só foram desenvolvidos posteriormente à sintaxe, pois a simples descrição do cálculo na teoria dos conjuntos gerava inconsistências com os axiomas da teoria dos conjuntos.
+
+\subsubsection{Estruturas Aplicativas}
+
+Primeiro, antes de definir o que é um modelo, é necessário definir um tipo de estrutura algébrica:
+
+\begin{definition}
+    Uma \emph{Estrutura Aplicativa} é um par $\langle D, \bullet \rangle$, onde $D$ é um conjunto com ao menos dois elementos, chamado de \emph{domínio} da estrutura, e $\bullet$ é um mapeamento de $\bullet : D \times D \to D$.
+\end{definition}
+
+Os modelos do Cálculo $\lambda$ serão estruturas aplicativas acrecidas de propriedades extras. A condição de se ter pelo menos dois elementos em $D$ é importante para evitar modelos triviais.
+
+Seja $\mathcal{M} = \langle D, \bullet \rangle$ uma estrutura aplicativa, escreve-se $a \in \mathcal{M}$ caso $a \in D$.
+
+\begin{definition}
+    Uma estrutura aplicativa $\mathcal{M} = \langle D, \bullet \rangle$ é \emph{extensional} se para $a, b \in D$, têm-se que $\forall x \in D, a \bullet x = b \bullet x \Rightarrow a = b$. $a$ e $b$ são chamadas de \emph{extensionalmente iguais} e são escritos como $a \sim b$.
+\end{definition}
+
+\begin{definition}
+    Seja $\mathcal{M} = \langle D, \bullet \rangle$ uma estrutura aplicativa e seja $n \geq 1$. Uma função $\theta : D^n \to D$ é \emph{representável} se, e somente se, $D$ possui um membro $a$ tal que: $$(\forall d_1, \dots, d_n \in D) a \bullet d_1 \bullet d_2 \bullet \dots \bullet d_n = \theta(d_1, \dots, d_n)$$
+
+    Usando a convenção de associação à esquerda, essa equação é lida como: $$(\dots((a \bullet d_1) \bullet d_2) \bullet \dots \bullet d_n) = \theta(d_1, \dots, d_n)$$
+\end{definition}
+
+Cada $a$ é chamado de \emph{representante} de $\theta$. O conjunto de todas as funções representáveis de $D^n$ para $D$ é chamado de $(D^n \to D)_{rep}$.
+
+
+\begin{definition}
+    Uma \emph{Algebra Combinatória} é uma estrutura aplicativa $\mathbb{D} = \langle D, \bullet \rangle$, onde dados $k, s \in D$,
+    \begin{enumerate}
+        \item ($\forall a, b \in D$) $k \bullet a \bullet b = a$
+        \item ($\forall a, b, c \in D$) $s \bullet a \bullet b \bullet c = a \bullet c \bullet (b \bullet c)$.
+    \end{enumerate}
+\end{definition}
+
+Uma Algebra combinatória também é chamada de uma estrutura \emph{combinatorialmente completa}
+
+\subsubsection{Modelos interpretativos algébricos}
+
+O primeiro tipo de modelo para o Cálculo $\lambda$ surge através das estruturas aplicativas da seguinte forma: 
+
+\begin{definition}
+    Um \emph{modelo} de $\lambda\beta$ é uma tripla $\mathbb{D} = \langle D, \bullet, \llbracket \text{  } \rrbracket  \rangle$, onde $\langle D, \bullet\rangle$ é uma estrutura aplicativa e $\llbracket \text{  } \rrbracket$ é um mapeamento que leva para cada $\lambda$-termo $M$ e cada valuação $\rho$, um membro $\llbracket M \rrbracket_{\rho}$ de $D$ tal que:
+    \begin{enumerate}
+        \item Para toda variável $x$, $\llbracket x \rrbracket_{\rho} = \rho(x)$
+        \item Para todos os termos $M$ e $N$, $\llbracket MN \rrbracket_{\rho} = \llbracket M \rrbracket_{\rho} \bullet \llbracket N \rrbracket_{\rho}$
+        \item Para toda variável $x$, termo $M$ e elemento $d \in D$, $\llbracket \lambda x . M \rrbracket_{\rho} \bullet d = \llbracket M \rrbracket_{[d/x]\rho}$ 
+        \item Para todo termo $M$ e valuações $\rho$ e $\sigma$, $\llbracket x \rrbracket_{\rho} = \llbracket x \rrbracket_{\sigma}$, toda vez que $\rho(x) = \sigma(x)$ para todas as variáveis livres $x$ de $M$
+        \item Para todo termo $M$ e todas variáveis $x$ e $y$, $\llbracket \lambda x . M \rrbracket_{\rho} = \llbracket \lambda y. [y/x] M \rrbracket_{\rho}$, dado que $y \not\in FV(M)$.
+        \item Para todo termo $M$ e $N$, se para todo $d \in D$ tem-se que $\llbracket M \rrbracket_{[d/x]\rho} = \llbracket N \rrbracket_{[d/x]\rho}$, então $\llbracket \lambda x . M \rrbracket_{\rho} = \llbracket \lambda x . N \rrbracket_{\rho}$
+    \end{enumerate}
+\end{definition}
+
+$\llbracket M \rrbracket_{\rho}$ também pode ser escrito como $\llbracket M \rrbracket_{\rho}^{\mathbb{D}}$ ou simplesmente 
+$\llbracket M \rrbracket$, quando já se sabe que a interpretação é independente de $\rho$.
+
+As condições 1 - 6 imitam o comportamento que um modelo de $\lambda\beta$ precisa ter. A condição 6 fornece a interpretação no modelo da regra $\xi$. Porém, essas condições não são suficientes para mapear $\lambda\beta\eta$, pois elas não dizem nada sobre a $\eta$-conversão. Para isso, é necessário adicionar a seguinte definição:
+
+\begin{definition}
+    Um modelo de $\lambda\beta\eta$ é um $\lambda$-modelo que satisfaz a equação $\lambda x . Mx = M$ para todo termo $M$ e $x \not\in FV(M$).
+\end{definition}
+
+Dada essa definição, pode-se supor que:
+
+\begin{theorem}
+    Um $\lambda$-modelo $\mathbb{D}$ é extensional se, e somente se, ele é um modelo de $\lambda\beta\eta$.
+\end{theorem}
+
+\subsubsection{Modelos livres de Sintaxe}
+
+O modelo definido anteriormente não define bem o que a estrutura aplicativa precisa ter como propriedades para ser um $\lambda$-modelo, já que se prende à sintaxe dos termos de $\lambda\beta$. Seria interessante definir um modelo onde não fosse necessário definir os termos antes de definir a estrutura aplicativa.
+
+Primeiro, é necessário definir uma propriedade sobre modelos no geral:
+
+\begin{definition}
+    Seja $\mathbb{D} = \langle D, \bullet, \llbracket \rrbracket \rangle$ um $\lambda$-modelo. Seja $\sim$ a \emph{equivalência extensional} definida na definição 1.23: $$a \sim b \Longleftrightarrow (\forall d \in D)(a \bullet d = b \bullet d)$$
+    Para cada $a \in D$, a classe de equivalência extensional $\tilde{a}$ é o conjunto definido por: $$\tilde{a} = \{b \in D : b \sim a \}$$
+\end{definition}
+
+Para todo $a \in D$ existem $M, x, \rho$ tais que $\llbracket \lambda x . M \rrbracket_{\rho} \in \tilde{a}$. Por exemplo, sejam $M \equiv ux$ e $\rho = [a/u]\sigma$ para toda valuação $\sigma$, então $\rho(u) = a$ e $\llbracket \lambda x . ux \rrbracket_{\rho}$ é equivalente extensionalmente a $a$, pois:
+
+$$\llbracket \lambda x . ux \rrbracket_{\rho} \bullet d = \llbracket ux \rrbracket_{[d/x]\rho} = a \bullet d$$
+
+\begin{definition}(O mapeamento $\Lambda$)
+    Seja $a \in D$ e $M, x, \rho$ tais que $\llbracket \lambda x . M \rrbracket_{\rho} \in \tilde{a}$. Somente um membro de $\tilde{a}$ é igual a $\llbracket \lambda x . M \rrbracket_{\rho}$, esse membro será denominado de $\Lambda(a)$, onde $\Lambda : D \to D$ possui as seguintes propriedades:
+    \begin{enumerate}
+        \item $\Lambda(a) \sim a$
+        \item $\Lambda(a) \sim \Lambda(b) \Longleftrightarrow \Lambda(a) = \Lambda(b)$
+        \item $a \sim b \Longleftarrow \Lambda(a) = \Lambda(b)$
+        \item $\Lambda (\Lambda a) = \Lambda a$
+        \item Existe $e \in D$ tal que $e \bullet a = \Lambda (a)$ para todo $a \in D$.
+    \end{enumerate}
+\end{definition}
+
+Um desses $e$ é o membro em $D$ que corresponde ao numeral de Church $1$, pois
+
+$$e = \llbracket 1 \rrbracket_{\sigma} = \llbracket \lambda xy . xy \rrbracket_{\sigma}$$
+
+e $$\llbracket \lambda xy . xy \rrbracket_{\sigma} \bullet a = \llbracket \lambda y . xy \rrbracket_{[a/x]\sigma} = \Lambda(a)$$
+
+\begin{definition}($\lambda$-modelos livres de sintaxe)
+    Um $\lambda$-modelo livre de sintaxe é uma tripla $\langle D, \bullet, \Lambda \rangle$ onde $\langle D, \bullet \rangle$ é uma estrutura aplicativa e $\Lambda$ é um mapeamento de $D$ para $D$, e
+    \begin{enumerate}
+        \item $\langle D, \bullet \rangle$ é uma algebra combinatória (estrutura aplicativa combinatorialmente completa)
+        \item Para todo $a \in D$, $\Lambda(a) \sim a$
+        \item Para todo $a, b \in D$, se $a \sim b$, então $\Lambda (a) = \Lambda (b)$ 
+        \item Existe um elemento $e \in D$ tal que para todo $a \in D$, $\Lambda (a) = e \bullet a$
+    \end{enumerate}
+\end{definition}
+
+\begin{theorem}
+    Se $\langle D, \bullet, \Lambda \rangle$ é um $\lambda$-modelo livre de sintaxe, então é possível construir um $\lambda$-modelo $\langle D, \bullet, \llbracket \rrbracket \rangle$ definindo:
+    \begin{enumerate}
+        \item $\llbracket x \rrbracket_{\rho} = \rho(x)$, se $x$ é uma variável
+        \item $\llbracket MN \rrbracket_{\rho} = \llbracket M \rrbracket_{\rho} \bullet \llbracket N \rrbracket_{\rho} $
+        \item $\llbracket \lambda x . N \rrbracket_{\rho} = \Lambda(a)$, onde $a$ é qualquer elemento de $D$ tal que $a \bullet d = \llbracket N \rrbracket_{[d/x]\rho}$ para todo $d \in D$.
+    \end{enumerate}
+    De forma contrária, se $\langle D, \bullet, \llbracket \rrbracket \rangle$ é um $\lambda$-modelo então é possível construir um modelo livre de sintaxe $\langle D, \bullet, \Lambda \rangle$ definindo $\Lambda(a) = e \bullet a$, onde $e = \llbracket \lambda yz . yz \rrbracket_{\rho}$ para qualquer valuação $\rho$.
+\end{theorem}
+
+A existência de $\Lambda$ pode ser caracterizada por um elemento $e$ da seguinte forma:
+
+\begin{theorem}
+    Seja $\mathbb{D} = \langle D, \bullet \rangle$ uma estrutura aplicativa tal que $\mathbb{D}$ é combinatorialmente completa e existe um elemento $e \in D$ tal que:
+    \begin{enumerate}
+        \item para todo $a, b \in D$, $e \bullet a \bullet b = a \bullet b$
+        \item para todo $a, b \in D$, se $a \sim b$, então $e \bullet a = e \bullet b$.
+    \end{enumerate}
+    Então $\langle D, \bullet, \Lambda \rangle$ é um $\lambda$-modelo livre de contexto, onde $\Lambda : D \to D$ é definida por $\Lambda(a) = e \bullet a$ para todo $a \in D$.
+\end{theorem}
+
+Uma tripla $\langle D, \bullet, e \rangle$ que satisfa a hipótese do teorema anterior é chamada de $\lambda$-modelo frouxo de Scott-Meyer.
+
 
 \subsection[A História do Cálculo Lambda]{A História do cálculo $\lambda$}
 ...

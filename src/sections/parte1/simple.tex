@@ -231,7 +231,7 @@ No geral, existem três tipos de problemas relacionados a julgamentos na teoria 
 
 Todos esses problemas são \emph{decidíveis} em $\lambda_\to$. Ou seja, para cada um deles existe um \emph{algoritmo} (um conjunto de passos) que produz a resposta. Em outros sistemas, encontar um termo se torna \emph{indecidível}.
 
-\subsubsection{Bem-tipagem em $\lambda_\to$}
+\subsubsection[Bem-tipagem no STLC]{Bem-tipagem em $\lambda_\to$}
 
 Para exemplificar os passos necessários para resolver a bem-tipagem em $\lambda_\to$, será utilizado o exemplo descrito em 1.1.3, dessa vez passo a passo.
 
@@ -329,7 +329,7 @@ Se existisse algum problema no caso de encontrar variáveis com tipagem incongru
 % \end{mathpar}
 
 
-\subsubsection{Checagem de tipos em $\lambda_\to$}
+\subsubsection[Checagem de tipos no STLC]{Checagem de tipos em $\lambda_\to$}
 
 Seja o juizo $$x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta \vdash (\lambda z : \beta . \lambda u : \gamma . z)(yx) : \gamma \to \beta$$
 
@@ -427,7 +427,7 @@ Seja $\Gamma \equiv x : \alpha \to \alpha, y : (\alpha \to \alpha) \to \beta$, a
 Dessa forma, é possível perceber que sim, a aplicação de $\lambda z : \beta . \lambda u : \gamma . z : \beta \to \gamma \to \beta$ com $yx : \beta$ possui o tipo $\gamma \to \beta$. 
 
 
-\subsubsection{Encontrar termos em $\lambda_\to$}
+\subsubsection[Encontrar termos no STLC]{Encontrar termos em $\lambda_\to$}
 
 Seja o tipo $A \to B \to A$. A pergunta que fica é: é possível encontrar um termo para esse tipo? Essa pergunta é, vista do ponto da lógica, a mesma coisa que "é possível computar uma prova para essa proposição?" (Isso será visto mais adiante). Isso é a mesma coisa que: $\text{ ? } : A \to B \to A$. Pelas regras de inferência:
 
@@ -559,5 +559,135 @@ Pela definição das regras de inferência, existem três possibilidades de regr
         \item (\emph{Permutação}) Se $\Gamma \vdash M : \sigma$ e $\Gamma'$ é uma permutação de $\Gamma$, então $\Gamma'$ também é um contexto e $\Gamma' \vdash M : \sigma$.
     \end{enumerate}
 \end{lemma}
+
+explicação:
+
+\begin{itemize}
+    \item O "afinamento" de um contexto é uma extensão do contexto obtida ao adicionar declarações extras com novas variáveis. O lema anterior diz que: se $M$ é tem tipo $\sigma$ em um contexto $\Gamma'$, então $M$ também terá um tipo $\sigma$ em um contexto "mais fino" $\Gamma'$. Ou seja, a validade do tipo de $M$ não muda ao adicionar novas declarações ao contexto. 
+    \item O lema da "condensação" diz que declarações $x : \rho$ podem ser retiradas de $\Gamma$ caso $x$ não ocorra livre em $M$. Ou seja, ele só deixa declarações relevantes à $M$.
+    \item O lema da "permutação" diz que não importa o jeito que o contexto foi ordenado e também que declarações no contexto são mutualmente independentes, então não existe impedimento teórico para a permutação do contexto. (Isso não vai ser verdadeiro em todas as teorias)
+\end{itemize}
+
+\emph{Prova do (1)}: A prova será feita por indução no juizo $\mathcal{J} \equiv \Gamma' \vdash M : \sigma$, assumindo que $\Gamma' \subseteq \Gamma''$. Existem três casos para considerar correspondentes a cada regra de inferência:
+
+\begin{enumerate}
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{var}) \\
+    Então $\mathcal{J}$ possui a forma $\Gamma' \vdash x : \sigma$ se seguindo de $x : \sigma \in \Gamma'$. Mas se $\Gamma' \subseteq \Gamma''$, então $x : \sigma \in \Gamma''$. Desse modo, usando (\emph{var}) tem-se que $\Gamma'' \vdash x : \sigma$. 
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{appl}) \\
+    Então $\mathcal{J}$ possui a forma $\Gamma' \vdash MN : \tau$ e precisa-se provar que $\Gamma'' \vdash MN : \tau$. Por indução, o afinamento é válido em $\Gamma' \vdash M : \sigma \to \tau$ e $\Gamma' \vdash N : \tau$. Mas, sendo assim, tem-se que $M \in \Gamma'$ e $N \in \Gamma'$, logo: $M \in \Gamma''$ e $N \in \Gamma''$ e, usando a regra  (\emph{appl}) em cima de $\Gamma'' \vdash M : \sigma \to \tau$ e $\Gamma'' \vdash N : \tau$, tem-se que $\Gamma'' \vdash MN : \tau$. 
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{abst}) \\
+    Então $\mathcal{J}$ tem que ter a forma $\Gamma' \vdash \lambda x : \rho . L : \rho \to \tau$. Temos que provar que $\Gamma' \vdash \lambda x : \rho . L : \rho \to \tau$, assumindo que $x \not\in dom(\Gamma'')$. Por indução na regra, temos que o "afinamento" também é válido para $\Gamma', x : \rho \vdash L : \tau$. Mas, como $x \not\in dom(\Gamma'')$, então podemos criar o contexto $\Gamma'', x : \rho$. E é possível ver que $\Gamma', x : \rho \subseteq \Gamma'', x : \rho$. Dessa forma, se segue que: $\Gamma'', x : \rho \vdash L : \tau$ e, através da regra, $\Gamma'' \vdash \lambda x : \rho . L : \rho \to \tau$
+\end{enumerate}
+
+As provas das outras duas partes se seguem de forma similiar e são deixadas para o leitor como exercício.
+
+Outro lema importante é o seguinte:
+
+\begin{lemma}(Lema da Geração)
+    \hfill
+    \begin{enumerate}
+        \item Se $\Gamma \vdash x : \sigma$, então $x : \sigma \in \Gamma$
+        \item Se $\Gamma \vdash MN : \tau$, então existe um tipo $\sigma$ tal que $\Gamma \vdash M : \sigma \to \tau$ e $\Gamma \vdash N : \sigma $
+        \item Se $\Gamma \vdash \lambda x : \sigma . M : \rho$, então existe um $\tau$ tal que $\Gamma, x : \sigma \vdash M : \tau$ e $\rho \equiv \sigma \to \tau$.
+    \end{enumerate}
+\end{lemma}
+
+\emph{prova:} Pela inspeção das regras de inferência de $\lambda_{\rightarrow}$, é possível ver que não existe outra possibilidade a não ser as listadas no lema.
+
+\begin{lemma}(Lema do subtermo)
+    Se $M$ é legal, então todo subtermo de $M$ é legal.
+\end{lemma}
+
+Então, se existem $\Gamma_1$ e $\sigma_1$ tal que $\Gamma_1 \vdash M : \sigma_1$ e se $L$ é um subtermo de $M$, então existem $\Gamma_2$ e $\sigma_2$ tais que $\Gamma_2 \vdash L : \sigma_2$. Com essa descrição, é possível ver que a prova também se segue da indução nas regras.
+
+\emph{prova}: Usando a indução e supondo $\Gamma \vdash x : \sigma$ como caso base, tem-se dois casos:
+
+\begin{itemize}
+    \item Se $M \equiv NL : \tau$, então tem-se que $\Gamma \vdash NL : \tau$, onde $N$ e $L$ são subtermos de $M$. Pelo lema da geração, existe um tipo $\sigma$ tal que $\Gamma \vdash N : \sigma \to \tau$ e $\Gamma \vdash L : \sigma $. Dessa forma, $N$ e $L$ são legais
+    \item Se $M \equiv \lambda x . N : \rho$, então tem-se que $\Gamma \vdash  \lambda x . N : \rho$, onde $N$ é subtermo de $M$. Pelo lema da geração, existe um tipo $\tau$ tal que $\Gamma, x : \sigma \vdash M : \tau$ e $\rho \equiv \sigma \to \tau$. Dessa forma $M$ é legal e $\Gamma_2 \equiv \Gamma_1, x : \sigma$.
+\end{itemize}
+
+Uma propriedade importante da Teoria dos Tipos de Church é que cada termo possui um tipo único, que pode ser descrito no seguint lema:
+
+\begin{lemma}(Unicidade dos tipos)
+    Assuma que $\Gamma \vdash M : \sigma$ e $\Gamma \vdash M : \tau$, então $\sigma \equiv \tau$.
+\end{lemma}
+
+\emph{Prova}: Por indução na construção de $M$
+
+\begin{theorem}(Decidabilidade)
+    Em $\lambda_{\rightarrow}$, os seguintes problemas são decidíveis:
+    \begin{enumerate}
+        \item Boa-tipagem: $? \vdash term : ?$
+        \item Checagem de tipos: $\text{contexto } \vdash^{?} \text{termo } : \text{tipo}$
+        \item Encontrar termos: $\text{contexto } \vdash \text{?} : \text{tipo}$
+    \end{enumerate}
+\end{theorem}
+
+\emph{Prova}: A prova pode ser encontrada em (Barendregt, 1992).
+
+\subsubsection[Redução no STLC]{Redução no ST$\lambda$C}
+
+Até agora, não havia sido definido o comportamento da $\beta$-redução no ST$\lambda$C. Para fazer isso, é necessário introduzir o seguinte lema:
+
+\begin{lemma}(Lema da Substituição)
+    Seja $\Gamma', x : \sigma, \Gamma'' \vdash M : \tau$ e $\Gamma' \vdash N : \sigma$, então $\Gamma', \Gamma'' \vdash M [x := N] : \tau$.
+\end{lemma}
+
+Esse lema diz que se em um termo legal $M$ for substituido todas as ocorrências da variável do contexto $x$ por um termo $N$ de mesmo tipo que $x$, então o resultado $M [x := N]$ possui o mesmo tipo que $M$.
+
+\emph{prova}: Usando indução em cima do juizo $\mathcal{J} \equiv \Gamma', x : \sigma, \Gamma'' \vdash M : \tau$. 
+
+\begin{enumerate}
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{var}) \\
+    Então $\mathcal{J}$ possui a forma $\Gamma', x : \sigma, \Gamma'' \vdash x : \sigma$. Se o contexto é bem formado, então $x : \sigma$ não está em $\Gamma''$ e $x \not\in FV(N)$. Com isso, pode-se inferir que $x [x:= N] : \sigma$.
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{appl}) \\
+    Então $\mathcal{J}$ possui a forma $\Gamma' \vdash MN : \tau$, pela regra de inferência, temos dois juizos $\mathcal{J}' \equiv \Gamma' \vdash M : \rho \to \tau$ e $\mathcal{J}'' \equiv \Gamma' x : \sigma \vdash N :\rho$ para os quais vale o lema, logo supondo $\Gamma' \vdash L : \sigma$, temos que: $\Gamma', \Gamma'' \vdash M [x := N] : \rho \to \tau$ e $\Gamma', \Gamma'' \vdash N [x := L] :\rho$. Usando a regra da aplicação, temos: $\Gamma', \Gamma'' \vdash (M [x := L])N(x := L) : \tau$ que é a mesma coisa que $\Gamma', \Gamma'' \vdash (MN)(x := L) : \tau$. $\qed$
+    \item Se $\mathcal{J}$ é a conclusão da regra (\emph{abst}) \\
+    Então $\mathcal{J}$ tem que ter a forma $\Gamma' \vdash \lambda u : \rho . L : \rho \to \tau$. Logo existe um outro juizo $\mathcal{J}' \equiv \Gamma', x : \sigma, \Gamma'', u : \rho \vdash L : \tau$. Mas em $\mathcal{J}'$, $x : \sigma$ não pode ocorrer em $\Gamma'$, logo como $\Gamma' \vdash N : \sigma$, $x \not\in FV(N)$. Usando o lema, temos que $\Gamma', \Gamma'', u : \rho \vdash L [x := N] : \tau$. Usando a regra da abstração: $\Gamma', \Gamma'' \vdash \lambda u : \rho . (L [x := N]) : \rho \to \tau$, que é o mesmo que $\Gamma', \Gamma'' \vdash (\lambda u : \rho . L) [x := N] : \rho \to \tau$. $\qed$
+\end{enumerate}
+
+Tendo definido a substituição, pode-se definir a $\beta$-redução:
+
+\begin{definition}($\beta$-redução de passo único para $\Lambda_{\mathbb{T}}$)
+    \hfill
+    \begin{enumerate}
+        \item (Base) $(\lambda x : \sigma . M)N \rightarrow_{\beta} M[x := N]$
+        \item (Compatibilidade) Como na definição 1.10
+    \end{enumerate}
+\end{definition}
+
+Como os tipos não são importantes no processo de $\beta$-redução, o Teorema de Church-Rosser também se torna válido no $\lambda_{\rightarrow}$:
+
+\begin{theorem}(Teorema de Church-Rosser)
+    A propriedade de Church-Rosser também é válida para $\lambda_{\rightarrow}$
+\end{theorem}
+
+\begin{corollary}
+    Suponha que $M =_{\beta} N$, então existe um $L$ tal que $M \twoheadrightarrow_{\beta} L$ e $N \twoheadrightarrow_{\beta} L$
+\end{corollary}
+
+\begin{lemma}(Redução do sujeito)
+    Se $\Gamma \vdash L : \rho$ e se $L \twoheadrightarrow_{\beta} L'$, então $\Gamma \vdash L' : \rho$.
+\end{lemma}
+
+Esse lema final mostra que a $\beta$-redução não afeta a tipabilidade e não muda o tipo do termo afetado, logo o mesmo contexto inicial serve para inferir.
+
+\emph{Prova: }
+
+\begin{theorem}(Teorema da normalização forte)
+    Todo termo legal $M$ é fortemente normalizável
+\end{theorem}
+
+Esse teorema garante que não existam termos que não são reduzíveis, ou seja, todo termo legal em $\lambda_{\rightarrow}$ possi uma forma normal e nem todo termo legal possui um ponto fixo. Isso faz com que o ST$\lambda$C não seja turing-completo.
+Essa característica não é muito desejável na implementação de linguagens de programação, pois na vida real, é necessário implementar códigos que podem não terminar. Por esse motivo, é necessário formar extensões do cálculo para que ele funcione nesses casos. 
+
+O fato do universo de funções legais possíveis ser reduzido bastante no ST$\lambda$C fez com que pesquisas em modelos partindo do Cálculo $\lambda$ não tipado fossem desenvolvidas. Esses modelos como trabalhados na subseção 1.2 possuem vantagens (e desvantagens) em relação à tipagem.
+
+\subsection[Extensões ao STLC e as Teorias dos Tipos Simples]{Extensões ao ST$\lambda$C e as Teorias dos Tipos Simples}
+
+
+
+
 
 \end{document}

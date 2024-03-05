@@ -9,6 +9,7 @@
 \usepackage{bussproofs}
 % \usepackage{pagestyle/fitch}
 \usepackage{mathpartir}
+\usepackage{stmaryrd}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definição}[section]
@@ -42,7 +43,12 @@
         \end{center}
     \end{titlepage}
 
-    \tableofcontents
+    \begingroup
+        \hypersetup{hidelinks}    
+        \tableofcontents
+
+    \endgroup
+
 
     \newpage
 
