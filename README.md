@@ -8,6 +8,12 @@ Esse repositório serve para a escrita de um conjunto de notas que quero faze re
 [IHoTT] = Introduction to Homotopy Type Theory. Egbert Rijke  
 etc.
 
+## Ordem dos livros a serem cobertos
+
+1. Type Theory and Formal Proof
+2. Proofs and Types
+3. Introduction to 
+
 
 ## O que foi feito até agora e os planos para os próximos passos
 
@@ -24,10 +30,14 @@ Parte I - O Cubo Lambda
 [x] Codificações dentro do Cálculo Lambda       
 1.2. Modelos  
 [x] Modelos interpretativos  
-[x] Modelos livres de sintaxe
-[ ] CPOs  
-[ ] Modelo de Scott D_\infty  
-[ ] Estruturas globais de modelos
+[x] Modelos livres de sintaxe  
+[x] CPOs  
+[x] Modelo de Scott D_\infty  
+[ ] Estruturas globais de modelos  
+[ ] Outros modelos (Arvores de Bohm, etc)  
+1.3 Lógica Combinatória  
+[ ] Combinadores  
+[ ] Modelos do CL  
 
 2. Teoria dos tipos simples  
 2.1 O cálculo Lambda simplesmente tipado  
@@ -47,7 +57,7 @@ Parte I - O Cubo Lambda
 [ ] Tipo unitário (1)  
 [ ] O tipo de produto [Currying] (A X B)  
 [ ] O tipo de produto disjunto  (A + B)  
-[ ] O tipo dos números naturais  
+[ ] O tipo dos números naturais (N)  
 [ ] O tipo PROP  
 [ ] O Sistema T de Gödel finalmente  
 [ ] A Teoria dos Tipos simples de Church    
@@ -57,6 +67,7 @@ Parte I - O Cubo Lambda
 [ ] Lógica equacional  
 [ ] Lógica de predicados de primeira ordem  
 [ ] Lógica de predicados de ordem superior     
+2.4 Uma discussão sobre HOL  
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
 
 3. Cálculo Lambda Polimórfico  
@@ -67,10 +78,6 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [ ] Propriedades    
 3.2 O Sistema F de Girard  
 [ ] Sistema F  
-3.3 Linguagens de programação  
-[ ] Teoria das PL  
-3.4 Resumo Histórico  
-[ ] Resumo  
 
 4. Tipos dependentes de tipos  
 [ ] Construtores de tipos  
@@ -114,13 +121,15 @@ Parte II - Construções paralelas ao cubo
 (hasegawa - decomposing)   
 3. O cálculo Zeta  
 [ ] Teoria dos tipos em computadores quânticos  
+4. teoria dos tipos infinitos (Uemura)
+[ ] Ver onde colocar essa teoria dos tipos
 
 
 Parte III - Semântica categorica do cubo  
 1. Um resumo de teoria das categorias  
-[ ] Categorias  
+[ ] Categorias (Explicar conjuntos simplices)  
 [ ] Categorias novas de antigas  
-[ ] Funtores  
+[ ] Funtores (Explicar prefeixes)  
 [ ] Transformações naturais  
 [ ] Construções universais  
 [ ] Categorias cartesianas fechadas  
@@ -136,9 +145,11 @@ Parte III - Semântica categorica do cubo
 4. Categorias com Famílias  
 [ ] Definição  
 [ ] A semântica categorial da teoria dos tipos dependentes
-5. Kappa-Categorias  
+5. A semântica dos prefeixes  
+[ ] Prefeixes novamente  
+6. Kappa-Categorias  
 [ ] Kappa-Categorias  
-6. Monadas  
+7. Monadas  
 [ ] Definição  
 [ ] A semântica categorial da teoria dos tipos modal  
 
@@ -193,6 +204,10 @@ Parte IV - As várias teorias homotópicas de tipos
 [ ] Apêndice III - História de H.O.T.T e DTT
 
 Parte V - Semântica categorial de HOTT
+1. Teoria dos Feixes  
+[ ] Feixes  
+2. Topos de Grothendieck  
+3. Infinito-categorias
 
 Parte VI - Lógica
 1. Dedução natural   
@@ -204,7 +219,7 @@ Parte VI - Lógica
 [ ] Fragmento mínimo, fragmento intuicionista, fragmento clássico  
 [ ] Fragmento dual-intuicionista  
 3. Algebras de Heyting  
-[ ] Definição  
+[ ] Definição (Reticulados novamente)  
 [ ] Topos gerado  
 4. Semântica de Kripke  
 [ ] Definição  
@@ -218,6 +233,9 @@ Parte VI - Lógica
 [ ] Cálculo de sequêntes
 8. Teorema da incompletude de Gödel  
 [ ] Definição  
+
+Apêndice Histórico
+[ ] Fazer cronograma das publicações
 
 Coisas que precisam ser feitas a nível estético/literário:  
 [ ] Corrigir erros de digitação e de primeira/terceira pessoa  

@@ -654,8 +654,267 @@ A existência de $\Lambda$ pode ser caracterizada por um elemento $e$ da seguint
 
 Uma tripla $\langle D, \bullet, e \rangle$ que satisfa a hipótese do teorema anterior é chamada de $\lambda$-modelo frouxo de Scott-Meyer.
 
+\subsubsection{Ordens Parciais Completas}
 
-\subsection[A História do Cálculo Lambda]{A História do cálculo $\lambda$}
-...
+O modelo mais conhecido para o Cálculo $\lambda$ é o Modelo de Dana Scott, o $D_{\infty}$. O modelo de Dana Scott utiliza a noção de Reticulados (Lattices) Completos, mas é possível fazer uma generalização para Ordens Parciais Completas (CPOs). Alguns modelos do Cálculo $\lambda$ podem ser descritos mais facilmente por CPOs do que por reticulados. 
+
+Para não precisar supor muito, é necessário voltar algumas etapas:
+
+% Davey - Priestley Definition 1.2
+
+\begin{definition}
+    Seja $P$ um conjunto. Uma \emph{ordem}, também chamada de \emph{ordem parcial}, em $P$ é uma relação binária $\leq$ em $P$ tal que, para todo $x, y, z, \in P$,
+    \begin{enumerate}
+        \item (Reflexividade) $x \leq x$
+        \item (antissimetria) Se $x \leq y$ e $y \leq x$, então $x = y$
+        \item (Transitividade) Se $x \leq y$ e $y \leq z$, então $x \leq z$
+    \end{enumerate}
+\end{definition}
+
+O par $(P, \leq)$ é chamado de \emph{Conjunto ordenado}, ou \emph{Poset} (Do inglês, Partially Ordered set).
+
+Exemplos:
+\begin{itemize}
+    \item O conjunto $\mathbb{N}$ dos números naturais, junto com a ordem crescente usual é um poset.
+    \item O conjunto $\{ A | A \subseteq X\}$ dos subconjuntos de um conjunto $X$, escrito como $\mathcal{P}(X)$ e denominado de \emph{Conjunto Potência}, é um poset com ordem dada pela inclusão de subconjuntos $A \subseteq B$. Essa ordem é antissimetrica pois se $A$ e $A'$ são subconjuntos de $X$ onde $A \subseteq A'$ e $A' \subseteq A$, então $A = A'$. Reflexividade e transitividade se seguem da mesma maneira.
+\end{itemize}
+
+Alguns conjuntos possuem um valor menor possível ou um valor maior possível, definidos da seguinte forma:
+
+\begin{definition}
+    Seja $P$ um conjunto ordenado. $P$ possui um elemento \emph{mínimo} se existe $\bot \in P$ tal que $\bot \leq x$ para todo $x \in P$. De forma dual, $P$ possui um elemento \emph{máximo} $\top \in P$ tal que $x \leq \top$ para todo $x \in P$.
+\end{definition}
+
+Exemplos:
+\begin{itemize}
+    \item O mínimo do conjunto ordenado $(\mathbb{N}, \leq)$ é o $0$, mas não existe máximo.
+    \item No conjunto ordenado $(P(X), \subseteq)$, tem-se que $\bot = \emptyset$ e $\top = X$. 
+\end{itemize}
+
+Subconjuntos de conjuntos ordenados também podem possuir elementos mínimos e máximos:
+
+\begin{definition}
+    Seja $P$ um conjunto ordenado e $Q \subseteq P$. Então o elemento $u \in P$ tal que $x \leq u$ para todo $x \in Q$ é chamado de \emph{cota superior} de $Q$. O elemento $l \in P$ é chamado de \emph{menor cota superior} ou \emph{supremo} de $Q$ se para toda cota superior $u \in P$, $l \leq u$. \\
+    Dualmente, o elemento $u \in P$ tal que $u \leq x$ para todo $x \in Q$ é chamado de \emph{cota inferior} de $Q$. O elemento $l \in P$ é chamado de \emph{maior cota inferior} ou \emph{infimo} de $Q$ se para toda cota inferior $u \in P$, $u \leq l$.
+\end{definition}
+
+
+Exemplo: Seja $S = \{ 1, 3, 5\} \subset \mathbb{N}$, então são cotas inferiores 0 e 1 e são cotas superiores todo número maior que $5$.
+
+Supremos e ínfimos podem ser tratados algebricamente da seguinte forma:
+
+\begin{definition}
+    \hfill
+    \begin{enumerate}
+        \item O \emph{Join} de $x$ e $y$, $x \vee y$, é o supremo $sup\{x, y\}$. O supremo de um conjunto qualquer é denotado por $\bigvee S$
+        \item O \emph{meet} de $x$ e $y$, $ x \land y$ é o infimo $inf\{x, y\}$. O infimo de um conjunto qualquer $S$ é denotado por $\bigwedge S$. 
+    \end{enumerate}
+\end{definition}
+
+Um reticulado pode ser definido por:
+
+\begin{definition}(Reticulado)
+    Seja $P$ um conjunto ordenado não vazio, então:
+    \begin{enumerate}
+        \item Se $x \vee y$ e $x \land y$ existem para todo $x, y \in P$, então $P$ é chamado de \emph{Reticulado}
+        \item Se $\bigvee S$ e $\bigwedge S$ existem para todo $S \subseteq P$, então $P$ é chamado de \emph{Reticulado Completo}
+    \end{enumerate}
+\end{definition}
+
+
+\begin{definition}
+    Um subconjunto $X$ de $P$ é dito \emph{direcionado} se, e somente se, $X$ é não vazio e para cada par de elementos $x, y \in X$, existe um elemento $z \in X$ tal que $x \leq z$ e $y \leq z$.
+\end{definition}
+
+Agora finalmente a definição de uma ordem parcialmente completa:
+
+\begin{definition}
+    Uma \emph{Ordem Parcialmente Completa} (CPO) é um conjunto ordenado parcial $(D, \leq)$ tal que:
+    \begin{enumerate}
+        \item $D$ possui um elemento mínimo
+        \item Todo subconjunto direcionado $X$ de $D$ possui um supremo. Ou seja $\bigvee X$ existe para todo $X \subseteq D$
+    \end{enumerate}
+\end{definition}
+
+Dessa forma, é possível ver em que medida um CPO é mais geral que um reticulado, pois ele retira a condição que o ínfimo exista para todo $X \subseteq D$.
+
+Exemplo: Seja um objeto $\bot \not\in \mathbb{N}$ e seja $\mathbb{N}^+ = \mathbb{N} \cup \{\bot\}$. Defina um ordenamento em $\mathbb{N}^+$ como: $$a \sqsubseteq b \text{ sse } (a = \bot \text{ e } b \in \mathbb{N}) \text{ ou } a = b$$. O par $(\mathbb{N}^+, \sqsubseteq)$ é um CPO.
+
+É possível descrever \emph{morfismos} entre CPOs:
+
+\begin{definition}
+    Sejam $D$ e $D'$ cpos e $\phi : D \to D'$ uma função,
+    \begin{enumerate}
+        \item $\phi$ é chamada \emph{monotônica} sse $a \leq b$ implica em $\phi (a) \leq' \phi (b)$
+        \item $\phi$ é chamada \emph{contínua} sse para todo subconjunto direcionado $X$ de $D$, $\phi (\bigvee X) = \bigvee \phi (X)$.
+    \end{enumerate}
+\end{definition}
+
+O conjunto de todas as funções contínuas entre $D$ e $D'$ é denotado por $[D \to D']$.
+
+Em $[D \to D']$ é possível definir uma relação $\preceq$ tal que: $$\phi \preceq \psi \leftrightarrow \phi (d) \leq' \psi (d) \text{ para todo } d \in D$$
+
+Então $\preceq$ é uma ordem parcial em $[D \to D']$ e $[D \to D']$ possui um elemento final: $$\bot (d) = \bot' \text{ para todo } d \in D$$
+
+E, se $\Phi$ é um subconjunto direcionado de $[D \to D']$, entã opara todo $d \in D$ o conjunto $\{\phi(d) | \phi \in \Phi\}$ é um subconjunto direcionado de $D'$. Com isso, é possível definir uma função $\psi : D \to D'$ como: $$\psi (d) = \bigvee \{\phi (d) | \phi \in \Phi\} \text{ para todo } d \in D$$
+
+Então, é possível monstrar a seguinte proposição:
+
+\begin{proposition}
+    Se $D$ e $D'$ são cpos, então $[D \to D']$ também é um cpo pelo ordenamento parcial $\preceq$ definido anteriormente. Seu último elemento é dado por $\bot'$ e para qualquer subconjunto direcionado $\Phi$ de $[D \to D']$, $\bigvee \Phi$ é uma função $\psi$ definida como anteriormente.
+\end{proposition}
+
+Dado um cpo $D_0$, pode-se construir uma sequência $\{D_n\}^{\infty}_{n=0}$ de cpos definidos indutivamente como $D_{n + 1} = [D_n \to D_n]$ para todo $n \geq 0$. O modelo $D_{\infty}$ de Scott parte de $D_0 = \mathbb{N}^+$
+
+Para estudar a relação das sequências $\{D_n\}^{\infty}_{n=0}$ entre si, é interessante pensar a relação de como um cpo pode estar \emph{mergulhado} em outro.
+
+\begin{definition}
+    Sejam $D$ e $D'$ cpos. Uma \emph{projeção} de $D$ em $D'$ é um par $\langle \phi, \psi \rangle$ de funções com $\phi \in [D \to D']$ e $\psi \in [D' \to D]$ tais que: $$\psi \circ \phi = I_D \text{ e } \phi \circ \psi \preceq I_D'$$
+
+    Onde $I_D$ e $I_D'$ são as funções identidade em $D$ e $D'$ respectivamente.
+\end{definition}
+
+Se $\langle \phi, \psi \rangle$ é uma projeção de $D'$ em $D$ então $\phi$ mergulha $D$ em $D'$.
+
+Para entender a composição de $\phi$ e $\psi$ é necessário definir o seguinte lema:
+
+\begin{lemma}
+    A composição de funções contínuas entre cpos é contínua. Ou seja, se $D$, $D'$ e $D''$ são cpos e $\psi \in [D \to D']$ e $\phi \in [D' \to D'']$ e $\phi \circ \psi$ é definido por $$\text{para todo } d \in D (\phi \circ \psi)(d) = \phi (\psi (d))$$
+    Então $$\phi \circ \psi \in [D \to D'']$$
+\end{lemma}
+
+Usando a definição de $\{D_n\}^{\infty}_{n=0}$ é possível construir uma projeção $\langle \phi_n, \psi_n \rangle$ de $D_{n+1}$ para $D_n$ para cada $n$. A projeção inicial de $D_1$ em $D_0$ pode ser montada da seguinte forma: Para cada $d \in D_0$, seja $\kappa_d$ uma função constante $\kappa_d (c) = d$ para $c \in D_0$. $\kappa_d$ é contínua, então $\kappa_d \in [D_0 \to D_0] = D_1$. Seja $\phi_0 : D_0 \to D_1$ e $\psi_0 : D_1 \to D_0$ tais que $\phi_0(d) = \kappa_d$ para $d \in D_0$ e $\psi_0 (c) = c(\bot_0)$ para $c \in D_1$ (onde $\bot_0$ é o menor elemento de $D_0$). $\phi_0$ e $\psi_0$ são contínuas e é possível ver que $$(\psi_0 \circ \phi_0) (d) = \kappa_d (\bot_0) = d = I_{D_0}$$ e $$(\phi_0 \circ \psi_0 )(f) = \kappa_d (f (\bot_0)) \preceq I_{D_1}$$
+
+Logo $\langle \phi_0, \psi_0 \rangle$ é uma projeção de $D_1$ em $D_0$. Agora seja $\phi_n : D_n \to D_{n+1}$ e $\psi_n : D_{n+1} \to D_n$ gerados indutivamente por: $$\phi_n(\sigma) = \phi_{n-1} \circ \sigma \circ \psi_{n-1} \text{  e  } \psi_n(\tau) = \psi_{n-1} \circ \tau \circ \phi_{n-1}$$ para $\sigma \in D_n$ e $\tau \in D_{n+1}$. É possível monstrar que $\phi_n \in [D_n \to D_{n+1}]$ e $\psi_n \in [D_{n+1} \to D_n]$. Logo o par $\langle \phi_n, \psi_n \rangle$ é uma projeção de $D_{n+1}$ em $D_n$.
+
+As funções $\psi_n$ e $\phi_n$ só elevam $n$ um número por vez, então é possível definir uma função $\phi_{m,n}$ da seguinte forma:
+
+\begin{definition}
+    Para qualquer $m, n \geq 0$, $\phi_{m,n} : D_m \to D_n$ é definido da seguinte forma:
+
+    \begin{equation*}
+        \phi_{m,n} =
+        \begin{cases}
+            \phi_{n - 1} \circ \phi_{n - 2} \circ \dots \circ \phi_{m + 1} \circ \phi_{m} & \text{se } m < n \\
+            I_{D_n} & \text{se } m = n \\
+            \psi_n \circ \psi_{n+1} \circ \dots \circ \psi_{m - 2} \circ \psi_{m - 1} & \text{se } m > n \\
+        \end{cases}
+    \end{equation*}
+\end{definition}
+
+Uma vez definida essa função, é possível monstrar o seguinte lema:
+
+\begin{lemma}
+    Sejam $m, n \geq 0$, então:
+    \begin{enumerate}
+        \item $\phi_{m,n} \in [D_m \to D_n]$
+        \item Se $m \leq n$, então $\phi_{n, m} \circ \phi_{m,n} = I_{D_m}$
+        \item Se $m > n$, então $\phi_{n, m} \circ \phi_{m,n} \preceq I_{D_m}$
+        \item Se $k$ é um número entre $m$ e $n$, então $\phi_{k, n} \circ \phi_{m,k} = \phi_{m, n}$
+    \end{enumerate}
+\end{lemma}
+
+\emph{Prova}: \begin{enumerate}
+    \item Em $\phi_{m,n}$ existem três casos:
+    \begin{enumerate}
+        \item Se $n > m$, então $\phi_{m,n} = \phi_{n - 1} \circ \phi_{n - 2} \circ \dots \circ \phi_{m + 1} \circ \phi_{m}$. É facil ver que, pelo lema da composição, sendo $\phi_m \in [D_m \to D_{m+1}]$ o inicio da cadeia de composições e $\phi_{n-1} \in [D_{n-1} \to D_{n}]$ o fim dessas cadeia, e sendo essa cadeia de composições contínua, então $\phi_{m,n} \in [D_m \to D_n]$
+        \item Se $n = m$, $\phi_{n,n} = I_{D_n}$, mas $I_{D_n} \in [D_n \to D_n]$, logo $\phi_{n,n} \in [D_n \to D_n]$
+        \item Se segue de forma análoga a (a)
+    \end{enumerate}
+    \item Existem dois casos:
+    \begin{enumerate}
+        \item Se $m = n$, $\phi_{n,n} \circ \phi_{n,n} = I_{D_n}$
+        \item Se $m < n$, $\phi_{m,n} \in [D_m \to D_n]$ e $\phi_{n,m} \in [D_n \to D_m]$. Pelo lema da composição, $\phi_{n, m} \circ \phi_{m,n} \in [D_n \to D_n]$. O valor de $\phi_{n, m} \circ \phi_{m,n} \preceq I_{D_m}$ se segue da definição de projeção.
+        % \item Se $m < n$, $\phi_{m,n} = \phi_{n - 1} \circ \phi_{n - 2} \circ \dots \circ \phi_{m + 1} \circ \phi_{m}$ e $\phi_{n,m} = \psi_m \circ \psi_{m+1} \circ \dots \circ \psi_{n - 2} \circ \psi_{n - 1}$, que é o mesmo que: $$\phi_{n, m} \circ \phi_{m,n} = \phi_{n - 1} \circ \phi_{n - 2} \circ \dots \circ \phi_{m + 1} \circ \phi_{m} \circ \psi_m \circ \psi_{m+1} \circ \dots \circ \psi_{n - 2} \circ \psi_{n - 1}$$. Visto de outra forma: $$\phi_{n, m} \circ \phi_{m,n} = (\phi_{n - 1} \circ (\phi_{n - 2} \circ (\dots \circ (\phi_{m + 1} \circ (\phi_{m} \circ \psi_m) \circ \psi_{m+1}) \circ \dots) \circ \psi_{n - 2}) \circ \psi_{n - 1})$$
+    \end{enumerate}
+    \item Deixado para o leitor \item Deixado para o leitor
+\end{enumerate}
+
+\subsubsection{O Modelo de Scott}
+
+Uma vez feitas essas definições sobre cpos, é possível definir o modelo de Scott. Para isso, é necessário definir $D_{\infty}$:
+
+\begin{definition}
+    \begin{itemize}
+        \item $D_{\infty}$ é o conjunto de todas as sequências infinitas na forma $$d = \langle d_0, d_1, d_2, \dots \rangle$$
+        tais que para todo $n \geq 0$ tem-se $d_n \in D_n$ e $\psi_n(d_{n+1}) = d_n$
+        \item A relação $\sqsubseteq$ em $D_{\infty}$ possui a forma: $$d = \langle d_0, d_1, d_2, \dots \rangle \sqsubseteq \langle d_0', d_1', d_2', \dots \rangle \text{ se } d_n \sqsubseteq d_n' \text{ para todo } n \geq 0 $$
+        \item Se $X$ é um subconjunto de $D_{\infty}$, então $X_n = \{ a_n | a \in X \}$ é o conjunto dos $n$-ésimos termos de cada sequência $a \in X$.
+    \end{itemize}
+\end{definition}
+
+\begin{lemma}
+    O par $\langle D_{\infty}, \sqsubseteq \rangle$ definido acima é um cpo com menor elemento $$\bot = \langle \bot_0, \bot_1, \bot_2, \dots \rangle$$ onde $\bot_n$ é o menor elemento de $D_n$ e menor cota superior do subconjunto direcionado $X$ de $D_{\infty}$ dado por: $$\bigvee X = \langle \bigvee X_0, \bigvee X_1, \bigvee X_2, \dots \rangle $$
+\end{lemma}
+
+Para cada $n \geq 0$ é possível definir um par de funções contínuas que formam uma projeção de $D_{\infty}$ em $D_n$ definidas como:
+
+\begin{definition}
+    Para cada $n \geq 0$, seja $\phi_{n, \infty} : D_{\infty} \to D_n$ e $\phi_{\infty, n} : D_n \to D_{\infty}$ definidas por:
+    $$\phi_{n, \infty} = \langle \phi_{n,0}(d), \phi_{n,1}(d), \phi_{n,2}(d), \dots \rangle$$ para todo $d \in D_n$ e
+    $$\phi_{\infty, n} (d) = d_n$$ para todo $d \in D_{\infty}$
+\end{definition}
+
+\begin{lemma}
+    Sejam $m, n \geq 0$ com $m \leq n$ e $a, b \in D_{\infty}$, então
+    \begin{enumerate}
+        \item O par $\langle \phi_{n, \infty}, \phi_{\infty, n} \rangle$ é uma projeção de $D_{\infty}$ em $D_n$
+        \item $\phi_{m, n} (a_m) \sqsubseteq a_n$
+        \item $\phi_{m, \infty} (a_m) \sqsubseteq \phi_{n, \infty} (a_n)$
+        \item $a = \bigvee_{n \geq 0} \phi_{n, \infty} (a_n)$
+        \item $\phi_{n, \infty} (a_{n+1}(b_n)) \sqsubseteq \phi_{n+1, \infty} (a_{n+2}(b_{n+1}))$
+    \end{enumerate}
+\end{lemma}
+
+A parte 4 sugere que os termos $a_n$ servem como aproximações cada vez mais certas de $a$ em $D_{\infty}$. Com isso, é possível ver a aplicação $(a_{n+1}(b_n))$ quando $n \to \infty$ como uma aproximação cada vez melhor da aplicação $ab$. Logo, é possível definir uma relação binária em $D_{\infty}$ da seguinte forma:
+
+\begin{definition}
+    Para todo $a, b \in D_{\infty}$, 
+    $$a \bullet b = \bigvee \{ \phi_{n, \infty} (a_{n+1}(b_n)) | n \geq 0 \}$$
+\end{definition}
+
+A autoaplicação presente no Cálculo $\lambda$ pode ser implementada utilizando a aplicação $a_{n+1}(a_n)$.
+
+Uma vez definida a relação binária, pode-se ver que o par $\langle D_{\infty}, \bullet \rangle$ é uma estrutura aplicativa. Pode-se definir um modelo livre de sintaxe a partir dessa estrutura. Para isso, é necessário mostrar que o par $\langle D_{\infty}, \bullet \rangle$ é uma algebra combinatória, ou seja mostrar que existem $k$ e $s$ que satisfaçam as condições da Definição 1.25.
+
+\begin{definition}[$k_n, s_n$]
+    \hfil
+    \begin{enumerate}
+        \item Seja $n \geq 2$. Para $a \in D_{n-1}$, $\kappa_a : D_{n-2} \to D_{n-2}$ é a função constante $\kappa_a = \psi_{n-2}(a)$ para todo $b \in D_{n-2}$. Então $k_n : D_{n-1} \to D_{n-1}$ é $k_n (a) = \kappa_a$ para todo $a \in D_{n-1}$.
+        \item  Seja $n \geq 3$. Para $a \in D_{n-1}$ e $a \in D_{n-2}$, $\tau_{a, b} : D_{n-3} \to D_{n-3}$ é a função constante $\tau_{a, b} = a(\phi_{n-3}(c))(b(c))$ para todo $c \in D_{n-3}$ e $\sigma_a : D_{n-2} \to D_{n-2}$ tal que $\sigma_a = \tau_{a, b}$ para todo $b \in D_{n-2}$. Então $s_n : D_{n-1} \to D_{n-1}$ é $s_n (a) = \sigma_a$ para todo $a \in D_{n-1}$.
+    \end{enumerate}
+\end{definition}
+
+\begin{lemma}
+    \hfill
+    \begin{enumerate}
+        \item Para todo $n \geq 2$, tem-se que $k_n \in D_n$ e $\psi_n (k_{n+1}) = k_n$. Logo $\psi_1 (k_2) = I_{D_0} \in D_1$.
+        \item Para todo $n \geq 3$, tem-se que $s_n \in D_n$ e $\psi_n (s_{n+1}) = s_n$. Logo $\psi_1 (\psi_2 (s_3)) = I_{D_0} \in D_1$.
+    \end{enumerate}
+\end{lemma}
+
+Agora finalmente pode-se definir $k$ e $s$:
+
+\begin{definition}
+    Sejam $k$ e $s$ as seguintes sequências: $$k = \langle \bot_0, I_{D_0}, k_2, k_3, \dots \rangle \text{ e } s = \langle \bot_0, I_{D_0}, \psi_2(s_3), k_3, k_4, \dots \rangle$$
+\end{definition}
+
+\begin{lemma}
+    As sequências $k$ e $s$ são elementos de $D_{\infty}$
+\end{lemma}
+
+\begin{lemma}
+    Para todo $a, b, c \in D_{\infty}$, $k \bullet a \bullet b = a$ e $s \bullet a \bullet b \bullet c = a \bullet c \bullet (b \bullet c)$
+\end{lemma}
+
+Logo, pelo lema anterior, é possível ver que o par $\langle D_{\infty}, \bullet \rangle$ é uma álgebra combinatória. O que falta para provar que esse par é um modelo é monstrar que ele é extensional.
+
+\begin{lemma}
+    $\langle D_{\infty}, \bullet \rangle$ é uma álgebra combinatória extensional
+\end{lemma}
+
+\emph{Prova}: Sejam $a$ e $b$ elementos de $D_{\infty}$ tais que $a \sim b$, ou seja, $a \bullet c = b \bullet c$ para todo $c \in D_{\infty}$. Seja $m \geq 0$ e $d$ um elemento arbitrário de $D_{m}$. Seja $c = \phi_{m, \infty} (d)$. Pode ser provado que $(a \bullet c)_m = a_{m + 1} (d)$ e $(b \bullet c)_m = b_{m + 1} (d)$ . Logo $ a_{m + 1} = (a \bullet c)_m = (b \bullet c)_m(d) = b_{m+1}$ e $a_{m+1} = b_{m + 1}$. Ou seja $a_n = b_n$ para $n > 0$ e $a_0 = \psi_0(a_1) = \psi_0(b_1) = b_0$ (Pois $\psi$ é contínua), logo $a = b$. Logo, $\langle D_{\infty}, \bullet \rangle$ é extensional.
+
+Com isso, fica provado que $\langle D_{\infty}, \bullet \rangle$ é um $\lambda$-modelo livre de sintaxe
 
 \end{document}
