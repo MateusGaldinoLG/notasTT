@@ -71,24 +71,26 @@ Parte I - O Cubo Lambda
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
 
 3. Cálculo Lambda Polimórfico  
-3.1 O Cálculo Lambda Polimófico  
-[ ] Abstração e Aplicação em cima de tipos  
-[ ] Tipos Pi    
-[ ] Cálculo de sequêntes    
-[ ] Propriedades    
+3.1 O C´alculo Lambda com tipagem de Segunda Ordem
+[x] Motivacao  
+[x] Abstração e Aplicação em cima de tipos  
+[x] Tipos Pi    
+[x] Cálculo de sequêntes    
+[x] Propriedades    
 3.2 O Sistema F de Girard  
 [ ] Sistema F  
 
 4. Tipos dependentes de tipos  
+4.1 \lambda \omega fraco  
 [ ] Construtores de tipos  
 [ ] Regra sort e regra var  
 [ ] Regra do enfraquecimento  
 [ ] Regra de formação  
 [ ] Aplicação e Abstração  
 [ ] Regra da conversão  
-[ ] Apêndice I - Teoria dos Tipos e Aritmética  
-[ ] Apêndice II - Construindo \lambda \omega em Coq  
-[ ] Apêndice III - A história de \lambda \omega
+[ ] Propriedades  
+4.2 O Sistema F\Omega de Girard
+
 
 5. Teoria dos Tipos Dependentes  
 5.1 Teoria dos tipos dependentes    

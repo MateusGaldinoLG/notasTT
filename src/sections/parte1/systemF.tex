@@ -1,0 +1,276 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{O Sistema F}
+
+No Cálculo-Lambda Simplesmente Tipado, é possível definir a função identidade, a função que pega um valor como input e retorna o próprio valor como outpu, para cada tipo definido no cálculo:
+
+\begin{itemize}
+    \item Para os números naturais, $\lambda x : \mathbb{N} . x$
+    \item Para os booleanos, $\lambda x: bool . x$
+    \item Para o tipo das funções dos naturais nos booleanos, $\lambda x : (\mathbb{N} \to bool) . x$
+    \item $\dots$
+\end{itemize}
+
+Mas dessa forma, quanto mais tipos a teoria suportar, mais formais diferentes são possíveis de serem criadas. Isso faz com que existam vários termos análogos sem qualquer possibilidade de relação entre eles. O máximo que se pode dizer é fazer uma quantificação além de $\lambda_{\to}$ e construir um tipo arbitrário $\alpha$ com uma função $f \equiv \lambda x : \alpha . x$ que seria a função identidade arbitrária.
+
+Porém, dado um termo $M : \mathbb{N}$, não é possível escrever $fM$ pois $\alpha \not\equiv \mathbb{N}$. Para fazer isso, é necessário que a função receba também o tipo específico que ela precisa ter para receber o termo $M$, fazendo um segundo processo de abstração em cima da função da seguinte forma: $$\lambda \alpha : \ast . \lambda x : \alpha . x$$
+
+Nesse caso, $\alpha$ se torna uma variável de tipo e $\star$ o tipo de todos os tipos. Esse termo é chamado de \emph{polimórfico}, pois pode possuir diversas formas diferentes a depender do tipo escolhido:
+
+\begin{itemize}
+    \item $(\lambda \alpha : \ast . \lambda x : \alpha . x)\mathbb{N} \to_{\beta} \lambda x : \mathbb{N} . x$
+\end{itemize}
+
+Para fazer essa extensão, é necessário adicionar regras de inferência e regras de tipagem que lidem com essa abstração de segunda ordem.
+
+A tipagem para a função identidade $\lambda \alpha : \ast . \lambda x : \alpha . x$ é o tipo $\Pi \alpha : \ast . \alpha \to \alpha$, onde $\Pi$ é o operador que tem como função ligar os tipos, chamado de Tipo $\Pi$ ou Tipo Produto
+
+Exemplos:
+
+\begin{itemize}
+    \item A função de iteração $D$ que recebe uma função $f : \alpha \to \alpha$ e retorna a aplicação dela duas vezes em cima de um termo $x : \alpha$ pode ser escrita da seguinte forma: $$D \equiv \lambda \alpha : \ast . \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (f x)$$
+    Nesse caso, $D$ é a mesma coisa que $f \circ f$.
+    Para os números naturais: $$D \mathbb{N} \equiv \lambda f : \mathbb{N} \to \mathbb{N} . \lambda x : \mathbb{N} . f (f x)$$
+    e sendo $f$ a função sucessor $s$ que mapeia $n : \mathbb{N}$ em $n + 1 : \mathbb{N}$, então: $$D \mathbb{N} s \to_{\beta} \lambda x : \mathbb{N} . s (s x)$$
+    O tipo de $D$ é: $D : \Pi \alpha : \ast . (\alpha \to \alpha) \to \alpha \to \alpha$
+    \item A composição de duas funções é a aplicação de uma função em outra. É possível definir o operador de composição $\circ$ da seguinte forma: $$\circ \equiv \lambda \alpha : \ast . \lambda \beta : \ast \lambda \gamma : \ast . \lambda f : \alpha \to \beta . \lambda g : \beta \to \gamma . \lambda x : \alpha . g (f x)$$
+    A sua tipagem é: $\circ : \Pi \alpha : \ast . \Pi \beta : \ast . \Pi \gamma : \ast . (\alpha \to \beta) \to (\beta \to \gamma) \to \alpha \to \gamma$
+\end{itemize}
+
+
+\subsection{O Cálculo Lambda com tipagem de Segunda Ordem}
+
+\subsubsection{Regras de Inferência}
+
+Uma vez inseridas as regras de abstração e aplicação de segunda ordem, é necessário extender as regras de inferência em relação ao ST$\lambda$C
+
+
+\begin{definition}[Regra de Inferência para a Abstração]
+    \hfil
+    \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma, \alpha : \ast \vdash M : A$}
+        \RightLabel{$abst_2$}
+        \UnaryInfC{$\Gamma \vdash \lambda \alpha : \ast . M : \Pi \alpha : \ast . A$}
+    \end{prooftree}
+\end{definition}
+
+Essa regra define basicamente que, sendo $M$ um termo de tipo $A$ em um contexto onde $\alpha$ possui tipo $\ast$, então a abstração $\alpha : \ast . M$ possui o tipo $\Pi \alpha : \ast . A$. Essa regra da abstração difere da primeira por permitir a definição de $\alpha$ no contexto.
+
+\begin{definition}[Regra de Inferência para a Aplicação]
+    \hfil
+    \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash M : \Pi \alpha : \ast . A$}
+        \AxiomC{$\Gamma \vdash B : \ast$}
+        \RightLabel{$appl_2$}
+        \BinaryInfC{$\Gamma \vdash MB : A[\alpha := B]$}
+    \end{prooftree}
+\end{definition}
+
+\subsubsection[O Sistema Lambda2]{O Sistema $\lambda 2$}
+
+A sintaxe de $\lambda2$ segue de forma análoga a $\lambda_{\sigma}$, sendo descrita pela seguinte BNF: $$\mathbb{T}2 = \mathbb{V} | (\mathbb{T}2 \to \mathbb{T}2) | (\Pi\mathbb{V} : \ast . \mathbb{T}2) $$
+
+onde $\mathbb{V}$ é a coleção dos tipos variáveis, denominados de $\alpha, \beta, \gamma, \dots$.
+
+Para os termos pré-tipados:
+
+\begin{definition}
+    A coleção dos $\lambda$-termos pré-tipados de segunda ordem, ou $\lambda2$-termos, é definido na seguinte BNF: $$\Lambda_{\mathbb{T}2} = V | (\Lambda_{\mathbb{T}2} \Lambda_{\mathbb{T}2}) | (\Lambda_{\mathbb{T}2} {\mathbb{T}2}) | (\lambda V : \mathbb{T}2 . \Lambda_{\mathbb{T}2}) | (\lambda \mathbb{V} : \ast . \Lambda_{\mathbb{T}2})$$
+\end{definition}
+
+Onde $V$ é a coleção das variáveis de termos ($x, y, z, \dots$). Como existem ambos $\mathbb{V}$ e $V$, então a BNF possui duas formas de aplicação, uma de primeira ordem ($\lambda V : \mathbb{T}2 . \Lambda_{\mathbb{T}2}$) para variáveis de termo e outro de segunda ordem ($\lambda \mathbb{V} : \ast . \Lambda_{\mathbb{T}2}$) para variáveis de tipo.
+
+Da mesma forma, também existe a aplicação de primeira ordem ($\Lambda_{\mathbb{T}2} \Lambda_{\mathbb{T}2}$) e de segunda ordem ($\Lambda_{\mathbb{T}2} {\mathbb{T}2}$).
+
+As regras de parenteses em aplicação e abstração segue as regras vistas anteriormente para o ST$\lambda$C e para o $\lambda_{\beta\eta}$:
+
+\begin{itemize}
+    \item Parenteses mais externos podem ser omitidos
+    \item Aplicação é associativa à esquerda
+    \item Aplicação e $\to$ precedem ambas abstrações $\lambda$ e $\Pi$
+    \item Abstrações $\lambda$ e $\Pi$ sucessivas com o mesmo tipo podem ser combinadas de forma associativa à direita
+    \item Tipos funcionais são escritos de forma associativa à direita
+\end{itemize}
+
+Exemplo: $(\Pi \alpha : \ast . (\Pi \beta : \ast . (\alpha \to (\beta \to \alpha))))$ pode ser escrito como $\Pi \alpha, \beta : \ast . \alpha \to \beta \to \alpha$.
+
+A definição para declarações e sentenças pode ser estendida da seguinte forma:
+
+\begin{definition}[Declarações, sentenças]
+    \hfil
+    \begin{itemize}
+        \item Uma \emph{sentença} possui a forma $M : \sigma$ onde $M \in \Lambda_{\mathbb{T}2}$ e $\sigma \in \mathbb{T}2$ ou da forma $\sigma : \ast$, onde $\sigma \in \mathbb{T}2$
+        \item Uma \emph{declaração} é uma sentença com uma variável de termo ou uma variável de tipo como sujeito
+    \end{itemize}
+\end{definition}
+
+Para $\lambda2$ como é possível que uma variável de termo faça uso de uma variável de tipo, é necessário que a ordem da aparição dessas variáveis siga uma regra, para que uma variável não seja usada antes de ser declarada. O contexto pode ser descrito como um \emph{domínio} da seguinte forma:
+
+\begin{definition}[Contexto de $\lambda2$]
+    \hfil
+    \begin{enumerate}
+        \item $\emptyset$ é um contexto válido de $\lambda2$ \\
+        $dom(\emptyset) = ()$, a lista vazia
+        \item Se $\Gamma$ for um contexto de $\lambda2$, $\alpha \in \mathbb{V}$ e $\alpha \not\in dom(\Gamma$), então $\Gamma, \alpha : \ast$ é um contexto de $\lambda2$ \\
+        $dom(\Gamma, \alpha : \ast) = (dom(\Gamma), \alpha)$, ou seja $dom(\Gamma)$ concatenado com $\alpha$
+        \item Se $\Gamma$ for um contexto de $\lambda2$, se $\rho \in \mathbb{T}2$ tal que $\alpha \in dom(\Gamma)$ para toda variável de tipo livre $\alpha$ existente em $\rho$ e se $x \not\in dom(\Gamma)$, então $\Gamma, x : \rho$ é um contexto de $\lambda2$ \\
+        $dom(\Gamma, x : \rho) = (dom(\Gamma), x)$
+    \end{enumerate}
+\end{definition}
+
+\textbf{Exemplos}
+
+\begin{itemize}
+    \item $\emptyset$ é um contexto de $\lambda2$ por (1)
+    \item $\alpha : \ast$ é um contexto de $\lambda2$ por (2)
+    \item $\alpha : \ast, x : \alpha \to \alpha$ é um contexto de $\lambda2$ por (3)
+    \item logo $\alpha : \ast, x : \alpha \to \alpha, \beta : \ast$ é um contexto de $\lambda2$ por (2)
+    \item e $\alpha : \ast, x : \alpha \to \alpha, \beta : \ast, y : (\alpha \to \alpha) \to \beta$ é um contexto de $\lambda2$ por (3), sendo $dom(\Gamma) = (\alpha, x, \beta, y)$
+\end{itemize}
+
+A regra \emph{var} pode ser reconstruida para lidar com os tipos de $\lambda2$:
+
+\begin{definition} (Regra var em $\lambda2$)
+    \hfil
+    (\emph{var}) $\Gamma \vdash x : \sigma$ se $\Gamma$ for um contexto de $\lambda2$ e $x : \sigma \in \Gamma$
+\end{definition}
+
+O problema é que, usando as regras até então, não é possível chegar ao juizo $\Gamma \vdash B : \ast$. Por isso, será introduzida uma nova regra:
+
+\begin{definition}(Regra de formação)
+    \hfil
+    (\emph{form}) $\Gamma \vdash B : \ast$ se $\Gamma$ é um contexto de $\lambda2$, $B \in \mathbb{T}2$ e todas as variáveis de tipo livres em $B$ sejam declaradas em $\Gamma$
+\end{definition}
+
+Regras de $\lambda2$:
+
+\begin{itemize}
+    \item (\emph{var}) $\Gamma \vdash x : \sigma$ se $\Gamma$ for um contexto de $\lambda2$ e $x : \sigma \in \Gamma$
+    \item (\emph{appl}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash M : \sigma \to \tau$}
+        \AxiomC{$\Gamma \vdash N : \sigma$}
+        \RightLabel{appl}
+        \BinaryInfC{$\Gamma \vdash MN : \tau$}
+    \end{prooftree}
+    \item (\emph{abst}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma, x : \sigma \vdash M : \tau$}
+        \RightLabel{abst}
+        \UnaryInfC{$\Gamma \vdash \lambda x : \sigma . M : \sigma \to \tau$}
+    \end{prooftree}
+    \item (\emph{form}) $\Gamma \vdash B : \ast$ se $\Gamma$ é um contexto de $\lambda2$, $B \in \mathbb{T}2$ e todas as variáveis de tipo livres em $B$ sejam declaradas em $\Gamma$
+    \item ($appl_2$) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash M : \Pi \alpha : \ast . A$}
+        \AxiomC{$\Gamma \vdash B : \ast$}
+        \RightLabel{$appl_2$}
+        \BinaryInfC{$\Gamma \vdash MB : A[\alpha := B]$}
+    \end{prooftree}
+    \item ($abst_2$) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma, \alpha : \ast \vdash M : A$}
+        \RightLabel{$abst_2$}
+        \UnaryInfC{$\Gamma \vdash \lambda \alpha : \ast . M : \Pi \alpha : \ast . A$}
+    \end{prooftree}
+\end{itemize}
+
+\begin{definition}($\lambda2$-termos legais)
+    Um termo $M$ em $\Lambda_{\mathbb{T}2}$ é chamado de \emph{legal} se existe um contexto de $\lambda2$ $\Gamma$ e um tipo $\rho$ em $\mathbb{T}2$ tal que $\Gamma \vdash M : \rho$    
+\end{definition}
+
+\subsubsection{Exemplos de Derivação}
+
+Seja a seguinte árvore de inferência incompleta:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{?}
+    \RightLabel{$?$}
+    \UnaryInfC{$\emptyset \vdash \lambda \alpha : \ast . \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (fx) : \Pi \alpha : \ast . (\alpha \to \alpha) \to \alpha \to \alpha$}
+\end{prooftree}
+
+Primeiro, é necessário utilizar a regra ($abst_2$):
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$?$}
+    \RightLabel{$?$}
+    \UnaryInfC{$\alpha : \ast \vdash \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (fx) : (\alpha \to \alpha) \to \alpha \to \alpha$}
+    \RightLabel{$abst_2$}
+    \UnaryInfC{$\emptyset \vdash \lambda \alpha : \ast . \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (fx) : \Pi \alpha : \ast . (\alpha \to \alpha) \to \alpha \to \alpha$}
+\end{prooftree}
+
+Após isso as regras que precisam ser utilizadas já são conhecidas a partir do ST$\lambda$C:
+
+primeiro dois absts seguidos para $f$ e $x$:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$?$}
+    \RightLabel{$?$}
+    \UnaryInfC{$\alpha : \ast, f : \alpha \to \alpha, x : \alpha \vdash f (fx) : \alpha$}
+    \RightLabel{$abst$}
+    \UnaryInfC{$\alpha : \ast, f : \alpha \to \alpha \vdash \lambda x : \alpha . f (fx) : \alpha \to \alpha$}
+    \RightLabel{$abst$}
+    \UnaryInfC{$\alpha : \ast \vdash \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (fx) : (\alpha \to \alpha) \to \alpha \to \alpha$}
+    \RightLabel{$abst_2$}
+    \UnaryInfC{$\emptyset \vdash \lambda \alpha : \ast . \lambda f : \alpha \to \alpha . \lambda x : \alpha . f (fx) : \Pi \alpha : \ast . (\alpha \to \alpha) \to \alpha \to \alpha$}
+\end{prooftree}
+
+O resto da Derivação fica como exercício para o leitor
+
+\subsubsection[Propriedades do l2]{Propriedades de $\lambda2$}
+
+A definição de $\alpha$-conversão deve ser acomodada para lidar com tipos $\Pi$:
+
+\begin{definition}[$\alpha$-conversão ou $\alpha$-equivalência]
+    \hfil
+    \begin{enumerate}
+        \item (Renomeando variáveis de termo) \\ $\lambda x : \sigma . M =_{\alpha} \lambda y : \sigma . M^{x \to y}$ se $y \not\in FV(M)$ e $y$ não ocorre como ligante em $M$
+        \item (Renomeando variáveis de tipo) \\ $\lambda \alpha : \ast . M =_{\alpha} \lambda \beta : \ast . M[\alpha := \beta]$ se $\beta$ não ocorre em $M$ \\
+        $\Pi \alpha : \ast . M =_{\alpha} \Pi \beta : \ast . M[\alpha := \beta]$ se $\beta$ não ocorre em $M$
+        \item O resto das definições se segue da definição 1.8
+    \end{enumerate}
+\end{definition}
+
+Também é possível extender a regra de $\beta$-redução:
+
+\begin{definition} ($\beta$-redução de passo único)
+    \hfil
+    \begin{enumerate}
+        \item (Base, de primeira ordem) $(\lambda : \sigma . M)N \to_{\beta} M[x := N]$
+        \item (Base, de segunda ordem) $(\lambda \alpha : \ast . M)T \to_{\beta} M[\alpha := T]$
+        \item (Compatibilidade) da mesma forma que definição 1.10
+    \end{enumerate}
+\end{definition}
+
+Os lemmas definidos no capítulo 2 também podem ser utilizados aqui:
+
+\begin{lemma}
+    Os seguintes lemas e teoremas também são válidos para $\lambda2$:
+    \begin{itemize}
+        \item Lema das variáveis livres
+        \item Lema do afinamento
+        \item Lema da condensação
+        \item Lema da geração
+        \item Lema do subtermo
+        \item Unicidade dos tipos
+        \item Lema da substituição
+        \item Teorema de Church-Rosser
+        \item Redução do sujeito
+        \item Teorema da normalização forte
+    \end{itemize}
+\end{lemma}
+
+\begin{lemma}[Lema da permutação]
+    Se $\Gamma \vdash M : \sigma$ e $\Gamma'$ é uma permutação de $\Gamma$ e um contexto de $\lambda2$ válido, então $\Gamma'$ também é um contexto e $\Gamma' \vdash M : \sigma$.
+\end{lemma}
+
+\subsection[O sistema F de Girard]{O Sistema $\mathcal{F}$ de girard}
+
+\end{document}
