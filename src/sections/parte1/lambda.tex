@@ -679,6 +679,17 @@ Exemplos:
     \item O conjunto $\{ A | A \subseteq X\}$ dos subconjuntos de um conjunto $X$, escrito como $\mathcal{P}(X)$ e denominado de \emph{Conjunto Potência}, é um poset com ordem dada pela inclusão de subconjuntos $A \subseteq B$. Essa ordem é antissimetrica pois se $A$ e $A'$ são subconjuntos de $X$ onde $A \subseteq A'$ e $A' \subseteq A$, então $A = A'$. Reflexividade e transitividade se seguem da mesma maneira.
 \end{itemize}
 
+Existem várias formas de mapear um conjunto ordenado em outro de forma a manter suas propriedades:
+
+\begin{definition}
+    Sejam $P$ e $Q$ conjuntos ordenados. Um mapeamento $\phi : P \to Q$ é dito:
+    \begin{enumerate}
+        \item \textbf{preservante de ordem} (também chamado de \textbf{monótono}) se $x \leq y$ em $P$ implica em $\phi (x) \leq \phi (y)$ em $Q$
+        \item \textbf{imersivo de ordem}, escrito como $\phi : P \hookrightarrow Q$, se $x \leq y$ em $P$ se, e somente se, $\phi (x) \leq \phi (y)$ em $Q$
+        \item \textbf{isomorfismo de ordem} se é uma imersão de ordem que mapeia $P$ em $Q$
+    \end{enumerate}
+\end{definition}
+
 Alguns conjuntos possuem um valor menor possível ou um valor maior possível, definidos da seguinte forma:
 
 \begin{definition}
