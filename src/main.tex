@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage{subfiles}
@@ -11,6 +11,9 @@
 \usepackage{mathpartir}
 \usepackage{stmaryrd}
 \usepackage[useregional]{datetime2}
+
+\usepackage[alf, abnt-repeated-title-omit=yes, abnt-emphasize=bf, abnt-etal-list=0]{abntex2cite}
+\citebrackets()
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definição}[section]
@@ -69,6 +72,8 @@
             \subfile{sections/parte1/simple.tex}
             \newpage
             \subfile{sections/parte1/systemF.tex}
+            \newpage
+            \subfile{sections/parte1/omega.tex}
 
     \newpage
         % PARTE 2
@@ -79,7 +84,10 @@
         % PARTE 3
 
         \part{Semântica Categorial das teorias do cubo lambda}
+            \setcounter{section}{0}
+            \renewcommand*{\theHsection}{chX.\the\value{section}}
 
+            \subfile{sections/parte3/cattheory.tex}
     \newpage
         % PARTE 4
 
@@ -94,6 +102,17 @@
         % PARTE 6
         \part{Lógica}
     \newpage
+
+    \newpage
+        % Apêndice Histórico
+        \part{Apêndices}
+        \setcounter{section}{0}
+
+            \subfile{sections/parte7/apendice.tex}
+
+    \newpage
+        % BIBLIOGRAFIA
+        \bibliography{referencias}
 
     \newpage
 \end{document}

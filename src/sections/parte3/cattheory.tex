@@ -1,0 +1,45 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{Introdução à Teoria das Categorias}
+
+A teoria das categorias é uma área de matemática que relaciona diversas áreas, como por exemplo, Teoria dos Grupos, Teoria dos Anéis, Topologia, Teoria dos Grafos, etc. Cada uma dessas teorias tem em comum a definição de seus objetos (Grupos, Anéis, Espaços topológicos, grafos) e formas de relacionar esses objetos (Homomorfismos de grupos, homomorfismos de aneis, homeomorfismos, homomorfismos entre grafos). 
+
+\subsection{Categorias}
+
+Para estudar categorias, primeiro é necessário defini-las:
+
+\begin{definition}[Categoria, \cite{awodey2010}]
+    Uma \emph{categoria} $\mathbf{C}$ consiste em:
+    \begin{itemize}
+        \item \emph{Objetos}: $A, B, C, \dots$
+        \item \emph{Setas} (Morfismos): $f, g, h, \dots$
+        \item Para cada seta $f$ existem objetos: $$dom(f), cod(f)$$ chamados de \emph{domínio} e \emph{contradomínio} de $f$. A escrita $$f : A \to B$$ indica que $A = dom(f)$ e $B = cod(f)$
+        \item Sejam setas $f : A \to B$ e $g : B \to C$ com: $$cod(f) = dom(g)$$ existe uma seta $g \circ f : A \to C$ chamada de \emph{composição} de $f$ com $g$
+        \item Para cada objeto $A$ existe uma seta $$1_A : A \to A$$ chamada de \emph{seta identidade} de $A$
+    \end{itemize}
+    Esses dados precisam satisfazer os seguintes axiomas:
+    \begin{itemize}
+        \item (Associatividade) Sejam $f : A \to B$, $g : B \to C$ e $h : C \to D$ setas, então: $$h \circ (g \circ f) = (h \circ g ) \circ f$$
+        \item (Identidade) Seja $f : A \to B$ uma seta, então $$f \circ 1_A = f = 1_B \circ f$$
+    \end{itemize}
+\end{definition}
+
+Alguns exemplos de categorias são:
+
+\begin{enumerate}
+    \item A categoria \textbf{Sets} que possui conjuntos como objetos e funções como morfismos. 
+    \item Os conjuntos ordenados descritos na Definição 1.31 também podem formar uma categoria junto com os mapeamentos monótonos descritos na Definição 1.32
+    \item Um monóide é um conjunto $M$ equipado com uma operação binária $\cdot : M \times M \to M$ e um elemento unitário $u \in M$ tal que para todo $x, y, z \in M$: $$x \cdot (y \cdot z) = (x \cdot y) \cdot z$$ e $$u \cdot x = x = x \cdot u$$. Por exemplo, o conjunto dos naturais, junto à operação de soma usual, pode ser considerado um monoide, com o $0$ como elemento unitário. \\
+    Existem duas formas de descrever o monoide em relação à teoria das categorias:
+    \begin{itemize}
+        \item O monóide pode ser por si só uma categoria com um único objeto, ele mesmo, e mapas identidade
+        \item Um monóide pode se relacionar a outro a partir de homomorfismos de monoide e nesse caso ele gera uma categoria mais clássica.
+    \end{itemize}
+\end{enumerate}
+
+
+
+\end{document}
+
