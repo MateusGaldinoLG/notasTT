@@ -1,0 +1,305 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{A Teoria \texorpdfstring{$\lambda\underline{\omega}$}{lambda omega}}
+
+\subsection{A Teoria \texorpdfstring{$\lambda\underline{\omega}$}{lambda omega}}
+
+Na seção anterior, foi introduzida a abstração em relação termos que podiam aceitar um tipo como parâmetro. Mas também é interessante construir tipos que aceitem tipos como parametros. Por exemplo, os tipos $\beta \to \beta$ e $\gamma \to \gamma$ possuem uma estrutura geral $\diamond \to \diamond$, com o tipo na mesma posição em relação à seta. Uma abstração em relação a $\diamond$ faz com que seja possível descrever uma família de tipos de forma mais simples.
+
+Para isso, será introduzido aqui um \emph{construtor de tipos} que gera uma função que recebe um tipo como valor e retorna um tipo como resultado, por exemplo $\lambda \alpha : \ast . \alpha \to \alpha$. Quando outros tipos são aplicados a essa função, ela muda seu comportamento: $$(\lambda \alpha : \ast . \alpha \to \alpha) \beta \to_{\beta} \beta \to \beta $$ $$ (\lambda \alpha : \ast . \alpha \to \alpha) \gamma \to_{\beta} \gamma \to \gamma$$
+
+A questão que fica é definir o tipo dessas expressões. Pois sendo $\alpha : \ast$ e $\alpha \to \alpha : \ast$, então $\lambda \alpha : \ast . \alpha \to \alpha : \ast \to \ast$. Logo serão adicionados tipos como $\ast \to \ast$, $\ast \to (\ast \to \ast)$, etc. à sintaxe.
+
+Os tipos $\ast$ e as setas entre $\ast$ são chamados de \emph{espécies} (\emph{kinds} em inglês). A BNF para o conjunto de todas as espécies é: $$\mathbb{K} = \ast | \mathbb{K} \to \mathbb{K}$$
+
+A notação dos parenteses segue a notação para os tipos simples introduzida anteriormente.
+
+O tipo de todas as espécies é denotado por $\square$. Sendo assim $\ast : \square$ e $\ast \to \ast : \square$, etc. Se $\kappa$ é uma espécie, então qualquer termo $M$ "do tipo" $\kappa$ é chamado de construtor de tipos, ou somente \emph{construtor}. Então $\alpha : \ast . \alpha \to \alpha$ é um construtor, assim como somente $\alpha \to \alpha$ também.
+
+\begin{definition}[Construtores, construtores próprios]
+    \hfil
+    \begin{enumerate}
+        \item Se $\kappa : \square$ e $M : \kappa$, então $M$ é um \emph{construtor}. Se $\kappa \not\equiv \ast$, então $M$ é um \emph{construtor próprio}
+        \item O conjunto de todas as variedades (\emph{sorts}) é $\{\ast, \square\}$
+    \end{enumerate}
+\end{definition}
+
+Para falar de uma variedade qualquer, será introduzido o simbolo $s$ como meta variável.
+
+\begin{definition}[níveis]
+    Com essa construção, existem quatro níveis na sintaxe:
+    Nível 1: termos
+    Nível 2: construtores e tipos com construtores próprios
+    Nível 3: espécies
+    Nível 4: consiste somente em $\square$
+\end{definition}
+
+Ao unir esses níveis é possível escrever correntes de juizos como $t : \sigma : \ast \to \ast : \square$, onde $t : \sigma$, $\sigma : \ast \to \ast$ e $\ast \to \ast : \square$ são juizos.
+
+\subsubsection{Regra sort e regra var em \texorpdfstring{$\lambda\underline{\omega}$}{lambda omega}}
+
+É necessário escrever novas regras de inferência para $\lambda\underline{\omega}$, a primeira delas sendo a regra das espécies:
+
+\begin{definition}[Regra das variedades, Sort-rule]
+    \hfil\\
+    (\emph{sort}) $\emptyset \vdash \ast : \square$
+\end{definition}
+
+A próxima regra é a regra de que todo termo ocorrendo em um contexto é derivável naquele contexto, para isso é necessário ter como base que o tipo do termo escolhido seja bem formado, então a regra (\emph{var}) vai mudar em relação às teorias vistas anteriormente:
+
+\begin{definition}[Var-rule]
+    \hfil
+    \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash A : s$}
+        \LeftLabel{(\emph{var})}
+        \RightLabel{se $x \not\in \Gamma$}
+        \UnaryInfC{$\Gamma, x : A \vdash x : A$}
+    \end{prooftree}
+\end{definition}
+
+A premissa dessa regra de derivação requer que $A$ seja ou um tipo, se $s \equiv \ast$, ou uma espécie (se $s \equiv \square$). Então $x$ pode ser ou um tipo variável ou um termo variável.
+
+Exemplo de derivação:
+
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(\emph{var})}
+    \UnaryInfC{$\alpha : \ast \vdash \alpha : \ast$}
+    \RightLabel{(\emph{var})}
+    \UnaryInfC{$\alpha : \ast, x : \alpha \vdash x : \alpha$}
+\end{prooftree}
+
+A primeira linha é formada utilizando a sort-rule, a segunda linha usa a var-rule com $s \equiv \square$ e a terceira linha usa a var-rule com $s \equiv \ast$
+
+\subsubsection{A regra do enfraquecimento em \texorpdfstring{$\lambda\underline{\omega}$}{lambda omega}}
+
+Somente usando as regras (\emph{var}) e (\emph{sort}) não é possível derivar $\alpha : \ast, \beta : \ast \vdash \alpha : \ast$, então é interessante desenvolver uma regra que permita fazer isso. A regra desejada seria uma regra que, partindo de $\alpha : \ast \vdash \alpha : \ast$, chegasse em $\alpha : \ast, \beta : \ast \vdash \alpha : \ast$. Ou seja, uma regra que adicionasse mais informação ao contexto do que o "necessario", que o enfraquecesse.
+
+A regra do enfraquecimento segue a seguinte forma:
+
+\begin{definition}[Regra do enfraquecimento, (\emph{weak})]
+    \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : B$}
+        \AxiomC{$\Gamma \vdash C : s$}
+        \LeftLabel{(\emph{weak})}
+        \RightLabel{se $x \not\in \Gamma$}
+        \BinaryInfC{$\Gamma, x : C \vdash A : B$}
+    \end{prooftree}
+\end{definition}
+
+Ou seja, assumindo que tenha sido derivado o juizo $\Gamma \vdash A : B$, é possível enfraquecer o contexto $\Gamma$ ao adicionar uma declaração arbitrária no final. 
+
+Então a derivação anterior se torna:
+
+\begin{prooftree}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(\emph{var})}
+    \UnaryInfC{ $\alpha : \ast \vdash \alpha : \ast$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(\emph{weak})}
+    \BinaryInfC{$\alpha : \ast \vdash \ast : \square$}
+    \RightLabel{(\emph{weak})}
+    \BinaryInfC{$\alpha : \ast, \beta : \ast \vdash \alpha : \ast$}
+\end{prooftree}
+
+Também é possível fazer a seguinte derivação:
+
+\begin{prooftree}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(\emph{weak})}
+    \BinaryInfC{$\alpha : \ast \vdash \ast : \square$}
+    \RightLabel{(\emph{var})}
+    \UnaryInfC{$\alpha : \ast, \beta : \ast \vdash \beta : \ast$}
+\end{prooftree}
+
+\subsubsection{A regra de formação de \texorpdfstring{$\lambda\underline{\omega}$}{lambda omega}}
+
+A regra de inferência para formar tipos e espécies é descrita como:
+
+\begin{definition}[Regra de Formação, (\emph{form})]
+    \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : s$}
+        \AxiomC{$\Gamma \vdash B : s$}
+        \RightLabel{(\emph{form})}
+        \BinaryInfC{$\Gamma \vdash A \to B : s$}
+    \end{prooftree}
+\end{definition}
+
+Note que não existem tipos dependentes de tipos em $\lambda\underline{\omega}$, logo não existem tipos $\Pi$.
+
+Exemplo:
+
+\begin{prooftree}
+    \AxiomC{\dots}
+    \RightLabel{(\dots)}
+    \UnaryInfC{$\alpha : \ast, \beta : \ast \vdash \alpha : \ast$}
+    \AxiomC{\dots}
+    \RightLabel{(\dots)}
+    \UnaryInfC{$\alpha : \ast, \beta : \ast \vdash \beta : \ast$}
+    \RightLabel{(\emph{form})}
+    \BinaryInfC{$\alpha : \ast, \beta : \ast \vdash \alpha \to \beta : \ast$}
+\end{prooftree}
+
+As duas subárvores geradas pela regra de formação nesse caso já foram detalhadas na subseção anterior, logo foram omitidas aqui.
+
+Exemplo:
+
+\begin{prooftree}
+    \AxiomC{\dots}
+    \RightLabel{(\dots)}
+    \UnaryInfC{$\alpha : \ast \vdash \ast : \square$}
+    \AxiomC{\dots}
+    \RightLabel{(\dots)}
+    \UnaryInfC{$\alpha : \ast \vdash  \ast : \square$}
+    \RightLabel{(\emph{form})}
+    \BinaryInfC{$\alpha : \ast \vdash \ast \to \ast : \square$}
+\end{prooftree}
+
+\subsubsection{Regras de abstração e aplicação}
+
+As regras de abstração e aplicação são definidas da seguinte forma:
+
+\begin{definition}
+    \hfil
+    \begin{itemize}
+        \item (\emph{appl}) \begin{prooftree}
+            \def\fCenter{\mbox{\ $\vdash$\ }}
+            \AxiomC{$\Gamma \vdash M : A \to B$}
+            \AxiomC{$\Gamma \vdash N : A$}
+            \RightLabel{(appl)}
+            \BinaryInfC{$\Gamma \vdash MN : B$}
+        \end{prooftree}
+        \item (\emph{abst}) \begin{prooftree}
+            \def\fCenter{\mbox{\ $\vdash$\ }}
+            \AxiomC{$\Gamma, x : A \vdash M : B$}
+            \AxiomC{$\Gamma \vdash A \to B : s$}
+            \RightLabel{(abst)}
+            \BinaryInfC{$\Gamma \vdash \lambda x : A . M : A \to B$}
+        \end{prooftree}
+    \end{itemize}
+\end{definition}
+
+Exemplo: derivação de $(\lambda \alpha : \ast . \alpha \to \alpha) \beta$
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$? \vdash \lambda \alpha : \ast . \alpha \to \alpha$}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$? \vdash \beta : \ast$}
+    \RightLabel{(appl)}
+    \BinaryInfC{$? \vdash (\lambda \alpha : \ast . \alpha \to \alpha) \beta$}
+\end{prooftree}
+
+A única regra que resolve o lado direito é a (\emph{var}), logo o contexto deve ser também $\beta : \ast$:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{?}
+    \RightLabel{?}
+    \UnaryInfC{$\beta : \ast \vdash \lambda \alpha : \ast . \alpha \to \alpha$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(var)}
+    \UnaryInfC{$\beta : \ast \vdash \beta : \ast$}
+    \RightLabel{(appl)}
+    \BinaryInfC{$\beta : \ast \vdash (\lambda \alpha : \ast . \alpha \to \alpha) \beta$}
+\end{prooftree}
+
+Já no lado esquerdo, é necessário usar a regra (\emph{abst}):
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$\beta : \ast, \alpha : \ast \vdash \alpha \to \alpha : \ast$}
+    \AxiomC{$\beta : \ast \vdash \ast \to \ast : \square$}
+    \RightLabel{(abst)}
+    \BinaryInfC{$\beta : \ast \vdash \lambda \alpha : \ast . \alpha \to \alpha$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \RightLabel{(var)}
+    \UnaryInfC{$\beta : \ast \vdash \beta : \ast$}
+    \RightLabel{(appl)}
+    \BinaryInfC{$\beta : \ast \vdash (\lambda \alpha : \ast . \alpha \to \alpha) \beta$}
+\end{prooftree}
+
+O resto das duas subárvores do lado esquerdo se segue das derivações feitas anteriormente.
+
+\subsubsection{Regra da Conversão}
+
+A regra da conversão faz com que termos que possuem um tipo que possa ser $\beta$-reduzido a outro, possa passar a possuir o tipo mais simples:
+
+\begin{definition}[Regra de Conversão, (\emph{form})]
+    \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : B$}
+        \AxiomC{$\Gamma \vdash B' : s$}
+        \RightLabel{(\emph{conv})}
+        \RightLabel{se $B =_{\beta} B'$}
+        \BinaryInfC{$\Gamma \vdash A : B'$}
+    \end{prooftree}
+\end{definition}
+
+Regras de $\lambda\underline{\omega}$:
+
+\begin{itemize}
+    \item (\emph{sort}) $\emptyset \vdash \ast : \square$
+    \item (\emph{var})  \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash A : s$}
+        \LeftLabel{(\emph{var})}
+        \RightLabel{se $x \not\in \Gamma$}
+        \UnaryInfC{$\Gamma, x : A \vdash x : A$}
+    \end{prooftree}
+    \item (\emph{weak})     \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : B$}
+        \AxiomC{$\Gamma \vdash C : s$}
+        \LeftLabel{(\emph{weak})}
+        \RightLabel{se $x \not\in \Gamma$}
+        \BinaryInfC{$\Gamma, x : C \vdash A : B$}
+    \end{prooftree}
+    \item (\emph{form})     \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : s$}
+        \AxiomC{$\Gamma \vdash B : s$}
+        \RightLabel{(\emph{form})}
+        \BinaryInfC{$\Gamma \vdash A \to B : s$}
+    \end{prooftree}
+    \item (\emph{appl}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma \vdash M : A \to B$}
+        \AxiomC{$\Gamma \vdash N : A$}
+        \RightLabel{(appl)}
+        \BinaryInfC{$\Gamma \vdash MN : B$}
+    \end{prooftree}
+    \item (\emph{abst}) \begin{prooftree}
+        \def\fCenter{\mbox{\ $\vdash$\ }}
+        \AxiomC{$\Gamma, x : A \vdash M : B$}
+        \AxiomC{$\Gamma \vdash A \to B : s$}
+        \RightLabel{(abst)}
+        \BinaryInfC{$\Gamma \vdash \lambda x : A . M : A \to B$}
+    \end{prooftree}
+    \item (\emph{conv})    \begin{prooftree}
+        \AxiomC{$\Gamma \vdash A : B$}
+        \AxiomC{$\Gamma \vdash B' : s$}
+        \RightLabel{(\emph{conv})}
+        \RightLabel{se $B =_{\beta} B'$}
+        \BinaryInfC{$\Gamma \vdash A : B'$}
+    \end{prooftree} 
+\end{itemize}
+
+\subsubsection{Propriedades}
+
+O sistema $\lambda\underline{\omega}$ satisfaz a maioria das propriedades de sistemas anteriores. A única modificação necessária é no Lema da Unicidade dos tipos, pois tipos não são mais literalmente unicos, mas são únicos a menos de $\beta$-conversão:
+
+\begin{lemma}[Unicidade dos tipos a menos de conversão]
+    Se $\Gamma \vdash A : B_1$ e $\Gamma \vdash A : B_2$, então $B_1 =_{\beta} B_2$
+\end{lemma}
+
+\subsection{O Sistema \texorpdfstring{$\mathcal{F}_{\omega}$}{Fw} de Girard}
+
+\end{document}
