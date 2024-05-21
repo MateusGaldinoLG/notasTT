@@ -26,20 +26,144 @@ Para estudar categorias, primeiro é necessário defini-las:
     \end{itemize}
 \end{definition}
 
+Para quaisquer objetos $A$ e $B$ em uma categoria $C$, a coleção de setas de $A$ para $B$ é escrito $Hom_C(A, B)$
+
 Alguns exemplos de categorias são:
 
 \begin{enumerate}
-    \item A categoria \textbf{Sets} que possui conjuntos como objetos e funções como morfismos. 
-    \item Os conjuntos ordenados descritos na Definição 1.31 também podem formar uma categoria junto com os mapeamentos monótonos descritos na Definição 1.32
-    \item Um monóide é um conjunto $M$ equipado com uma operação binária $\cdot : M \times M \to M$ e um elemento unitário $u \in M$ tal que para todo $x, y, z \in M$: $$x \cdot (y \cdot z) = (x \cdot y) \cdot z$$ e $$u \cdot x = x = x \cdot u$$. Por exemplo, o conjunto dos naturais, junto à operação de soma usual, pode ser considerado um monoide, com o $0$ como elemento unitário. \\
-    Existem duas formas de descrever o monoide em relação à teoria das categorias:
-    \begin{itemize}
-        \item O monóide pode ser por si só uma categoria com um único objeto, ele mesmo, e mapas identidade
-        \item Um monóide pode se relacionar a outro a partir de homomorfismos de monoide e nesse caso ele gera uma categoria mais clássica.
-    \end{itemize}
+    \item A categoria \textbf{Set} que possui conjuntos como objetos e funções como morfismos. 
+    \item Os conjuntos ordenados descritos na Definição 1.31 também podem formar uma categoria junto com os mapeamentos monótonos descritos na Definição 1.32, chamada de \textbf{Pos}
+    \item Um monóide é um conjunto $M$ equipado com uma operação binária $\cdot : M \times M \to M$ e um elemento unitário $e \in M$ tal que para todo $x, y, z \in M$: $$x \cdot (y \cdot z) = (x \cdot y) \cdot z$$ e $$e \cdot x = x = x \cdot e$$. Por exemplo, o conjunto dos naturais $\mathbb{N}$, junto à operação de soma usual $+ : \mathbb{N} \times \mathbb{N} \to \mathbb{N}$, pode ser considerado um monoide, com o $0$ como elemento unitário. \\
+    Dois monóides $(M, \cdot)$ e $(N, \star)$ podem ser relacionados através de um \emph{homomorfismo} $\phi : M \to N$ tal que $$\phi (x \cdot y) = \phi(x) \star \phi(y)$$ e $$\phi(e_M) = e_N$$
+    A categoria que possui monóides como objetos e homeomorfismos como morfismos é denominada de \textbf{Mon}
+    \item Um grupo $G$ é um monóide onde para todo $a \in G$ existe um elemento $b \in G$ tal que $a \cdot b = e$. $b$ é chamado de \emph{inverso} de $a$ e é escrito como $a^{-1}$. Um homomorfismo $\phi$ entre dois grupos $(G, \cdot)$ e $(H, \star)$ obedece as duas condições para homomorfismos entre monóides mais a seguinte: $$\phi(a^{-1}) = \phi(a)^{-1}$$ A categoria que possui monóides como objetos e homomorfismos como morfismos é denominada de \textbf{Grp}
+    \item (\cite{riehl2017}) Um grupo $G$ (e também um monóide) define uma categoria $BG$ com um único objeto. Os elementos do grupo são seus morfismos e a composição é dada por $\cdot$. O elemento unitário $e \in G$ age como o morfismo identidade para o objeto único dessa categoria. \\ Por exemplo, para $(\mathbb{Z}, +)$, $e = 0$ e será representado por $0 : \mathbb{Z} \to \mathbb{Z}$. Sendo $ 1 : \mathbb{Z} \to \mathbb{Z}$ e $2 : \mathbb{Z} \to \mathbb{Z}$, então a composição $1 \circ 2$ é em $(\mathbb{Z}, +)$ equivalente a $1 + 2$ e $1 \circ 2 = 3$.
 \end{enumerate}
 
+\begin{definition}[Isomorfismos, \cite{awodey2010}]
+    Em qualquer categoria $C$, um morfismo $f : A \to B$ é chamado de \emph{isomorfismo} se existe um morfismo $g : B \to A$ em $C$ tal que $$g \circ f = 1_A \text{ e } f \circ g = 1_B$$
+\end{definition}
 
+$g$ é chamado de inverso de $f$ e, por ser único, pode ser denotado por $f^{-1}$. Os objetos $A$ e $B$ são ditos \emph{isomórficos} e denotados por $A \cong B$
+
+Exemplos:
+
+\begin{enumerate}
+    \item Os isomorfismos em \textbf{Set} são bijeções
+    \item Os isomorfismos em \textbf{Grp} são os homomorfismos bijetivos
+\end{enumerate}
+
+\begin{definition}[Categorias pequenas, \cite{awodey2010}]
+    Uma categoria $C$ é chamada de \emph{pequena} se a coleção $C_0$ de objetos em $C$ e a coleção $C_1$ de morfismos em $C$ são conjuntos. Caso contrário, $C$ é chamada de \emph{grande}
+\end{definition}
+
+Todas as categorias finitas são pequenas, assim como a categoria \textbf{$Sets_{fin}$} de conjuntos finitos. Já a categoria \textbf{Sets} é grande (Pois caso a coleção de seus objetos fosse um conjunto, isso geraria o paradoxo de Russell)
+
+\begin{definition}[Categoria localmente pequena, \cite{awodey2010}]
+    Uma categoria $C$ é chamada de \emph{localmente pequena} se para quaisquer objetos $X$ e $Y$ em $C$, a coleção de morfismos $Hom_C(X, Y) = \{f \in C_1 | f : X \to Y\}$ é um \emph{conjunto} (Chamado de \emph{hom-set})
+\end{definition}
+
+\subsection{Categorias novas das antigas}
+
+Dada a definição de categorias, é interessante analisar o que pode ser feito com uma categoria e como gerar novas categorias de categorias antigas
+
+\begin{definition}[Categoria oposta, \cite{awodey2010}]
+    A categoria \emph{oposta} (ou "dual") $C^{op}$ de uma categoria $C$ possui os mesmos objetos que $C$, mas para cada morfismos $f : A \to B$ em $C$ existe um morfismo $f : B \to A$ em $C^{op}$
+\end{definition}
+
+A categoria oposta inverte todos os morfismos da categoria que parte. Então seja $f^{op}$ o morfismo invertido, a composição na categoria oposta se torna: $f^{op} \circ g^{op} = (g \circ f)^{op}$
+
+É interessante perceber que cada resultado na Teoria das Categorias terá um resultado dual ganho "de graça" ao fazer esse resultado nas categorias duais.
+
+Também é possível ver que $(C^{op})^{op} = C$
+
+\begin{definition}[Categoria de setas, \cite{rosiak2022}]
+    Seja uma categoria $C$, definimos a \emph{categoria de setas} de $C$, denotada por $C^{\to}$, tendo:
+    \begin{itemize}
+        \item Objetos: morfismos $A \xrightarrow{f} B$ de $C$
+        \item Morfismos: a partir de um objeto de $C^{\to}$ $A \xrightarrow{f} B$ para outro $A' \xrightarrow{f'} B'$ um morfismo é um par $\langle A \xrightarrow{f} B, A' \xrightarrow{f'} B' \rangle$ de morfismos de $C$ fazendo o diagrama
+        \[\begin{tikzcd}
+            A && {A'} \\
+            \\
+            B && {B'}
+            \arrow["h", from=1-1, to=1-3]
+            \arrow["f"', from=1-1, to=3-1]
+            \arrow["{f'}", from=1-3, to=3-3]
+            \arrow["k"', from=3-1, to=3-3]
+        \end{tikzcd}\]
+        comutar. Ou seja, $k \circ f = f' \circ h$ em $C$
+    \end{itemize}
+
+    A composição das setas é feita ao colocar quadrados comutativos lado a lado da seguinte forma:
+    \[\begin{tikzcd}
+        A && {A'} && {A''} \\
+        \\
+        B && {B'} && {B''}
+        \arrow["h", from=1-1, to=1-3]
+        \arrow["f"', from=1-1, to=3-1]
+        \arrow["l", from=1-3, to=1-5]
+        \arrow["{f'}", from=1-3, to=3-3]
+        \arrow["{f''}", from=1-5, to=3-5]
+        \arrow["k"', from=3-1, to=3-3]
+        \arrow["m", from=3-3, to=3-5]
+    \end{tikzcd}\]
+
+    tal que $\langle l, m \rangle \circ \langle h, k \rangle = \langle l \circ h, m \circ k \rangle$
+    \\
+    A identidade de um objeto $A \xrightarrow{f} B$ é dado pelo par $\langle id_A, id_B \rangle$
+
+\end{definition}
+
+Outro tipo de categoria de interesse é a categoria slice:
+
+\begin{definition}[Categoria Slice, \cite{awodey2010}]
+    A categoria slice $\textbf{C}/C$ de uma categoria $\textbf{C}$ sobre um objeto $C \in \textbf{C}$ possui:
+    \begin{itemize}
+        \item Objetos: todas as setas $f \in \textbf{C}$ tal que $cod(f) = C$
+        \item Morfismos: $g$ de $f : X \to C$ e $f' : X' \to C$ é uma seta $g : X \to X'$ em $\textbf{C}$ tal que $f' \circ g = f$ como no diagrama:
+        \[\begin{tikzcd}
+            X && {X'} \\
+            & C
+            \arrow["g", from=1-1, to=1-3]
+            \arrow["f"', from=1-1, to=2-2]
+            \arrow["{f'}", from=1-3, to=2-2]
+        \end{tikzcd}\]
+    \end{itemize}
+    A composição desses morfismos é basicamente a junção de desses triangulos \\
+
+    Também é possível definir a categoria $(C / \textbf{C})$ chamada de categoria de co-slice, onde os objetos são setas $f$ de $\textbf{C}$ tal que $dom(f) = C$ e uma seta entre $f : C \to X$ e $f' : C \to X'$ é uma seta $h : X \to X'$ tal que $h \circ f = f'$ como no diagrama:
+    \[\begin{tikzcd}
+        & C \\
+        X && {X'}
+        \arrow["f", from=2-1, to=1-2]
+        \arrow["g", from=2-1, to=2-3]
+        \arrow["{f'}"', from=2-3, to=1-2]
+    \end{tikzcd}\]
+\end{definition}
+
+Também é possível definir a noção de subcategoria:
+
+\begin{definition}[Subcategoria, \cite{rosiak2022}]
+    Uma categoria $\textbf{D}$ dita \emph{subcategoria} de $\textbf{C}$ é obtida restringindo a coleção de objetos de $\textbf{C}$ para uma subcoleção (Ou seja, todo $\textbf{D}$-objeto é um $\textbf{C}$-objeto) e a coleção de morfismos é obtida restringindo a coleção de morfismos de $\textbf{C}$ onde:
+    \begin{itemize}
+        \item Se o morfismo $f : A \to B$ está em $\textbf{D}$, então $A$ e $B$ estão em $\textbf{D}$
+        \item Se $A$ está em $\textbf{D}$, então também está o morfismo identidade $id_A$
+        \item Se $f : A \to B$ e $g : B \to C$ estão em $\textbf{D}$, então $g \circ f : A \to C$ também está
+    \end{itemize}
+\end{definition}
+
+e também:
+
+\begin{definition}[Subcategoria cheia, \cite{rosiak2022}]
+    Seja $\textbf{D}$ uma subcategoria de $\textbf{C}$. ENtão $\textbf{D}$ é uma \emph{subcategoria cheia} de \textbf{C} quando \textbf{C} não possui setas $A \to B$ além dos que já existem em $\textbf{D}$. Ou seja para quaisquer objetos $A$ e $B$ em $\textbf{D}$, $\textbf{C}$: $$Hom_{\textbf{D}}(A, B) = Hom_{\textbf{C}}(A, B)$$
+\end{definition}
+
+Exemplo:
+
+\begin{itemize}
+    \item A categoria \textbf{FinSet} de conjuntos finitos é uma subcategoria de \textbf{Set}.
+    \item Um grupo $(G, \cdot)$ é dito \emph{abeliano}, ou comutativo, caso para quaisquer dois elementos $a, b \in G$, $a \cdot b = b \cdot a$. A categoria de grupos abelianos \textbf{Ab} é uma subcategoria (cheia) de \textbf{Grp}
+\end{itemize}
 
 \end{document}
 
