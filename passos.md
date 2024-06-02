@@ -133,13 +133,15 @@ Parte II - Construções paralelas ao cubo
 
 Parte III - Semântica categorica do cubo  
 1. Introdução à teoria das categorias  
-[ ] Categorias  
-[ ] Categorias novas de antigas  
-[ ] Funtores (Explicar prefeixes)  
-[ ] Transformações naturais  
-[ ] Construções universais  
+[x] Categorias  
+[x] Categorias novas de antigas  
+[x] Funtores (Explicar prefeixes)  
+[x] Transformações naturais  
+[ ] Adjunções
+[ ] Construções universais - Limites e Colimites  
 [ ] Categorias cartesianas fechadas  
-[ ] Estudo de caso: categoria simplice e conjuntos simpliciais  
+[ ] Estudo de caso 1: categoria simplice e conjuntos simpliciais  
+[ ] Estudo de caso 2: ações de prefeixes  
 2. Semantica categorial da teoria dos tipos simples  
 [ ] A semântica categorial da teoria dos tipos simples  
 3. Teoria dos Topos  
