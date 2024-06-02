@@ -165,5 +165,232 @@ Exemplo:
     \item Um grupo $(G, \cdot)$ é dito \emph{abeliano}, ou comutativo, caso para quaisquer dois elementos $a, b \in G$, $a \cdot b = b \cdot a$. A categoria de grupos abelianos \textbf{Ab} é uma subcategoria (cheia) de \textbf{Grp}
 \end{itemize}
 
+\subsection{Funtores}
+
+Sendo categorias estruturas que se iniciam com objetos e morfismos entre esses objetos, é natural se perguntar se existem morfismos entre categorias. Esses morfismos deveriam também manter a estrutura entre categorias, como por exemplo os morfismos entre grupos mantém a estrutura do grupo, mesmo que mudando-se os objetos e os morfismos internos à categoria. Esse tipo de morfismo entre categorias é chamado de \emph{funtor} e definido da seguinte forma:
+
+\begin{definition}[Funtor, \cite{awodey2010}]
+    Um funtor $F : \mathcal{C} \to \mathcal{D}$ entre categorias $\mathcal{C}$ e $\mathcal{D}$ é um mapeamento de objetos em objetos e setas em setas tal que:
+    \begin{enumerate}
+        \item $F(f : A \to B) = F(f) : F(A) \to F(B)$
+        \item $F(g \circ f) = F(g) \circ F(f)$
+        \item $F(1_A) = 1_{F(A)}$
+    \end{enumerate}
+\end{definition}
+
+A primeira parte define que para cada objeto $A$ em $\mathcal{C}$, existe um objeto correspondente $F(A)$ em $\mathcal{D}$. Também define que Funtores preservam os domínios e codomínios de cada morfismo.
+
+\[\begin{tikzcd}
+	A && B &&& {F(A)} && {F(B)} \\
+	\\
+	&& C &&&&& {F(C)} \\
+	& {\mathcal{C}} &&&&& {\mathcal{D}}
+	\arrow["f", from=1-1, to=1-3]
+	\arrow["{g \circ f}"', from=1-1, to=3-3]
+	\arrow["g", from=1-3, to=3-3]
+	\arrow["{F(f)}"', from=1-6, to=1-8]
+	\arrow["{F(g) \circ F(f)}"', from=1-6, to=3-8]
+	\arrow["{F(g)}"', from=1-8, to=3-8]
+	\arrow["F"', from=4-2, to=4-7]
+\end{tikzcd}\]
+% \[\begin{tikzcd}
+% 	A && {F(A)} \\
+% 	\\
+% 	B && {F(B)} \\
+% 	\\
+% 	C && {F(C)} \\
+% 	C && {\mathcal{D}}
+% 	\arrow["{1_A}"{pos=0.6}, from=1-1, to=1-1, loop, in=150, out=210, distance=5mm]
+% 	\arrow["f", from=1-1, to=3-1]
+% 	\arrow["{g \circ f}"'{pos=0.6}, curve={height=-24pt}, from=1-1, to=5-1]
+% 	\arrow["{1_{F(a)}}", from=1-3, to=1-3, loop, in=150, out=210, distance=5mm]
+% 	\arrow["{F(f)}", from=1-3, to=3-3]
+% 	\arrow["{F(g) \circ F(f)}", curve={height=-24pt}, from=1-3, to=5-3]
+% 	\arrow["g", from=3-1, to=5-1]
+% 	\arrow["{F(g)}", from=3-3, to=5-3]
+% 	\arrow["F", from=6-1, to=6-3]
+% \end{tikzcd}\]
+
+A segunda parte define que existindo uma composição de morfismos em $\mathcal{C}$, também existira uma composição correspondente em $mathcal{D}$.
+
+A terceira parte define que as identidades também são preservadas.
+
+Em algumas partes da matemática porém, os funtores não preservam a ordem dos morfismos. Os funtores que preservam como da regra 1 da parte anterior são chamados de \emph{funtores covariantes}. É interessante também definir os funtores \emph{contravariantes}:
+
+\begin{definition}[Funtor Contravariante, \cite{awodey2010}]
+    Um funtor da forma $F : \mathcal{C}^{op} \to \mathcal{D}$ é chamado de \emph{funtor contravarinate} em $\mathcal{C}$. Ou seja, as regras se tornam:
+    \begin{enumerate}
+        \item Seja $f : A \to B$ em $\mathcal{C}$, então: $F(f : A \to B) : F(B) \to F(A)$
+        \item Seja $g \circ f$ em $\mathcal{C}$, então $F(g \circ f) = F(f) \circ F(g)$
+        \item $F(1_A) = 1_{F(A)}$
+    \end{enumerate}  
+\end{definition}
+
+Um exemplo essencial de funtor contravariante são os \emph{pré-feixes}, definidos da seguinte forma:
+
+\begin{definition}[Pré-feixe, \cite{rosiak2022}]
+    Um \emph{pré-feixe} (com valor de conjunto) em $\mathcal{C}$, onde $\mathcal{C}$ é uma categoria pequena, é um funtor $\mathcal{C}^{op} \to \textbf{Set}$
+\end{definition}
+
+
+O pré-feixe pode ser visto como uma atribuição de dados locais de acordo com a estrutura de $\mathcal{C}$.
+
+Uma vez definidos funtores, o próximo passo é se perguntar se existe uma categoria que usa funtores como morfismos entre seus objetos, e a resposta é que existe tal categoria, onde objetos são categorias, definida da seguinte forma:
+
+\begin{definition}[\textbf{Cat}, \cite{rosiak2022}]
+    A categoria de \emph{categorias pequenas}, denotada por \textbf{Cat}, é a categoria que possui:
+    \begin{itemize}
+        \item objetos: categorias pequenas
+        \item morfismos: funtores entre elas
+    \end{itemize}
+\end{definition}
+
+Para demonstrar que essa é de fato uma categoria, é necessário definir um morfismo/funtor identidade e a ideia de composição entre morfismos/funtores.
+
+\begin{definition}[\cite{rosiak2022}]
+    Dada uma categoria $\mathcal{C}$, o \emph{funtor identidade} é o funtor $id_{\mathcal{C}} : \mathcal{C} \to \mathcal{C}$ que faz o esperado: leva um objeto a ele mesmo e um morfismos a ele mesmo tal que:
+    \begin{itemize}
+        \item $id_{\mathcal{C}} (c) = c$
+        \item $id_{\mathcal{C}} (f) = f$
+    \end{itemize}
+\end{definition}
+
+Para a composição, sejam $\mathcal{C}$, $\mathcal{D}$ e $\mathcal{E}$ categorias pequenas, e $F : \mathcal{C} \to \mathcal{D}$ e $G : \mathcal{D} \to \mathcal{E}$ dois funtores, a composição de $G$ com $F$, o funtor composição $G \circ F : \mathcal{C} \to \mathcal{E}$, é definido tal que para objetos $c$ em $\mathcal{C}$, $(G \circ F) (c) = G(F(c))$ e para um morfismo $f : c \to c'$ em $\mathcal{C}$ $(G \circ F) (f) = G(F(f))$. Para definir que $G \circ F$ é um funtor é necessário pedir sua \emph{funtorialidade}, ou seja, que ele obedeça às regras impostas na definição de funtores:
+
+(1) Sejam $f, g$ funtores em $\mathcal{C}$ tal que $g \circ f$ também está definido em $\mathcal{C}$, então: 
+
+\begin{equation*}
+    \begin{split}
+        (G \circ F) (g \circ f) & = G(F(g \circ f))
+                                     \\ & = G(F(g) \circ F(f))
+                                     \\ & = G(F(g)) \circ G(F(f))
+                                     \\ & = (G \circ F) (g) \circ (G \circ F) (f)
+    \end{split}
+\end{equation*}
+
+onde a primeira e a última linha são a definição da composição de funtores e o méio é a derivação dessa composição.
+
+(2) Seja $c$ qualquer objeto em $\mathcal{C}$, então:
+
+\begin{equation*}
+    \begin{split}
+        (G \circ F) (1_c) & = G(F(1_C))
+                        \\ & = G(1_{F(c)})
+                        \\ & = 1_{G(F(c))}
+                        \\ & = 1_{(G \circ F)(c)}
+    \end{split}
+\end{equation*}
+
+A seguir estão alguns exemplos de funtores:
+
+\begin{enumerate}
+    \item Ao tratar monoides como categorias por si só, é interessante entender o que seria equivalente a funtores nesse caso. Normalmente, as relações entre monoides são \emph{homomorfismos de monoides}. Sejam dois monoides $(M, e, \cdot)$ e $(N, e', \star)$, um homomorfismo $\phi : M \to N$ é um mapeamento tal que $$\phi(m \cdot m') = \phi(m) \star \phi(m')$$ e $$\phi(e) = e'$$
+    É possível ver que $\phi$ possui a estrutura de funtor entre monoides. $\phi$ seria contravariante se $\phi(m \cdot m') = \phi(m') \star \phi(m)$
+    \item Existe um funtor $Core : \textbf{Mon} \to \textbf{Grp}$ que pega um monoide e retorna um subconjunto desse monoide que possui elementos inversos, o que faz com que o monoide se torne um grupo, chamado de \emph{cerne} (\emph{Core}) do monoide.
+    \item Existe um funtor $U : \textbf{Grp} \to \textbf{Mon}$ chamado de \emph{Forgetful functor} (Funtor esquecido) que pega um grupo e retorna o monoide correspondente, "esquecendo" a estrutura a mais que caracteriza os grupos.
+    \item Outro funtor esquecido é $U : \textbf{Cat} \to \textbf{Grph}$ que pega cada categoria e retorna o grafo correspondente a ela. Um Grafo $G = (V, A, s, t)$ é composto de um conjunto de vertices $V$, um conjunto de arestas $A$ que são direcionadas, e um par de funções $s, t : A \to B$ que codifica a direção das arestas ao assinalar a cada aresta $a \in A$ um inicio $s(a) \in V$ e um fim $t(a) \in V$.
+\end{enumerate}
+
+A coleção de objetos de uma categoria $\mathcal{C}$ será denotada por $\mathcal{C}_0$ e a coleção de morfismos será denotada por $\mathcal{C}_1$ na próxima definição:
+
+\begin{definition}[\cite{awodey2010}]
+    Um funtor $F : \mathcal{C} \to \mathcal{D}$ é dito:
+    \begin{itemize}
+        \item \emph{injetivo em objetos} se a parte de objetos $F_0 : \mathcal{C}_0 \to \mathcal{D}_0$ é injetiva, é \emph{sobrejetora em objetos} se $F_0$ é sobrejetora
+        \item De forma similar, $F$ é \emph{injetiva} (resp. \emph{sobrejetora}) em \emph{setas} se a parte de setas $F_1 : \mathcal{C}_1 \to \mathcal{D}_1$ é injetiva (resp. sobrejetora)
+        \item $F$ é dito \emph{fiel} (Faithful) se, para todo $A, B \in \mathcal{C}_0$, o mapa $F_{A, B} : Hom_{\mathcal{C}}(A, B) \to Hom_{\mathcal{D}}(FA, FB)$ definido por $f : F(f)$ é injetivo
+        \item Similarmente $F$ é dito \emph{cheio} (full) se $F_{A, B}$ é sempre sobrejetor
+    \end{itemize}
+\end{definition}
+
+Exemplo: Seja o funtor esquecido $U : \textbf{Grp} \to \textbf{Set}$. $U_0$ é basicamente o mapeamento dos conjuntos que forma o grupo para os próprios conjuntos, logo $U_0$ é injetivo e sobrejetor em objetos. $U_1$ mapeia os homomorfismos de grupo para as funções correspondentes. Mas dois homomorfismos de grupo com o mesmo domínio e codomínio são iguais se são dados pelas mesmas funções nos conjuntos internos. Porém, nem todas as funções em $\textbf{Set}$ são mapeadas por homomorfismos, logo $U_1$ é injetivo em setas mas não sobrejetor em setas. Os motivos para dizer que $U_1$ é injetor em setas podem ser usados para mostrar que $U$ é fiel. 
+
+\subsection{Transformações Naturais}
+
+Uma vez tendo definido morfismos entre categorias, se torna possível pensar morfismos entre esses morfismos. No caso, morfismos entre funtores:
+
+\begin{definition}[Transformação Natural, \cite{rosiak2022}]
+    Sejam duas categorias $\mathcal{C}$ e $\mathcal{D}$ e funtores $F, G : \mathcal{C} \to \mathcal{D}$. Uma \emph{Transformação Natural} $\alpha : F \Rightarrow G$ representado em relação a seus dados como: 
+    % \[\begin{tikzcd}
+    %     C && D
+    %     \arrow[""{name=0, anchor=center, inner sep=0}, "F", curve={height=-12pt}, from=1-1, to=1-3]
+    %     \arrow[""{name=1, anchor=center, inner sep=0}, "G"', curve={height=12pt}, from=1-1, to=1-3]
+    %     \arrow["\alpha", shorten <=3pt, shorten >=3pt, Rightarrow, from=0, to=1]
+    % \end{tikzcd}\]
+    Consiste no seguinte:
+    \begin{itemize}
+        \item Para cada objeto $c \in \mathcal{C}$, um morfismo $\alpha_c : F(c) \to G(c)$ em $\mathcal{D}$ chamado de $c$-componente de $\alpha$, a coleção do qual (para todo objeto em $\mathcal{C}$) define os \emph{componentes} da transformação natural
+        \item Para cada morfismo $f : c \to c'$ em $\mathcal{C}$ o seguinte quadrado de morfismos, chamado de \emph{quadrado de naturalidade} de $f$, que deve comutar em $\mathcal{D}$:
+        \[\begin{tikzcd}
+            c && {F(c)} && {G(c)} \\
+            \\
+            {c'} && {F(c')} && {G(c')}
+            \arrow["f"', from=1-1, to=3-1]
+            \arrow["{\alpha_{c}}"', from=1-3, to=1-5]
+            \arrow["{F(f)}"', from=1-3, to=3-3]
+            \arrow["{G(f)}", from=1-5, to=3-5]
+            \arrow["{\alpha_{c'}}"', from=3-3, to=3-5]
+        \end{tikzcd}\]
+    \end{itemize}
+    A coleção de transformações naturais entre $F$ e $G$ é por vezes denotada por $Nat(F, G)$
+\end{definition}
+
+É dito que morfismos em uma categoria possuem \emph{naturalidade} quando possuem um comportamento parecido com o do \emph{quadrado de naturalidade}, ou seja se $G(f) \circ \alpha_c = \alpha_{c'} \circ F(f)$.
+
+Uma vez que as transformações naturais ajudam a comparar dois funtores entre si, é interessante saber quando os dois funtores são praticamente iguais. Para isso, vamos usar a seguinte definição:
+
+\begin{definition}[Isomorfismo natural, \cite{rosiak2022}]
+    Um \emph{isomorfismo natural} é uma transformação natural $\alpha : F \Rightarrow G$ para qual todo componente $\alpha_c : F(c) \to G(c)$ em $\mathcal{D}$ é um isomorfismo (na categoria alvo). Ou seja, cada $\alpha_c$ possui um inverso $\alpha_c^{-1} : G(c) \to F(c)$ onde os inversos formam componentes de uma transformação natural $\alpha^{-1}$ de $G$ para $F$.
+\end{definition}
+
+Se $\alpha$ for um isomorfismo, usa-se a notação $\alpha : F \cong G$
+
+Uma vez definida a equivalência entre funtores, é interessante definir equivalência entre categorias:
+
+\begin{definition}[equivalência de categorias, \cite{rosiak2022}]
+    Uma \emph{equivalência de categorias} consiste de um par de funtores $F : \mathcal{C} \to \mathcal{D}$ e $G : \mathcal{D} \to \mathcal{C}$ junto com os isomorfismos naturais $\eta : id_{\mathcal{C}} \cong G \circ F$ e $\epsilon : F \circ G \cong id_{\mathcal{D}}$. Outro jeito de dizer isso é que os funtores são inversos entre si "até o isomorfismo natural de funtores". As categorias $\mathcal{C}$ e $\mathcal{D}$ são ditas \emph{equivalentes} se existe uma equivalência de categorias entre elas, isso é denotado por $\mathcal{C} \simeq \mathcal{D}$
+\end{definition}
+
+Uma construção interessante é a categoria de setas que possui funtores como objetos e transformações naturais como morfismos, definida como:
+
+\begin{definition}[\cite{rosiak2022}]
+    Para qualquer par fixo de categorias $\mathcal{C}$ e $\mathcal{D}$, pode-se formar uma \emph{categoria de funtores} denotada por $\mathcal{D}^{\mathcal{C}}$ (Ou também $Fun(\mathcal{C}, \mathcal{D})$) que possui:
+    \begin{itemize}
+        \item objetos: todos os funtores de $\mathcal{C}$ para $\mathcal{D}$
+        \item morfismos: todas as transformações naturais entre tais funtores
+    \end{itemize}
+\end{definition}
+
+Para demonstrar o aspecto de morfismo das transformações naturais, é necessário definir a transformação natural identidade, dada simplismente por $id_F : F \Rightarrow F$, e a composição entre transformações naturais, dada pela seguinte definição:
+
+\begin{definition}[\cite{rosiak2022}]
+    Sejam $\alpha : F \Rightarrow G$ e $\beta : G \Rightarrow H$ transformações naturais entre os funtores paralelos $F, G, H$ entre $\mathcal{C}$ e $\mathcal{D}$ como no seguinte diagrama:
+    % \[\begin{tikzcd}
+    %     C &&& D
+    %     \arrow[""{name=0, anchor=center, inner sep=0}, "H"', curve={height=30pt}, from=1-1, to=1-4]
+    %     \arrow[""{name=1, anchor=center, inner sep=0}, "F", curve={height=-30pt}, from=1-1, to=1-4]
+    %     \arrow[""{name=2, anchor=center, inner sep=0}, "G"{description}, from=1-1, to=1-4]
+    %     \arrow["\alpha", shorten <=4pt, shorten >=4pt, Rightarrow, from=1, to=2]
+    %     \arrow["\beta", shorten <=4pt, shorten >=4pt, Rightarrow, from=2, to=0]
+    % \end{tikzcd}\]
+    Existe uma transformação natural $\beta \circ \alpha : F \Rightarrow H$, definida em cada componente como: $(\beta \circ \alpha)_c := \beta_c \circ \alpha_c$ dada pela composição de $\beta$ e $\alpha$.
+\end{definition}
+
+Esse estilo de composição é denominado de \emph{compisição vertical}
+
+Já a composição horizontal denotada pelo simbolo $\diamond$ dado por $\beta \diamond \alpha : F_2 \circ F_1 \Rightarrow G_2 \circ G_1$, os quais cada componente em $c$ de $\mathcal{C}$ é definido como o composto do seguinte diagrama comutativo:
+
+% \[\begin{tikzcd}
+% 	C &&& D && E
+% 	\arrow[""{name=0, anchor=center, inner sep=0}, "{G_1}"', curve={height=30pt}, from=1-1, to=1-4]
+% 	\arrow[""{name=1, anchor=center, inner sep=0}, "{F_1}", curve={height=-30pt}, from=1-1, to=1-4]
+% 	\arrow[""{name=2, anchor=center, inner sep=0}, "{F_2}", curve={height=-30pt}, from=1-4, to=1-6]
+% 	\arrow[""{name=3, anchor=center, inner sep=0}, "{G_2}", curve={height=30pt}, from=1-4, to=1-6]
+% 	\arrow["\alpha", shorten <=8pt, shorten >=8pt, Rightarrow, from=1, to=0]
+% 	\arrow["\beta", shorten <=8pt, shorten >=8pt, Rightarrow, from=2, to=3]
+% \end{tikzcd}\]
+
+
+
 \end{document}
 
