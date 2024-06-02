@@ -80,10 +80,10 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 
 5. Teoria dos Tipos Dependentes  
 5.1 Teoria dos tipos dependentes    
-[ ] Regras de inferência  
-[ ] Exemplo de derivação  
-[ ] Lógica predicativa mínima  
-[ ] Exemplo de derivação lógica  
+[x] Regras de inferência  
+[x] Exemplo de derivação  
+[x] Lógica predicativa mínima  
+[x] Exemplo de derivação lógica  
 
 
 6. Cálculo de Construções  
@@ -127,8 +127,8 @@ Parte II - Construções paralelas ao cubo
 (hasegawa - decomposing)   
 3. O cálculo Zeta  
 [ ] Teoria dos tipos em computadores quânticos  
-4. teoria dos tipos infinitos (Uemura)
-[ ] Ver onde colocar essa teoria dos tipos
+4. Sistema de Tipos de Hindley-Milner  
+[ ] Definição do sistema  
 
 
 Parte III - Semântica categorica do cubo  
@@ -163,7 +163,12 @@ Parte III - Semântica categorica do cubo
 [ ] Definição  
 [ ] A semântica categorial da teoria dos tipos modal  
 9. Categorias fibradas  
+[ ] Definição  
+[ ] A semântica categorial da teoria dos tipos simples, novamente, de novo  
+[ ] A semântica categorial do cálculo lambda não tipado  
+[ ] A semântica categorial do Sistema F, de novo
 10. Categorias enriquecidas  
+[ ] Definição  
 
 
 Parte IV - As várias teorias homotópicas de tipos  
@@ -219,7 +224,20 @@ Parte V - Semântica categorial de HOTT
 1. Teoria dos Feixes  
 [ ] Feixes  
 2. Topos de Grothendieck   
-3. 2-categorias e Infinito-categorias
+[ ] Definição  
+3. 2-categorias  
+[ ] Definição
+4. Um resumo de Teoria das Homotopias  
+[ ] Definição  
+[ ] Grupoide Fundamental  
+[ ] complexos CW  
+[ ] Cubos  
+4. Infinito-categorias  
+[ ] O problema dos modelos de infinito-categorias  
+[ ] Quasi-categorias  
+[ ] infinito-groupoid  
+[ ] infinito-cosmos  
+
 
 Parte VI - Lógica
 1. Dedução natural   
@@ -246,9 +264,17 @@ Parte VI - Lógica
 8. Teorema da incompletude de Gödel  
 [ ] Definição  
 
-Apêndice Histórico
+Apêndice Histórico  
 [ ] Fazer cronograma das publicações
 
 Coisas que precisam ser feitas a nível estético/literário:  
 [ ] Corrigir erros de digitação e de primeira/terceira pessoa  
 [ ] Transformar as citações em ABNT
+
+Ver onde encaixar os seguintes tópicos:  
+1. teoria dos tipos infinitos (Uemura)  
+[ ] Ver onde colocar essa teoria dos tipos  
+2. Abstract Stone Duality (Taylor)  
+[ ] Definições  
+3. Interaction Combinators  
+[ ] Definições  

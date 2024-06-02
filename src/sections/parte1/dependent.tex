@@ -1,0 +1,388 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{Teoria dos Tipos Dependente}
+
+\subsection{Teoria dos Tipos dependentes}
+
+Na Teoria dos Tipos simples $\lambda_{\to}$, cada termo depende de outro. Para cada extensão, foram adicionadas novas dependências:
+
+\begin{itemize}
+    \item $\lambda2$: termos dependem de tipos
+    \item $\lambda\underline{\omega}$: tipos dependem de tipos
+\end{itemize}
+
+Fica faltando então uma teoria dos tipos que abarque tipos que dependem de termos.
+
+\begin{itemize}
+    \item $\lambda P$: tipos dependem de termos
+\end{itemize}
+
+É essa teoria que será analisáda nesse capítulo. Tipos que pendendem de termos possuem o seguinte formato:
+
+$$\lambda x : A . M$$
+
+onde $M$ é um tipo e $x$ é uma variável de termo (Logo $A$ é um tipo também). A abstração $\lambda x : A . M$ \emph{depende} do termo $x$.
+
+\textbf{Exemplos de Motivação}:
+
+\begin{enumerate}[label=(\arabic*)]
+    \item Na programação, podemos definir uma lista a partir de seu tamanho, por exemplo: $[1, 2] : \text{List}2$. Logo $\lambda n : \mathbb{N} . List n$ também é um tipo, também chamado de \emph{construtor de tipo}, \emph{família de tipos} ou \emph{tipo indexado} (indexado pelo termo $n : \mathbb{N}$) que depende do termo $n$
+    \item Seja $S_n = \{0, n, 2n, 3n, \dots\}$ o conjunto de todos os multiplos não negativos de $n$. Então $\lambda n : \mathbb{N} . S_n$ mapeia:
+    \begin{itemize}[label=-]
+        \item $0 \mapsto \{0\}$
+        \item $1 \mapsto \mathbb{N}$ (O conjunto de todos os números naturais)
+        \item $2 \mapsto \{0, 2, 4, \dots\}$ (O conjunto de todos os números pares)
+    \end{itemize}
+\end{enumerate}
+
+O tipo de $S_n$ e de $\text{List}n$ é $\mathbb{N} \to \ast$.
+
+Um exemplo importante é o seguinte:
+
+\begin{enumerate}[label=(\arabic*)]\addtocounter{enumi}{2}
+    \item Seja $P_n$ uma \emph{proposição} para cada $n : \mathbb{N}$. A partir da interpretação de \emph{Proposições-como-Tipos}, $\lambda n : \mathbb{N} . P_n$ é um tipo que mapeia $n$ para sua proposição $P_n$ correspondente, chamado de \emph{função com valor de proposição}. \\
+    Na lógica, esse tipo de construção é chamado de \emph{Predicado}. Por exemplo, seja a interpretação de $P_n$ como "$n$ é um número primo". Na lógica, esse predicado pode ser verdadeiro ou falso a depender do valor de $n$
+\end{enumerate}
+
+\subsubsection{Regras de Inferência de \texorpdfstring{$\lambda P$}{lP}}
+
+
+As regras de inferência de $\lambda P$ são as seguintes:
+
+\begin{itemize}[label=]
+    \item (\emph{sort}) $\emptyset \vdash \ast : \square$
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : s$}
+                \LeftLabel{(\emph{var})}
+                \RightLabel{se $x \not\in \Gamma$}
+                \UnaryInfC{$\Gamma, x : A \vdash x : A$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : B$}
+                \AxiomC{$\Gamma \vdash C : s$}
+                \LeftLabel{(\emph{weak})}
+                \RightLabel{se $x \not\in \Gamma$}
+                \BinaryInfC{$\Gamma, x : C \vdash A : B$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : \ast$}
+                \AxiomC{$\Gamma, x : A \vdash B : s$}
+                \LeftLabel{(\emph{form})}
+                \BinaryInfC{$\Gamma \vdash \Pi x : A . B : s$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash M : \Pi x : A . B$}
+            \AxiomC{$\Gamma \vdash N : A$}
+            \LeftLabel{(\emph{appl})}
+            \BinaryInfC{$\Gamma \vdash MN : B[x := N]$}
+            \DisplayProof
+            }
+    \item \noindent\mbox{%
+        \AxiomC{$\Gamma, x : A \vdash M : B$}
+        \AxiomC{$\Gamma \vdash \Pi x : A . B$}
+        \LeftLabel{(\emph{abst})}
+        \BinaryInfC{$\Gamma \vdash \lambda x : A . M : \Pi x : A . B$}
+        \DisplayProof
+    }
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash A : B $}
+            \AxiomC{$\Gamma \vdash B' : s$}
+            \LeftLabel{(\emph{conv})}
+            \RightLabel{se $B =_{\beta} B'$}
+            \BinaryInfC{$\Gamma \vdash A : B'$}
+            \DisplayProof
+    }
+\end{itemize}
+
+As regras (\emph{sort}), (\emph{var}) e (\emph{weak}) em $\lambda P$ são identicas às de $\lambda\underline{\omega}$. Porém, as regras que diferem de $\lambda\underline{\omega}$ são porque:
+
+\begin{enumerate}[label=(\roman*)]
+    \item Com o uso de tipos $\Pi$, nas regras de (\emph{form}), (\emph{appl}) e (\emph{abst}) os tipos $\to$ não aparecem como em $A \to B$ e no lugar são colocados tipos como $\Pi x : A . B$. 
+    \item No tipo $\Pi x : A . B$, $x$ é necessariamente um \emph{termo}, logo $A : \ast$. O que difere de $\lambda\underline{\omega}$
+\end{enumerate}
+
+Em $\lambda P$, a abstração só é escrita como $A \to B$ no lugar de $\Pi x : A. B$ se existe a certeza que $x$ não ocorre livre em $B$. 
+
+Na regra (\emph{form}), existem dois casos possíveis:
+
+\begin{enumerate}
+    \item Se $s = \ast$, então $A : \ast$, $B : \ast$ e $\Pi x : A . B : \ast$
+    \item Se $s = \square$, então $A : \ast$, $B : \square$ e $\Pi x : A . B : \square$
+\end{enumerate}
+
+\subsubsection{Exemplo de derivação em \texorpdfstring{$\lambda P$}{lP}}
+
+Primeiro é interessante derivar o tipo $A \to \ast : \square$:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \LeftLabel{(\emph{var})}
+    \UnaryInfC{$\emptyset \vdash A : \ast$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \AxiomC{$\emptyset \vdash \ast : \square$}
+    \LeftLabel{(\emph{weak})}
+    \BinaryInfC{$A : \ast \vdash \ast : \square$}
+    \LeftLabel{(\emph{var})}
+    \UnaryInfC{$\emptyset \vdash A : \ast$}
+    \LeftLabel{(\emph{weak})}
+    \BinaryInfC{$ x : A \vdash \ast : \square$}
+    \LeftLabel{(\emph{form})}
+    \BinaryInfC{$\emptyset \vdash A \to \ast : \square$}
+\end{prooftree}
+
+Uma vez construido esse tipo, é possível utilizar a regra (\emph{var}) para gerar um habitante desse tipo:
+
+\begin{prooftree}
+    \AxiomC{$\emptyset \vdash A \to \ast : \square$}
+    \LeftLabel{(\emph{var})}
+    \UnaryInfC{$P : A \to \ast \vdash P : A \to \ast$}
+\end{prooftree}
+
+Seja $x : A$ um termo, é possível construir a aplicação de $P$ com $x$:
+
+\begin{prooftree}
+    \AxiomC{$P : A \to \ast \vdash P : A \to \ast$}
+    \AxiomC{$\emptyset \vdash A : \ast$}
+    \LeftLabel{(\emph{var})}
+    \UnaryInfC{$x : A \vdash x : A$}
+    \LeftLabel{(\emph{appl})}
+    \BinaryInfC{$ P : A \to \ast, x : A \vdash Px : \ast$}
+\end{prooftree}
+
+Podemos gerar o seguinte tipo:
+
+\begin{prooftree}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px : \ast$}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px : \ast$}
+    \LeftLabel{(\emph{weak})}
+    \BinaryInfC{$ P : A \to \ast, x : A, y : Px \vdash Px : \ast$}
+\end{prooftree}
+
+e
+
+\begin{prooftree}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px : \ast$}
+    \AxiomC{$ P : A \to \ast, x : A, y : Px \vdash Px : \ast$}
+    \LeftLabel{(\emph{form})}
+    \BinaryInfC{$ P : A \to \ast, x : A \vdash Px \to Px : \ast$}
+\end{prooftree}
+
+Logo:
+
+\begin{prooftree}
+    \AxiomC{$\emptyset \vdash A : \ast$}
+    \AxiomC{$\emptyset \vdash A \to \ast : \square$}
+    \LeftLabel{(\emph{weak})}
+    \BinaryInfC{$ P : A \to \ast \vdash A : \ast$}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px \to Px : \ast$}
+    \LeftLabel{(\emph{form})}
+    \BinaryInfC{$ P : A \to \ast \vdash \Pi x : A . Px \to Px : \ast$}
+\end{prooftree}
+
+
+Para gerar os termos:
+
+\begin{prooftree}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px : \ast$}
+    \LeftLabel{(\emph{var})}
+    \UnaryInfC{$ P : A \to \ast, x : A, y : Px \vdash y : Px $}
+    \AxiomC{$ P : A \to \ast, x : A \vdash Px \to Px : \ast$}
+    \LeftLabel{(\emph{abst})}
+    \BinaryInfC{$P : A \to \ast, x : A \vdash \lambda y : Px . y : Px \to Px$}
+    \AxiomC{$ P : A \to \ast \vdash \Pi x : A . Px \to Px : \ast$}
+    \LeftLabel{(\emph{abst})}
+    \BinaryInfC{$P : A \to \ast \vdash \lambda x : A \lambda y : Px . y : \Pi x : A . Px \to Px$}
+\end{prooftree}
+
+Fica para o leitor integrar essas díversas árvores em uma única.
+
+\subsubsection{Lógica de Predicados mínima em \texorpdfstring{$\lambda P$}{lP}}
+
+Em $\lambda P$ é possível codificar uma forma de lógica simples chamada de \emph{lógica de predicados mínima}. Essa lógica só possui a implicação e o quantificador universal em sua estrutura. As suas entidades básicas são \emph{proposições}, \emph{conjuntos} e \emph{predicados sobre conjuntos}.
+
+A interpretação de Proposições-como-Tipos (PAT) é feita da seguinte forma:
+
+\begin{enumerate}[label=-]
+    \item Se o termo $b$ habita o tipo $B$ (ou seja, $b : B$) e sendo $B$ interpretada como uma proposição, então $b$ é a \emph{prova} de $B$, chamado de \emph{objeto de prova}.
+    \item Se um tipo $B$ não possui habitante, então não existe prova de $B$ e $B$ deve ser falso
+\end{enumerate}
+
+Em $\lambda P$, para definir que $b$ habita $B$ temos que realizar um juizo no estilo $\Gamma \vdash b : B$ a partir das regras de inferência descritas anteriormente.
+
+Um conjunto $S$ pode ser codificado como um tipo, então $S : \ast$. \emph{Elementos} de um conjunto são termos. Então se $a$ é um elemento de $S$, $a : S$. Se $S$ for o conjunto vazio, $S$ não vai possuir termos.
+
+Exemplos: Se $\mathbb{N} : \ast$, $3 : \mathbb{N}$
+
+Proposições também podem ser definidas como tipos. Então sendo $A$ uma proposição, $A : \ast$. Um termo $p : A$ é uma prova de $A$.
+
+Como visto anteriormente, um predicado $P$ é uma função de um \emph{conjunto} $S$ para o \emph{conjunto de todas as proposições}, então: $P : S \to \ast$. Logo seja $P$ um predicado arbitrário em $S$, ou seja $P : S \to \ast$, então para cada $a : S$ tem-se $Pa : \ast$. Todo $Pa$ é uma proposição, que é um tipo em $\lambda P$, logo existem duas possibilidades:
+
+\begin{enumerate}
+    \item Se $Pa$ for \emph{habitado}, ou seja existe $t : Pa$, então o predicado é válido para $a$
+    \item Caso $Pa$ não seja habitado, o predicado não se segue para $a$
+\end{enumerate}
+
+Anteriormente, foi identificada a implicação $A \Rightarrow  B$ com o tipo $A \to B$ da seguinte forma:
+
+\begin{enumerate}[label=]
+    \item $A \Rightarrow B$ é verdadeiro
+    \item Se $A$ é verdadeiro, então $B$ é verdadeiro
+    \item Se $A$ é habitado, então $B$ é habitado
+    \item Existe uma função mapeando habitantes de $A$ em habitantes de $B$
+    \item Existe uma função $f : A \to B$
+    \item $A \to B$ é habitado
+\end{enumerate}
+
+A partir das regras de $\lambda P$ é possível obter as regras de eliminação e introdução da implicação:
+
+\begin{enumerate}
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash M : A \to B$}
+            \AxiomC{$\Gamma \vdash N : A$}
+            \LeftLabel{$\Rightarrow$-elim}
+            \BinaryInfC{$\Gamma \vdash MN : B$}
+            \DisplayProof
+            }
+    \item \noindent\mbox{%
+        \AxiomC{$\Gamma, x : A \vdash M : B$}
+        \AxiomC{$\Gamma \vdash A \to B : s$}
+        \LeftLabel{$\Rightarrow$-intro}
+        \BinaryInfC{$\Gamma \vdash \lambda x : A . M : A \to B$}
+        \DisplayProof
+    }
+\end{enumerate}
+
+Já a quantificação universal, $\forall_{x \in S} P(x)$, de um prediado $P$ dependente de um $x$ elemento de $S$ vai ter sua equivalência encontrada da seguinte forma:
+
+\begin{enumerate}[label=]
+    \item $\forall_{x \in S} P(x)$ é verdadeiro
+    \item Para cada $x$ pertencente a $S$, a proposição $P(x)$ é verdadeira
+    \item para cada $X$ em $S$, o tipo $Px$ é habitado
+    \item Existe uma função mapeando cada $x$ em $S$ para um habitante de $Px$
+    \item Existe uma função $f$ tal que $f : \Pi x : S . Px$
+    \item $\Pi x : S . Px$ é habitado
+\end{enumerate}
+
+Logo, a forma de codificação de $\forall_{x \in S} P(x)$ é o tipo $\Pi x : S . Px$. 
+
+As regras de eliminação e introdução do $\forall$ no $\lambda P$ são as seguintes:
+
+\begin{enumerate}
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash p : \forall_{x \in S} P(x)$}
+            \AxiomC{$\Gamma \vdash n : S$}
+            \LeftLabel{$\forall$-elim}
+            \BinaryInfC{$\Gamma \vdash pn : P(x)[x := n]$}
+            \DisplayProof
+            }
+    \item \noindent\mbox{%
+        \AxiomC{$\Gamma, x : S \vdash M : P(x)$}
+        \AxiomC{$\Gamma \vdash \forall_{x \in S} P(x) : \ast$}
+        \LeftLabel{$\forall$-intro}
+        \BinaryInfC{$\Gamma \vdash \lambda x : S . P(x) : \forall_{x \in S} P(x)$}
+        \DisplayProof
+    }
+\end{enumerate}
+
+Essas regras correspondem, na dedução natural no estilo de Gentzen às seguintes:
+
+
+\begin{enumerate}
+    \item \noindent\mbox{%
+            \def\fCenter{\mbox{\ $\vdash$\ }}
+            \AxiomC{$P(n)$}
+            \LeftLabel{$\forall$I}
+            \UnaryInfC{$\forall_{x \in S} P(x)$}
+            \DisplayProof
+            }
+    \item \noindent\mbox{%
+        \AxiomC{$\forall_{x \in S} P(x)$}
+        \LeftLabel{$\forall$E}
+        \UnaryInfC{$P(n)$}
+        \DisplayProof
+    }
+\end{enumerate}
+
+
+\subsubsection{Exemplo de derivação na lógica de predicados mínima}
+
+Seja $S$ um conjunto de $Q$ um predicado sobre $S$, então a seguinte proposição é provável usando a lógica de predicados mínima:
+
+$$\forall_{x \in S} \forall_{y \in S} (Q(x, y)) \Rightarrow \forall_{u \in S}Q(u, u)$$
+
+Na dedução natural, isso se torna:
+
+\begin{prooftree}
+    \AxiomC{$\forall_{x \in S} \forall_{y \in S} (Q(x, y))^1$}
+    \LeftLabel{$\forall$E}
+    \UnaryInfC{$\forall_{y \in S} (Q(z, y))$}
+    \LeftLabel{$\forall$E}
+    \UnaryInfC{$Q(u, u)$}
+    \LeftLabel{$\forall$I}
+    \UnaryInfC{$\forall_{u \in S}Q(u, u)$}
+    \LeftLabel{$\to$I}
+    \UnaryInfC{$\forall_{x \in S} \forall_{y \in S} (Q(x, y)) \Rightarrow \forall_{u \in S}Q(u, u)$}
+\end{prooftree}
+
+Usando as regras de inferência introduzidas anteriormente:
+
+Primeiro, é necessário traduzir essa proposição para um tipo: $$\Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu$$
+
+Então o problema se torna:
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\emptyset \vdash  ? : \Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu$}
+\end{prooftree}
+
+Usando as regras, é possível ver que o tipo $\Pi x : S . \Pi y : S . Qxy$ precisa ser definido por um termo único $z$ na abstração:
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$z : (\Pi x : S . \Pi y : S . Qxy)  \vdash ? : \Pi u : S . Quu$}
+    \AxiomC{$\emptyset \vdash \Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu : \ast$}
+    \LeftLabel{$\to$-intro}
+    \BinaryInfC{$\emptyset \vdash \lambda z :( \Pi x : S . \Pi y : S . Qxy) . ? : \Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu$}
+\end{prooftree}
+
+Também por abstração, $\Pi u : S$ também se torna um termo próprio:
+
+\begin{prooftree}
+    \AxiomC{$z : (\Pi x : S . \Pi y : S . Qxy), u : S \vdash ? : Quu$}
+    \AxiomC{$z : (\Pi x : S . \Pi y : S . Qxy) \vdash S : \ast$}
+    \LeftLabel{$\to$-intro}
+    \BinaryInfC{$z : (\Pi x : S . \Pi y : S . Qxy)  \vdash \lambda u : S . ? : \Pi u : S . Quu$}
+    \LeftLabel{$\to$-intro}
+    \UnaryInfC{$\emptyset \vdash \lambda z :( \Pi x : S . \Pi y : S . Qxy) . \lambda u : S . ? : \Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu$}
+\end{prooftree}
+
+A partir daqui é usado a regra da aplicação para o $\forall$:
+
+\begin{prooftree}
+    \AxiomC{$z : (\Pi x : S . \Pi y : S . Qxy), u : S \vdash z : (\Pi x : S . \Pi y : S . Qxy)$}
+    \LeftLabel{$\forall$-elim}
+    \UnaryInfC{$z : (\Pi x : S . \Pi y : S . Qxy), u : S \vdash zu : \Pi y : S .Quy$}
+    \LeftLabel{$\forall$-elim}
+    \UnaryInfC{$z : (\Pi x : S . \Pi y : S . Qxy), u : S \vdash zuu : Quu$}
+    \LeftLabel{$\to$-intro}
+    \UnaryInfC{$z : (\Pi x : S . \Pi y : S . Qxy)  \vdash \lambda u : S . zuu : \Pi u : S . Quu$}
+    \LeftLabel{$\to$-intro}
+    \UnaryInfC{$\emptyset \vdash \lambda z :( \Pi x : S . \Pi y : S . Qxy) . \lambda u : S . zuu : \Pi x : S . \Pi y : S . Qxy \to \Pi u : S . Quu$}
+\end{prooftree}
+
+O lado direto de cada passo é deixado para o leitor fazer por si só (Dica: usar uma folha A4 no modo paisagem).
+
+Logo, o termo que prova que a proposição é verdadeira é o $\lambda z :( \Pi x : S . \Pi y : S . Qxy) . \lambda u : S . zuu$.
+O interessante de descobrir o termo é que, somente a partir do termo, é possível reconstruir toda a prova novamente.
+
+
+\end{document}
