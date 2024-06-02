@@ -137,38 +137,52 @@ Parte III - Semântica categorica do cubo
 [x] Categorias novas de antigas  
 [x] Funtores (Explicar prefeixes)  
 [x] Transformações naturais  
-[ ] Adjunções
 [ ] Construções universais - Limites e Colimites  
-[ ] Categorias cartesianas fechadas  
+[ ] Lema de Yoneda  
+[ ] Adjunções  
 [ ] Estudo de caso 1: categoria simplice e conjuntos simpliciais  
-[ ] Estudo de caso 2: ações de prefeixes  
-2. Semantica categorial da teoria dos tipos simples  
-[ ] A semântica categorial da teoria dos tipos simples  
-3. Teoria dos Topos  
+[ ] Estudo de caso 2: ações de prefeixes 
+
+2. Categorias cartesianas fechadas  
+[ ] Exponenciais  
+[ ] Definições  
+[ ] Semântica da teoria dos tipos simples em CCC  
+
+3. Teoria dos Topos Elementares  
 [ ] Definição de topos  
 [ ] Objeto de números naturais  
+[ ] A linguagem interna a um topos  
 [ ] A semântica categorial da teoria dos tipos simples, novamente  
-[ ] A teoria dos tipos gerada por um Topos  
+[ ] A teoria dos tipos gerada por um Topos 
+(Possivelmente falar sobre o topos gerado pela categoria de conjuntos simplices)   
+
 4. Hiperdoutrinas  
 [ ] Hiperdoutrinas  
 [ ] A semântica categorial do Sistema F  
+
 5. Categorias com Famílias  
 [ ] Definição  
-[ ] A semântica categorial da teoria dos tipos dependentes
+[ ] A semântica categorial da teoria dos tipos dependentes  
+
 6. A semântica dos prefeixes  
 [ ] Prefeixes novamente  
-7. Kappa-Categorias  
-[ ] Kappa-Categorias  
-8. Monadas  
+
+7. Monadas  
 [ ] Definição  
 [ ] A semântica categorial da teoria dos tipos modal  
+
+8. Kappa-Categorias  
+[ ] Kappa-Categorias  
+
 9. Categorias fibradas  
 [ ] Definição  
 [ ] A semântica categorial da teoria dos tipos simples, novamente, de novo  
 [ ] A semântica categorial do cálculo lambda não tipado  
 [ ] A semântica categorial do Sistema F, de novo
+
 10. Categorias enriquecidas  
 [ ] Definição  
+[ ] Objetos monoides  
 
 
 Parte IV - As várias teorias homotópicas de tipos  
@@ -223,11 +237,12 @@ Parte IV - As várias teorias homotópicas de tipos
 Parte V - Semântica categorial de HOTT
 1. Teoria dos Feixes  
 [ ] Feixes  
+[ ] Feixes em um sítio  
 2. Topos de Grothendieck   
 [ ] Definição  
 3. 2-categorias  
 [ ] Definição
-4. Um resumo de Teoria das Homotopias  
+4. Um resumo de Teoria das Homotopias    
 [ ] Definição  
 [ ] Grupoide Fundamental  
 [ ] complexos CW  
