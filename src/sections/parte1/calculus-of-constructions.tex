@@ -1,0 +1,213 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{Calculo de Construções}
+
+\subsection{O Cálculo de Construções e o \texorpdfstring{$\lambda$}{L}-Cubo}
+
+\subsubsection{O Sistema \texorpdfstring{$\lambda C$}{LC}}
+
+O \emph{Calculo de Construções} é a combinação das extenções do ST$\lambda$C vistas anteriormente: O $\lambda 2$, o $\lambda \underline{\omega}$ e o $\lambda P$. Esse sistema foi desenvolvido por Thierry Coquand em 1988. O $C$ vem do seu sobrenome.
+
+A única regra que difere $\lambda P$ de $\lambda C$ é a regra de formação, pois no $\lambda P$, (\emph{form}) se comporta da seguinte forma:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash A : \ast$}
+    \AxiomC{$\Gamma, x : A \vdash B : s$}
+    \LeftLabel{($form_{\lambda P}$)}
+    \BinaryInfC{$\Gamma \vdash \Pi x : A . B : s$}
+\end{prooftree}
+
+A primeira premissa garante que $x$ seja um termo, ou seja que $\Pi x : A . B : s$ seja uma relação de tipos dependendo de termos. Porém em $\lambda \underline{\omega}$, tipos podem depender de tipos também, logo $A : \ast$ se torna $A : s$, onde $s$ pode ser tanto $\ast$ ou $\square$. Porém é necessário diferenciar o $s$ da primeira premissa do $s$ da seguinda premissa, logo serão usados os números $1$ e $2$ da seguinte forma:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash A : s_1$}
+    \AxiomC{$\Gamma, x : A \vdash B : s_2$}
+    \LeftLabel{($form_{\lambda C}$)}
+    \BinaryInfC{$\Gamma \vdash \Pi x : A . B : s_2$}
+\end{prooftree}
+
+Logo essa regra de formação pode ter quatro formas possíveis a depender da escolha de $s_1$ e $s_2$:
+
+\begin{center}[]
+    \begin{tabular}{|l|l|l|l|l|}
+    \hline
+    $x : A : s_1$ & $b : B : s_2$ & $(s_1, s_2)$         & $\lambda x : A . b$           & sistema                        \\ \hline
+    $\ast$        & $\ast$        & $(\ast, \ast)$       & termos que dependem de termos & $\lambda_{\to}$               \\ \hline
+    $\square$     & $\ast$        & $(\square, \ast)$    & termos que dependem de tipos  & $\lambda 2$                   \\ \hline
+    $\ast$        & $\square$     & $(\ast, \square)$    & tipos que dependem de termos  & $\lambda P$                   \\ \hline
+    $\square$     & $\square$     & $(\square, \square)$ & tipos que dependem de tipos   & $\lambda \underline{\omega}$ \\ \hline
+    \end{tabular}
+\end{center}
+
+\subsubsection{O \texorpdfstring{$\lambda$}{L}-Cubo}
+
+Todas as extensões do cálculo $\lambda$ simplesmente tipado vistos nos capítulos anteriores se juntam para formar o $\lambda C$, mas são independentes entre si. Cada sistema diferente pode ser unido ao outro formando outro sistema da seguinte forma:
+
+\begin{itemize}
+    \item $\lambda \underline{\omega} + \lambda 2 = \lambda \omega$
+    \item $\lambda \underline{\omega} + \lambda P = \lambda P \underline{\omega}$
+    \item $\lambda P + \lambda 2 = \lambda P 2$
+\end{itemize}
+
+Alguns desses sistemas derivados não possuem nomes separados como as extensões iniciais, sendo vistos primariamente como subsistemas de $\lambda C$. O primeiro subsistema dessa lista é, só para relembrar, o Sistema $\mathcal{F} \omega$ de Girard.
+
+Barendregt, no seu estulo desses diversos sistemas e suas ligações, desenvolveu uma forma de perceber esses sistemas em uma espécie de Cubo, onde cada "dimensão" (Largura, altura e profundidade) teria uma característica associada a um sistema diferente da seguinte forma:
+
+\[\begin{tikzcd}
+	& {\lambda \omega} && {\lambda C} \\
+	\lambda2 && {\lambda P2} \\
+	& {\lambda \underline{\omega}} && {\lambda P \underline{\omega}} \\
+	{\lambda_{\to}} && {\lambda P}
+	\arrow[from=1-2, to=1-4]
+	\arrow[from=2-1, to=1-2]
+	\arrow[from=2-1, to=2-3]
+	\arrow[from=2-3, to=1-4]
+	\arrow[from=3-2, to=1-2]
+	\arrow[from=3-2, to=3-4]
+	\arrow[from=3-4, to=1-4]
+	\arrow[from=4-1, to=2-1]
+	\arrow[from=4-1, to=3-2]
+	\arrow[from=4-1, to=4-3]
+	\arrow[from=4-3, to=2-3]
+	\arrow[from=4-3, to=3-4]
+\end{tikzcd}\]
+
+As regras de inferência do $\lambda C$ são as seguintes:
+
+\begin{itemize}[label=]
+    \item (\emph{sort}) $\emptyset \vdash \ast : \square$
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : s$}
+                \LeftLabel{(\emph{var})}
+                \RightLabel{se $x \not\in \Gamma$}
+                \UnaryInfC{$\Gamma, x : A \vdash x : A$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : B$}
+                \AxiomC{$\Gamma \vdash C : s$}
+                \LeftLabel{(\emph{weak})}
+                \RightLabel{se $x \not\in \Gamma$}
+                \BinaryInfC{$\Gamma, x : C \vdash A : B$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+                \AxiomC{$\Gamma \vdash A : s_1$}
+                \AxiomC{$\Gamma, x : A \vdash B : s_2$}
+                \LeftLabel{(\emph{form})}
+                \BinaryInfC{$\Gamma \vdash \Pi x : A . B : s_2$}
+                \DisplayProof
+            }
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash M : \Pi x : A . B$}
+            \AxiomC{$\Gamma \vdash N : A$}
+            \LeftLabel{(\emph{appl})}
+            \BinaryInfC{$\Gamma \vdash MN : B[x := N]$}
+            \DisplayProof
+            }
+    \item \noindent\mbox{%
+        \AxiomC{$\Gamma, x : A \vdash M : B$}
+        \AxiomC{$\Gamma \vdash \Pi x : A . B$}
+        \LeftLabel{(\emph{abst})}
+        \BinaryInfC{$\Gamma \vdash \lambda x : A . M : \Pi x : A . B$}
+        \DisplayProof
+    }
+    \item \noindent\mbox{%
+            \AxiomC{$\Gamma \vdash A : B $}
+            \AxiomC{$\Gamma \vdash B' : s$}
+            \LeftLabel{(\emph{conv})}
+            \RightLabel{se $B =_{\beta} B'$}
+            \BinaryInfC{$\Gamma \vdash A : B'$}
+            \DisplayProof
+    }
+\end{itemize}
+
+\subsubsection{Propriedades de \texorpdfstring{$\lambda C$}{LC}}
+
+A maioria das propriedades de $\lambda C$ são extensões das propriedades vistas anteriormente nos seus subsistemas. O que muda de um para o outro é a necessidade de construir definições e proposições que abarquem as diversas dependências que existem no sistema. Muitas das provas também se tornam mais e mais complexas a medida que são adicionadas novas regras e formas de se relacionar os sorts
+
+Primeiro, é necessário definir as expressões de $\lambda C$:
+
+\begin{definition}[Expressões de $\lambda C$, $\mathcal{E}$, \cite{nederpelt2014}]
+    O conjunto $\mathcal{E}$ de $\lambda C$-expressões é definido pela seguinte BNF:
+    $$\mathcal{E} = V | \square | \ast | (\mathcal{E} \mathcal{E}) | (\lambda V : \mathcal{E} . \mathcal{E}) | \Pi V : \mathcal{E} . \mathcal{E}$$ 
+\end{definition}
+
+A notação de parenteses, abstrações sucessivas e aplicações sucessivas é a mesma.
+
+\begin{lemma}[\emph{Lema das Variáveis Livres}, \cite{nederpelt2014}]
+    Se $\Gamma \vdash A : B$, então $FV(A)$ e $FV(B) \subseteq dom(\Gamma)$
+\end{lemma}
+
+O contexto é dito \emph{bem-formado} se ele forma parte de um juizo derivável:
+
+\begin{definition}[\cite{nederpelt2014}]
+    Um contexto $\Gamma$ é \emph{bem formado} se existem $A$ e $B$ tais que $\Gamma \vdash A : B$.
+\end{definition}
+
+Com isso, é possível ver os seguintes lemas:
+
+\begin{lemma}[Afinamento, Condensação, Permutação, \cite{nederpelt2014}]
+    \hfil
+    \begin{enumerate}[label=(\arabic*)]
+        \item (\emph{Afinamento}) Sejam $\Gamma '$ e $\Gamma ''$ contextos tais que $\Gamma' \subseteq \Gamma ''$. Se $\Gamma ' \vdash A : B$ e $\Gamma ''$ é bem formado, então $\Gamma '' \vdash A : B$
+        \item (\emph{Permutação}) Sejam $\Gamma '$ e $\Gamma ''$ dois contextos e seja $\Gamma ''$ a permutação de $\Gamma '$. Se $\Gamma ' \vdash A : B$ e $\Gamma ''$ é bem formado, então $\Gamma '' \vdash A : B$.
+        \item (\emph{Condensação}) Se $\Gamma ', x : A, \Gamma '' \vdash B : C$ e $x$ não ocorre em $\Gamma ''$, $B$ ou $C$, então $\Gamma', \Gamma'' \vdash B : C$.
+    \end{enumerate}
+\end{lemma}
+
+Também é interessante saber se uma expressão é \emph{legal} ou não:
+
+\begin{definition}[\cite{nederpelt2014}]
+    Uma expressão $M$ em $\lambda C$ é \emph{legal} se existe $\Gamma$ e $N$ tais que $\Gamma \vdash M : N$ ou $\Gamma \vdash N : M$ (Ou seja, quando $M$ é \emph{tipável} ou \emph{habitável})
+\end{definition}
+
+\begin{lemma}[Lema da subexpressão, \cite{nederpelt2014}]
+    Se $M$ é legal, então toda subexpressão de $M$ é legal
+\end{lemma}
+
+Outro lema importante:
+
+\begin{lemma}[Lema da unicidade de tipos a menos que conversão, \cite{nederpelt2014}]
+    Se $\Gamma \vdash A : B_1$ e $\Gamma \vdash A : B_2$, então $B_1 =_{\beta} B_2$
+\end{lemma}
+
+\begin{lemma}[Lema da substituição, \cite{nederpelt2014}]
+    Seja $\Gamma ', x : A, \Gamma '' \vdash B : C$ e $\Gamma ' \vdash D : A$, então $\Gamma ', \Gamma '' [x := D] \vdash B[x := D] : C [x := D]$
+\end{lemma}
+
+Esse lema fala que é possível substituir $D$ em $\Gamma ', x : A, \Gamma '' \vdash B : C$ caso $D$ e $x : A$ possuam o mesmo tipo. Como tipos também podem possuir termos, essa substituição vai ocorer em todos os lugares.
+
+Um teorema presente também em $\lambda C$ é o Teorema de Church-Rosser:
+
+\begin{theorem}[Teorema de Church-Rosser, \cite{nederpelt2014}]
+    A propriedade de Church-Rosser é válida para $\lambda C$, ou seja, se $M$ está em $\mathcal{E}$, $M \twoheadrightarrow_{\beta} N_1$ e $M \twoheadrightarrow_{\beta} N_2$, então existe um $N_3$ tal que $N_1 \twoheadrightarrow_{\beta} N_3$ e $N_2 \twoheadrightarrow_{\beta} N_3$
+\end{theorem}
+
+\begin{corollary}[\cite{nederpelt2014}]
+    Suponha que $M$ e $N$ estão em $\mathcal{E}$ e $M =_{\beta} N$, então existe um $L$ tal que $M \twoheadrightarrow_{\beta} L$ e $N \twoheadrightarrow_{\beta} L$
+\end{corollary}
+
+\begin{lemma}[Redução de sujeito, \cite{nederpelt2014}]
+    Se $\Gamma \vdash A : B$ e $A \twoheadrightarrow_{\beta} A'$, então $\Gamma \vdash A' : B$
+\end{lemma}
+
+Outro teorema muito importante que está presente em $\lambda C$ é o da normalização forte:
+
+\begin{theorem}[Teorema da Normalização Forte, \cite{nederpelt2014}]
+    Todo termo legal $M$ é fortemente normalizável
+\end{theorem}
+
+Finalmente, de um ponto de vista computacional, a questão que fica é saber se a Boa-tipagem e a checagem de tipos é decidível ou não em $\lambda C$, e a resposta é sim:
+
+\begin{theorem}[Decidabilidade em $\lambda C$, \cite{nederpelt2014}]
+    Em $\lambda C$ e seus subsistemas, as questões de Boa-tipagem e Checagem de tipos são decidíveis
+\end{theorem}
+
+Logo, é possível desenvolver um \emph{programa de computador} que resolve esses problemas automaticamente. Um desses programas é o \emph{Provador de Teoremas} \textbf{Coq}.
+
+A questão de Encontrar os termos só é decidível em $\lambda_{\to}$ e $\lambda \underline{\omega}$, mas indecidível nos outros sistemas.
+
+\end{document}

@@ -88,9 +88,10 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 
 6. Cálculo de Construções  
 6.1 O cálculo de construções e o cubo lambda  
-[ ] O sistema \lambda C  
-[ ] O cubo lambda  
-[ ] Propriedades   
+[x] O sistema \lambda C  
+[x] O cubo lambda  
+[x] Propriedades   
+[ ] Verificar provas das propriedades em artigos de Barendregt  
 6.2 Lógica em \lambda C  
 [ ] absurdo e negação  
 [ ] Conjunção e disjunção  
@@ -119,15 +120,20 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [ ] \lambda D  
 
 Parte II - Construções paralelas ao cubo
-1. O cálculo lambda-mu  
+1. Extensões do Cálculo Lambda não tipado  
+1.1. O cálculo lambda-mu  
 [ ] Sintaxe  
 [ ] Modelagem da lógica clássica  
-2. O cálculo Kappa  
+1.2. O cálculo Kappa  
 [ ] Sintaxe  
 (hasegawa - decomposing)   
-3. O cálculo Zeta  
+1.3. O cálculo Zeta  
 [ ] Teoria dos tipos em computadores quânticos  
-4. Sistema de Tipos de Hindley-Milner  
+1.4. Interaction Combinators  
+[ ] Definições  
+[ ] Turing Completude  
+2. Extensões a teoria dos tipos polimórfica  
+2.1. Sistema de Tipos de Hindley-Milner  
 [ ] Definição do sistema  
 
 
@@ -290,6 +296,4 @@ Ver onde encaixar os seguintes tópicos:
 1. teoria dos tipos infinitos (Uemura)  
 [ ] Ver onde colocar essa teoria dos tipos  
 2. Abstract Stone Duality (Taylor)  
-[ ] Definições  
-3. Interaction Combinators  
-[ ] Definições  
+[ ] Definições   
