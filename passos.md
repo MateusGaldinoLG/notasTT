@@ -144,8 +144,8 @@ Parte III - Semântica categorica do cubo
 [x] Funtores (Explicar prefeixes)  
 [x] Transformações naturais  
 [x] Construções universais - Limites e Colimites  
+[x] Exponenciais  
 [ ] Categorias cartesianas fechadas  
-[ ] Exponenciais  
 [ ] Adjunções  
 [ ] Monadas  
 [ ] Estudo de caso 1: categoria simplice e conjuntos simpliciais  
