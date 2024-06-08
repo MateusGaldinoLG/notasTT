@@ -40,6 +40,30 @@ Alguns exemplos de categorias são:
     \item (\cite{riehl2017}) Um grupo $G$ (e também um monóide) define uma categoria $BG$ com um único objeto. Os elementos do grupo são seus morfismos e a composição é dada por $\cdot$. O elemento unitário $e \in G$ age como o morfismo identidade para o objeto único dessa categoria. \\ Por exemplo, para $(\mathbb{Z}, +)$, $e = 0$ e será representado por $0 : \mathbb{Z} \to \mathbb{Z}$. Sendo $ 1 : \mathbb{Z} \to \mathbb{Z}$ e $2 : \mathbb{Z} \to \mathbb{Z}$, então a composição $1 \circ 2$ é em $(\mathbb{Z}, +)$ equivalente a $1 + 2$ e $1 \circ 2 = 3$.
 \end{enumerate}
 
+% \begin{proposition}
+%     O sistema $\lambda_{\to}$ é uma categoria que tem:
+%     \begin{itemize}
+%         \item Objetos: os tipos simples $\alpha, \beta, \gamma, \dots$
+%         \item Morfismos: os tipos funcionais entre os tipos simples
+%     \end{itemize}
+% \end{proposition}
+
+% \emph{Prova}: Primeiro, é claro que os seguintes tipos:
+% \begin{itemize}
+%     \item $(\alpha \to \beta) \to (\beta \to \gamma) \to \alpha \to \gamma$ (Equivalente à composição)
+%     \item $(\alpha \to \alpha)$ (Equivalente à seta identidade)
+% \end{itemize} 
+
+% são habitados em $\lambda_{\to}$ para quaisquer tipos $\alpha, \beta, \gamma$. Após isso é necessário provar a associatividade:
+
+% $$(\alpha \to \beta) \to (\beta \to \gamma) \to (\gamma \to \delta) \to \alpha \to \gamma$$
+
+% O que equivale a provar que esse tipo é habitado. Mas isso pode ser feito usando o seguinte termo:
+
+% $$\lambda f : (\alpha \to \beta) . \lambda g : (\beta \to \gamma) . \lambda h : (\gamma \to \delta) . \lambda a : \alpha . hgfa$$
+
+% Para a identidade, é o mesmo que
+
 \begin{definition}[Isomorfismos, \cite{awodey2010}]
     Em qualquer categoria $C$, um morfismo $f : A \to B$ é chamado de \emph{isomorfismo} se existe um morfismo $g : B \to A$ em $C$ tal que $$g \circ f = 1_A \text{ e } f \circ g = 1_B$$
 \end{definition}
@@ -164,6 +188,96 @@ Exemplo:
     \item A categoria \textbf{FinSet} de conjuntos finitos é uma subcategoria de \textbf{Set}.
     \item Um grupo $(G, \cdot)$ é dito \emph{abeliano}, ou comutativo, caso para quaisquer dois elementos $a, b \in G$, $a \cdot b = b \cdot a$. A categoria de grupos abelianos \textbf{Ab} é uma subcategoria (cheia) de \textbf{Grp}
 \end{itemize}
+
+Um produto de dois conjuntos $A$ e $B$ é dado por $$A \times B = \{ (a, b) | a \in A, b \in B \}$$. O conjunto produto possui duas projeções:
+
+\[\begin{tikzcd}
+	A && {A \times B} && B
+	\arrow["{\pi_1}", from=1-3, to=1-1]
+	\arrow["{\pi_2}"', from=1-3, to=1-5]
+\end{tikzcd}\]
+
+tais que $$\pi_1(a,b) = a, \quad \pi_2(a, b) = b$$.
+
+Dado um elemento $c \in A \times B$, tem-se que $$c = (\pi_1 c, \pi_2 c)$$ capturado no seguinte diagrama:
+
+\[\begin{tikzcd}
+	&& 1 \\
+	\\
+	A && {A \times B} && B
+	\arrow["a"', from=1-3, to=3-1]
+	\arrow["{(a, b)}"{description}, dashed, from=1-3, to=3-3]
+	\arrow["b", from=1-3, to=3-5]
+	\arrow["{\pi_1}", from=3-3, to=3-1]
+	\arrow["{\pi_2}"', from=3-3, to=3-5]
+\end{tikzcd}\]
+
+Para categorias gerais:
+
+\begin{definition}[\cite{awodey2010}]
+    Em uma categoria $\mathcal{C}$, um \emph{diagrama de produto} para objetos $A$ e $B$ consiste de um objeto $P$ e setas:
+
+    \[\begin{tikzcd}
+        A && P && B
+        \arrow["{p_1}", from=1-3, to=1-1]
+        \arrow["{p_2}"', from=1-3, to=1-5]
+    \end{tikzcd}\]
+
+    Tais que para qualquer diagrama:
+
+    \[\begin{tikzcd}
+        A && X && B
+        \arrow["{x_1}", from=1-3, to=1-1]
+        \arrow["{x_2}"', from=1-3, to=1-5]
+    \end{tikzcd}\]
+
+    existe uma seta única $u : X \to P$ fazendo o diagrama
+
+    \[\begin{tikzcd}
+        && X \\
+        \\
+        A && P && B
+        \arrow["{x_1}"', from=1-3, to=3-1]
+        \arrow["u", dashed, from=1-3, to=3-3]
+        \arrow["{x_2}", from=1-3, to=3-5]
+        \arrow["{p_1}", from=3-3, to=3-1]
+        \arrow["{p_2}"', from=3-3, to=3-5]
+    \end{tikzcd}\]
+
+    comutar, ou seja $x_1 = p_1 u$ e $x_2 = p_2 u$
+\end{definition}
+
+Seja $\mathcal{C}$ uma categoria com diagramas de produto para cada par de objetos, tem-se então:
+
+\[\begin{tikzcd}
+	A && {A \times A'} && {A'} \\
+	\\
+	B && {B \times B'} && {B'}
+	\arrow["f"', from=1-1, to=3-1]
+	\arrow["{p_1}"', from=1-3, to=1-1]
+	\arrow["{p_2}", from=1-3, to=1-5]
+	\arrow["{f'}", from=1-5, to=3-5]
+	\arrow["{q_1}", from=3-3, to=3-1]
+	\arrow["{q_2}"', from=3-3, to=3-5]
+\end{tikzcd}\]
+
+Então, pode-se encontrar um morfismo $$f \times f' : A \times A' \to B \times B'$$ para $f \times f' = \langle f \circ p_1, f' \circ p_2 \rangle$ que faz os dois lados do seguinte diagrama comutarem:
+
+\[\begin{tikzcd}
+	A && {A \times A'} && {A'} \\
+	\\
+	B && {B \times B'} && {B'}
+	\arrow["f"', from=1-1, to=3-1]
+	\arrow["{p_1}"', from=1-3, to=1-1]
+	\arrow["{p_2}", from=1-3, to=1-5]
+	\arrow["{f \times f'}", dashed, from=1-3, to=3-3]
+	\arrow["{f'}", from=1-5, to=3-5]
+	\arrow["{q_1}", from=3-3, to=3-1]
+	\arrow["{q_2}"', from=3-3, to=3-5]
+\end{tikzcd}\]
+
+Uma categoria que possui um produto para cada par de objetos é dita \emph{ter produtos binários}. Essa construção também pode ser feita para produtos ternários e generalizada para produtos $I$-ários
+
 
 \subsection{Funtores}
 
@@ -389,6 +503,609 @@ Já a composição horizontal denotada pelo simbolo $\diamond$ dado por $\beta \
 % 	\arrow["\alpha", shorten <=8pt, shorten >=8pt, Rightarrow, from=1, to=0]
 % 	\arrow["\beta", shorten <=8pt, shorten >=8pt, Rightarrow, from=2, to=3]
 % \end{tikzcd}\]
+
+\subsection{Limites}
+
+Antes de definir limites, é necessário definir o que são diagramas em uma categoria:
+
+\begin{definition}[Diagrama, \cite{riehl2017}]
+    Um \emph{Diagrama} em uma categoria $\mathcal{C}$ é um funtor $F : \mathcal{J} \to \mathcal{C}$ que possui como domínio, chamado de \emph{Categoria Índice} ou \emph{template}, uma categoria pequena
+\end{definition}
+
+Um diagrama é normalmente pensado como um grafo orientado. Um diagrama pode ser pensado como a instanciação ou realização em $\mathcal{C}$ de um template específico $\mathcal{J}$.
+
+Seja 
+
+\[\begin{tikzcd}
+	& \bullet \\
+	\bullet && \bullet
+	\arrow[from=1-2, to=2-3]
+	\arrow[from=2-1, to=1-2]
+	\arrow[from=2-1, to=2-3]
+\end{tikzcd}\]
+
+O template do seguinte diagrama:
+
+\[\begin{tikzcd}
+	& B \\
+	A && C
+	\arrow[from=1-2, to=2-3]
+	\arrow[from=2-1, to=1-2]
+	\arrow[from=2-1, to=2-3]
+\end{tikzcd}\]
+
+na categoria $\mathcal{C}$. Seja qualquer objeto $X$ em $\mathcal{C}$, existe um \emph{Funtor constante} denotado também por $X$ que leva todo objeto para $X$ e todo morfismo para a seta identidade em $X$. Então $X$ é, em si, um diagrama $X : \mathcal{J} \to \mathcal{C}$.
+
+Como $X$ e $F$ são dois funtores, então vai pode ser construida uma transformação natural entre eles. Essa tranformação natural vai consistir na coleção de morfismos em $X$ e objetos encontrados no diagrama $F$ tal que esses morfismos comutam com os morfismos encontrados no diagrama. Quando esses morfismos vão de $X$ para $F$, a construção é chamada de \emph{Cone} e, no exemplo é da seguinte forma:
+
+% \[\begin{tikzcd}
+% 	& X \\
+% 	& B \\
+% 	A && C
+% 	\arrow[from=1-2, to=2-2]
+% 	\arrow[curve={height=12pt}, from=1-2, to=3-1]
+% 	\arrow[curve={height=-12pt}, from=1-2, to=3-3]
+% 	\arrow[from=2-2, to=3-3]
+% 	\arrow[from=3-1, to=2-2]
+% 	\arrow[from=3-1, to=3-3]
+% \end{tikzcd}\]
+
+Já indo os morfismos de $F$ para $X$, essa construção é chamada de \emph{Cocone} e, seguindo o exemplo anterior, é da seguinte forma:
+
+% \[\begin{tikzcd}
+% 	& B \\
+% 	A && C \\
+% 	& X
+% 	\arrow[from=1-2, to=2-3]
+% 	\arrow[from=1-2, to=3-2]
+% 	\arrow[from=2-1, to=1-2]
+% 	\arrow[from=2-1, to=2-3]
+% 	\arrow[curve={height=12pt}, from=2-1, to=3-2]
+% 	\arrow[curve={height=-12pt}, from=2-3, to=3-2]
+% \end{tikzcd}\]
+
+
+Um limite em um diagrama $F$ é um caso especial de cone sobre $F$, onde o cone se aproxima o máximo possível do diagrama $F$.
+
+Para definir um limite, é necessário fazer algumas definições primeiro:
+
+\begin{definition}[Objetos terminais e iniciais, \cite{awodey2010}]
+    Em uma categoria $\mathcal{C}$, um objeto
+    \begin{itemize}
+        \item $0$ é dito \emph{inicial} se para qualquer objeto $C$ de $\mathcal{C}$ existe um morfismo único $$0 \to C$$
+        \item $1$ é dito \emph{terminal} se para qualquer objeto $C$ existe um morfismo único $$C \to 1$$
+    \end{itemize}
+\end{definition}
+
+\begin{proposition}[\cite{awodey2010}]
+    Objetos iniciais (terminais) são únicos a menos que isomorfismo
+\end{proposition}
+
+\emph{Prova}: Se $C$ e $C'$ são ambos iniciais (finais), então existe um isomorfismo \emph{único} $C \to C'$.
+
+Sejam $0$ e $0'$ ambos objetos iniciais e seja o seguinte diagrama:
+
+\[\begin{tikzcd}
+	0 && {0'} \\
+	\\
+	&& 0 && {0'}
+	\arrow["u", from=1-1, to=1-3]
+	\arrow["{1_{0}}", from=1-1, to=3-3]
+	\arrow["v", from=1-3, to=3-3]
+	\arrow["{1_{0'}}", from=1-3, to=3-5]
+	\arrow["u", from=3-3, to=3-5]
+\end{tikzcd}\]
+
+é possível ver que $u \circ v = 1_0$ e $v \ circ u = 1_{0'}$, logo eles são unicamente isomórficos. $\Box $
+ 
+Exemplos:
+
+\begin{itemize}
+    \item Em \textbf{Sets}, o conjunto vazio é o conjunto inicial e o conjunto unitário é o conjunto terminal. Ou seja, \textbf{Sets} possui um único conjunto inicial mas vários conjuntos terminais.
+    \item Em \textbf{Cat}, a categoria $\textbf{0}$ (com nenhum objeto nem nenhum morfismo) é inicial, enquanto a categoria $\textbf{1}$ é terminal.
+    \item Em \textbf{Grp} o grupo com único elemento é tanto inicial quanto terminal, assim como em \textbf{Mon}
+\end{itemize}
+
+Seja $t : \mathcal{J} \to \textbf{1}$ o funtor único para a categoria terminal. Seja uma categoria $\mathcal{C}$ com um objeto $X \in Ob(\mathcal{C})$. Esse objeto pode ser representado pelo funtor $X : \textbf{1} \to \mathcal{C}$. Então fazendo a composição de $X$ em $t$, tem-se $X \circ t : \mathcal{J} \to \mathcal{C}$ que da o \emph{funtor constante} em $X$, que envia cada objeto em $\mathcal{J}$ para o mesmo $\mathcal{C}$-objeto $X$ e cada morfismo em $\mathcal{J}$ para a identidade $1_X$ naquele objeto. Ou seja, essa composição induz um funtor $[C \cong Fun(\textbf{1}, \mathcal{C})] \to Fun(\mathcal{J}, \mathcal{C})$ denotado por $\Delta_t : \mathcal{C} \to Fun(\mathcal{J}, \mathcal{C}) = \mathcal{C}^{\mathcal{J}}$. No total, isso dá $\Delta : C \to \mathcal{C}^{\mathcal{J}}$ que leva cada objeto $X$ para o funtor constante em $X$ e cada morfismo $f : X \to Y$ à \emph{transformação natural constante}. Seja $f : X \to Y$ em $\mathcal{C}$, então existe uma transformação natural $\Delta (X) \xrightarrow{\Delta (f)} \Delta (Y)$ tal que:
+
+\[\begin{tikzcd}
+	{(\Delta X)(i)} && {(\Delta Y)(i)} && i \\
+	\\
+	{(\Delta X)(j)} && {(\Delta Y)(j)} && j
+	\arrow["{(\Delta f)(i)}", from=1-1, to=1-3]
+	\arrow["{(\Delta X)(e)}"', from=1-1, to=3-1]
+	\arrow["{(\Delta Y)(e)}", from=1-3, to=3-3]
+	\arrow["e"', from=1-5, to=3-5]
+	\arrow["{(\Delta f)(j)}"', from=3-1, to=3-3]
+\end{tikzcd}\]
+
+comuta para cada aresta $e$ da categoria índice $\mathcal{J}$. Mas como $\Delta$ leva para o funtor constante, que leva os objetos neles prórios, então os objetos nesse diagrama se reduzem a:
+
+\[\begin{tikzcd}
+	X && Y \\
+	\\
+	X && Y
+	\arrow["{(\Delta f)(i)}", from=1-1, to=1-3]
+	\arrow["{1_X}"', from=1-1, to=3-1]
+	\arrow["{1_Y}", from=1-3, to=3-3]
+	\arrow["{(\Delta f)(j)}"', from=3-1, to=3-3]
+\end{tikzcd}\]
+
+que obviamente comuta.
+
+Considerando um $\mathcal{J}$-diagrama qualquer $F : \mathcal{J} \to \mathcal{C}$ e para cada $X \in \mathcal{C}$, as setas (que são transformações naturais):
+
+$$\Delta X \to F \quad\quad F \to \Delta X$$
+
+Então uma seta em $\mathcal{C}^{\mathcal{J}}$ que corresponde a essas setas é somente uma transformação natural, ou seja uma familia de setas em $\mathcal{C}$,
+
+$$(\Delta X)(i) \xrightarrow{\xi (i)} F(i) \quad\quad F(i) \xrightarrow{\xi (i)} (\Delta X)(i)$$
+
+indexada pelos vários objetos ou nós em $\mathcal{J}$ e tais que:
+
+\[\begin{tikzcd}
+	{(\Delta X)(i)} && {F(i)} && i && {F(i)} && {(\Delta X)(i)} \\
+	\\
+	{(\Delta X)(j)} && {F(j)} && j && {F(j)} && {(\Delta X)(j)}
+	\arrow["{\xi (i)}", from=1-1, to=1-3]
+	\arrow["{(\Delta X)(e)}"', from=1-1, to=3-1]
+	\arrow["{F(e)}", from=1-3, to=3-3]
+	\arrow["e"', from=1-5, to=3-5]
+	\arrow["{\xi (i)}", from=1-7, to=1-9]
+	\arrow["{F(e)}"', from=1-7, to=3-7]
+	\arrow["{(\Delta X)(e)}", from=1-9, to=3-9]
+	\arrow["{\xi(j)}"', from=3-1, to=3-3]
+	\arrow["{\xi (j)}"', from=3-7, to=3-9]
+\end{tikzcd}\]
+
+Ou, fazendo a mesma redução anterior:
+
+\[\begin{tikzcd}
+	X && {F(i)} && i && {F(i)} && X \\
+	\\
+	X && {F(j)} && j && {F(j)} && X
+	\arrow["{\xi (i)}", from=1-1, to=1-3]
+	\arrow["{id_X}"', from=1-1, to=3-1]
+	\arrow["{F(e)}", from=1-3, to=3-3]
+	\arrow["e"', from=1-5, to=3-5]
+	\arrow["{\xi (i)}", from=1-7, to=1-9]
+	\arrow["{F(e)}"', from=1-7, to=3-7]
+	\arrow["{id_X}", from=1-9, to=3-9]
+	\arrow["{\xi(j)}"', from=3-1, to=3-3]
+	\arrow["{\xi (j)}"', from=3-7, to=3-9]
+\end{tikzcd}\]
+
+Mas isso se reduz aos seguintes triangulos comutativos:
+
+\[\begin{tikzcd}
+	&& {F(i)} && i && {F(i)} \\
+	X &&&&&&&& X \\
+	&& {F(j)} && j && {F(j)}
+	\arrow["{F(e)}", from=1-3, to=3-3]
+	\arrow["e"', from=1-5, to=3-5]
+	\arrow["{F(e)}"', from=1-7, to=3-7]
+	\arrow["{\xi (i)}", from=2-1, to=1-3]
+	\arrow["{\xi (j)}"', from=2-1, to=3-3]
+	\arrow["{\xi(i)}"', from=2-9, to=1-7]
+	\arrow["{\xi (j)}", from=2-9, to=3-7]
+\end{tikzcd}\]
+
+
+As transformações naturais representadas pelos triangulos na esquerda dão \emph{soluções esquerdas} ao diagrama em $\mathcal{C}$, as vezes chamadas de \emph{Cones acima} do diagrama $F$ com vertice \emph{cume} em $X$. As transformações naturais representada pelos triangulos a direita dão as \emph{soluções direitas} para o diagrama, também chamadas de \emph{Cocones abaixo} do diagrama $F$ com \emph{nadir} (ponto mais baixo) em $X$.
+
+Com isso, é possível definir a categoria de cones, onde um objeto na categoria de cones sobre $F$ será um cone acima de $F$, com algum cume, enquanto o morfismo de um cone $\xi : X \Rightarrow F$ para um cone $\mu : Z \Rightarrow F$ é um morfismo $f : X \to Z$ em $\mathcal{C}$ tal que para cada indice $j \in \mathcal{J}$, $\mu_j \circ f = \xi_j$, ou seja, um mapa entre cumes tal que cada perna do cone domínio é fatorado através da perna correspondente do cone codominio.
+
+A categoria de cones pode ser vista como a categoria slice $\Delta / F$.
+
+Usando essas noções, é possível definir o \emph{limite} de $F$ em termos do cone universal, onde um cone $\alpha : L \to F$ com vertice $L$ é universal em respeito a $F$ caso para cada cone $\Delta X \to F$ existe um mapa único $g : \Delta X \to L$ tal que o diagrama:
+
+% \[\begin{tikzcd}
+% 	X && L \\
+% 	& {F(i)} \\
+% 	& {F(j)}
+% 	\arrow["g", dashed, from=1-1, to=1-3]
+% 	\arrow["{\xi (i)}", from=1-1, to=2-2]
+% 	\arrow["{\xi (j)}"', curve={height=18pt}, from=1-1, to=3-2]
+% 	\arrow["{\alpha (i)}"', from=1-3, to=2-2]
+% 	\arrow["{\alpha(j)}", curve={height=-18pt}, from=1-3, to=3-2]
+% 	\arrow["{F(e)}"', from=2-2, to=3-2]
+% \end{tikzcd}\]
+
+Comuta. Em uma definição formal:
+
+\begin{definition}[\cite{awodey2010}]
+    Um \emph{limite} para o diagrama $F : \mathcal{J} \to \mathcal{C}$ é um objeto terminal $\text{lim} F$ na categoria de cones em $F$, denotada por $\textbf{Cone}(F)$. Se $\mathcal{J}$ for finito, o limite é chamado de \emph{limite finito}
+\end{definition}
+
+De forma dual, na categoria dos cocones $\textbf{CoCones}(F)$ o cocone universal surge como \emph{colimite} do diagrama $F$, denotado por $\text{colim} F$:
+
+\begin{definition}[\cite{rosiak2022}]
+    O \emph{colimite} do diagrama $F : \mathcal{J} \to \mathcal{C}$ é um objeto $\text{colim} F$ em $\mathcal{C}$ junto com uma transformação natural $\epsilon : F \Rightarrow \text{colim} F$ que satisfaz que para qualquer objeto $X$ e qualquer transformação natural $\beta : F \Rightarrow X$ existe um morfismo único $h : \text{colim} F \to X$ tal que $\beta = h \circ \epsilon$
+\end{definition}
+
+Exemplos de limites:
+
+Em \textbf{Set}, o limite do diagrama discreto consistindo de conjuntos $X_1, X_2, \dots$, é o \emph{Produto cartesiano} $\Pi_{i \in I} x_i$, onde essa construção vem com mapas projetivos $\pi_i : \Pi_{i \in I} X_i \to X_i$ para cada fator.
+
+Seja o diagrama na forma:
+
+\[\begin{tikzcd}
+	&& \bullet \\
+	\\
+	\bullet && \bullet
+	\arrow[from=1-3, to=3-3]
+	\arrow[from=3-1, to=3-3]
+\end{tikzcd}\]
+
+em uma categoria $\mathcal{C}$, o limite de um diagrama de tal formato é chamado de \emph{pullback} (ou \emph{produto fibrado}), consistindo de um objeto junto com morfismos que satisfazem essa propriedade universal. De forma formal:
+
+\begin{definition}\cite{awodey2010}
+    Em uma categoria $\mathcal{C}$, um \emph{pullback} de setas $f, g$ com $cod (f) = cod (g)$
+    \[\begin{tikzcd}
+        && B \\
+        \\
+        A && C
+        \arrow["f"', from=1-3, to=3-3]
+        \arrow["f", from=3-1, to=3-3]
+    \end{tikzcd}\]
+
+    consiste de setas
+
+    \[\begin{tikzcd}
+        P && B \\
+        \\
+        A
+        \arrow["{\pi_1}"', from=1-1, to=1-3]
+        \arrow["{\pi_2}"', from=1-1, to=3-1]
+    \end{tikzcd}\]
+
+    tais que $f \pi_1 = g \pi_2$, ou seja o diagrama
+
+    \[\begin{tikzcd}
+        P && B \\
+        \\
+        A && C
+        \arrow["{\pi_1}"', from=1-1, to=1-3]
+        \arrow["{\pi_2}"', from=1-1, to=3-1]
+        \arrow["g", from=1-3, to=3-3]
+        \arrow["f"', from=3-1, to=3-3]
+    \end{tikzcd}\]
+
+    comuta.
+    
+    E também $\pi_1$ e $\pi_2$ são universais com essa propriedade. Ou seja sendo quaisquer $z_1 : Z \to A$ e $z_2 : Z \to B$, com $fz_1 = gz_2$, então existe um morfismo único $$u : Z \to P$$ com $z_1 = \pi_1 u$ e $z_2 = \pi_2 u$. O diagrama equivalente é:
+
+    \[\begin{tikzcd}
+        Z \\
+        & P && B \\
+        \\
+        & A && C
+        \arrow[dashed, from=1-1, to=2-2]
+        \arrow["{z_2}", from=1-1, to=2-4]
+        \arrow["{z_1}"', from=1-1, to=4-2]
+        \arrow["{\pi_2}", from=2-2, to=2-4]
+        \arrow["{\pi_1}"', from=2-2, to=4-2]
+        \arrow["g", from=2-4, to=4-4]
+        \arrow["f"', from=4-2, to=4-4]
+    \end{tikzcd}\]
+\end{definition}
+
+Considerando um poset como uma categoria, um diagrama pullback:
+
+% https://q.uiver.app/#q=WzAsMyxbMCwxLCJwIl0sWzEsMCwicSJdLFsxLDEsInIiXSxbMSwyLCJcXGxlcSJdLFswLDIsIlxcbGVxIiwyXV0=
+\[\begin{tikzcd}
+	& q \\
+	p & r
+	\arrow["\leq", from=1-2, to=2-2]
+	\arrow["\leq"', from=2-1, to=2-2]
+\end{tikzcd}\]
+
+será dado por um elemento $l$, com $l \leq p$ e $l \leq q$, tais que para qualquer elemento $s$ que também $s \leq p$ e $s \leq q$, tem-se que $s \leq l$:
+
+% https://q.uiver.app/#q=WzAsNSxbNCwyLCJxIl0sWzIsNCwicCJdLFs0LDQsInIiXSxbMiwyLCJsIl0sWzAsMCwicyJdLFsxLDIsIlxcbGVxIiwyXSxbMCwyLCJcXGxlcSJdLFszLDAsIlxcbGVxIl0sWzMsMSwiXFxsZXEiLDJdLFs0LDEsIlxcbGVxIiwyXSxbNCwwLCJcXGxlcSJdLFs0LDMsIlxcbGVxIiwyLHsic3R5bGUiOnsiYm9keSI6eyJuYW1lIjoiZGFzaGVkIn19fV1d
+\[\begin{tikzcd}
+	s \\
+	\\
+	&& l && q \\
+	\\
+	&& p && r
+	\arrow["\leq"', dashed, from=1-1, to=3-3]
+	\arrow["\leq", from=1-1, to=3-5]
+	\arrow["\leq"', from=1-1, to=5-3]
+	\arrow["\leq", from=3-3, to=3-5]
+	\arrow["\leq"', from=3-3, to=5-3]
+	\arrow["\leq", from=3-5, to=5-5]
+	\arrow["\leq"', from=5-3, to=5-5]
+\end{tikzcd}\]
+
+Ou seja, $l$ é a \emph{maior cota inferior} de $p$ e $q$
+
+Para \textbf{Sets} existem várias formas de construir pullbacks (\cite{rosiak2022}):
+
+\begin{itemize}
+    \item Seja $Z = \{\ast\}$ um conjunto unitário. ENtão como $\{\ast\}$ é o objeto terminal em \textbf{Sets}, tanto $X \xrightarrow{f} \{\ast\}$ e $Y \xrightarrow{g} \{\ast\}$ são funções únicas que levam tudo para $\{\ast\}$. O pullback de tal diagrama seria todos os pares $(x, y)$ tais que tanto $x$ e $y$ são enviados para $\{\ast\}$ pelas funções únicas $f$ e $g$, mas como não existem pares que satisfaçam esse requisito, é possível recuperar \emph{todos} os pares $(x, y)$ fazendo o pullback um diagrama que possui o conjunto inteiro $X \times Y$, chamado de produto cartesiano binário.
+    \item Agora seja $Y = \{\ast\}$, enquanto $Z$ é qualquer conjunto. Uma função $\{\ast\} \xrightarrow{g} Z$ só pega um elemento $z \in Z$. Então, para qualquer função $X \xrightarrow{f} Z$, o pullback será o subconjunto de elementos em $X$ que são enviados para $z$ através de $f$, recuperando a \emph{pre-imagem} (ou \emph{fibra}) de $f$ em $g$.
+    \item Agora sejam $X$ e $Y$ subconjuntos de $Z$, fazendo que $f$ e $g$ sejam inclusões, da forma:
+    % https://q.uiver.app/#q=WzAsMyxbMCwyLCJYIl0sWzIsMiwiWiJdLFsyLDAsIlkiXSxbMCwxLCJmIiwyLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XSxbMiwxLCJnIiwwLHsic3R5bGUiOnsidGFpbCI6eyJuYW1lIjoiaG9vayIsInNpZGUiOiJ0b3AifX19XV0=
+\[\begin{tikzcd}
+	&& Y \\
+	\\
+	X && Z
+	\arrow["g", hook, from=1-3, to=3-3]
+	\arrow["f"', hook, from=3-1, to=3-3]
+\end{tikzcd}\]
+Nesse caso, o pullback vai consistir em pares $(x, y)$ tais que $x$ e $y$ são \emph{iguais} na inclusão em $Z$. Ou seja, o pullback consiste em elementos $x = y$ de $X$ que também estão em $Y$. Isso é a construção da \emph{interseção} $X \cap Y$ 
+\end{itemize}
+
+Seja um diagrama da forma 
+
+\[\begin{tikzcd}
+	\bullet && \bullet && \bullet & \dots
+	\arrow[from=1-3, to=1-1]
+	\arrow[from=1-5, to=1-3]
+\end{tikzcd}\]
+
+Em uma categoria $\mathcal{C}$, o limite de tal diagrama é chamado de \emph{limite inverso}. Esse limite possui um objeto junto com os morfismos daquele objeto para cada $\bullet$ tal que todos os triangulos resultantes comutem e a propriedade universal do limite seja satisfeita.
+
+Sejam $X_1, X_2, \dots$ objetos em $\mathcal{C}$, então o limite inverso, denotado $\underset{\leftarrow}{lim} X_i$ do diagrama 
+
+\[\begin{tikzcd}
+	{X_1} && {X_2} && {X_3} & \dots
+	\arrow["{f_1}", from=1-3, to=1-1]
+	\arrow["{f_2}", from=1-5, to=1-3]
+\end{tikzcd}\]
+
+seria um objeto que mapeia em cada $X_i$ na forma:
+
+\[\begin{tikzcd}
+	&& {\underset{\leftarrow}{lim} X_i} \\
+	\\
+	{X_1} && {X_2} && {X_3} & \dots
+	\arrow[from=1-3, to=3-1]
+	\arrow[from=1-3, to=3-3]
+	\arrow[from=1-3, to=3-5]
+	\arrow["{f_1}", from=3-3, to=3-1]
+	\arrow["{f_2}", from=3-5, to=3-3]
+\end{tikzcd}\]
+
+Em \textbf{Set}, esse seria um subconjunto $\underset{\leftarrow}{lim} X_i$ do produto $\prod_{i \in I} X_i$ contendo todas as sequências $(x_1, x_2, x_3, \dots)
+$ onde o $i$-ésimo fator é tal que $f_i (x_{i+1}) = x_i$
+
+Exemplo (\cite{rosiak2022}): Seja um diagrama indexado por uma categoria consistindo de dois objetos e dois morfismos paralelos não identidade,
+
+\[\begin{tikzcd}
+	\bullet && \bullet
+	\arrow[shift right, from=1-1, to=1-3]
+	\arrow[shift left, from=1-1, to=1-3]
+\end{tikzcd}\]
+
+Um diagrama em $\mathcal{C}$ de tal forma é um par de morfismos
+
+\[\begin{tikzcd}
+	X && Y
+	\arrow["g"', shift right, from=1-1, to=1-3]
+	\arrow["f", shift left, from=1-1, to=1-3]
+\end{tikzcd}\]
+
+em $\mathcal{C}$. Um cone com cume $C$ consiste em de pares de morfismos $h : C \to X$ e $i : C \to Y$ tais que $f \circ h = i$ e $g \circ h = i$ junto com $f \circ h = g \circ h$. Ou seja, um cone acima desse par é um morfismo $h : C \to X$ tal que $f \circ h = g \circ h$. 
+
+A partir disso, é possível definir um objeto $E$ junto com $e : E \to X$, chamado de \emph{equalizador} de $f$ e $g$, como a seta universal com a mesma propriedade, ou seja, $f \circ e = g \circ e$. Essa propriedade universal aponta que dado qualquer $h : C \to X$ tal que $f \circ h = g \circ h$ existe uma seta única $k : C \to E$ que fatora o morfismo $h$ através de $e$ tal que $e \circ k = h$ como no diagrama:
+
+\[\begin{tikzcd}
+	C \\
+	\\
+	E && X && Y
+	\arrow["k"', dashed, from=1-1, to=3-1]
+	\arrow["h", from=1-1, to=3-3]
+	\arrow["e", from=3-1, to=3-3]
+	\arrow["g"', shift right, from=3-3, to=3-5]
+	\arrow["f", shift left, from=3-3, to=3-5]
+\end{tikzcd}\]
+
+Em \textbf{Set}, o equalizador de $f$ e $g$ é o subconjunto de elementos de $X$ para os quais as duas funções coincidem: $$E = Eq(f, g) := \{x \in X | f(x) = g(x)\}$$
+
+A seguinte definição mostra quando é possível "cancelar" setas em um lado:
+
+\begin{definition}[monomorfismo, \cite{rosiak2022}]
+    Um morfismo $i : B \to C$ em uma categoria é chamado de \emph{monomorfismo} (ou morfismo \emph{mônico}) se para qualquer $A$ com morfismos paralelos $f$ e $g$ tais que:
+
+    \[\begin{tikzcd}
+        A && B && C
+        \arrow["g"', shift right, from=1-1, to=1-3]
+        \arrow["f", shift left, from=1-1, to=1-3]
+        \arrow["i"', from=1-3, to=1-5]
+    \end{tikzcd}\]
+
+    $i \circ f = i \circ g$ implica que $f = g$
+\end{definition}
+
+monomorfismos generalizam a noção de funções injetoras em \textbf{Set}.
+
+\begin{proposition}[\cite{awodey2010}]
+    Em qualquer categoria, se $e : E \to A$ é um equalizador de um par de setas, então $e$ é mônico
+\end{proposition}
+
+\emph{Prova}: Considere o diagrama:
+
+\[\begin{tikzcd}
+	E && A && B \\
+	\\
+	Z
+	\arrow["e"', from=1-1, to=1-3]
+	\arrow["g"', shift right, from=1-3, to=1-5]
+	\arrow["f", shift left, from=1-3, to=1-5]
+	\arrow["x", shift left, from=3-1, to=1-1]
+	\arrow["y"', shift right, from=3-1, to=1-1]
+	\arrow["z", from=3-1, to=1-3]
+\end{tikzcd}\]
+
+onde $e$ é equalizador de $f$ e $g$. Suponha que $ex = ey$, o que quer se mostrar é que $x = y$. Para isso, vamos usar a comutatividade do diagrama triangular. Seja $z = ex = ey$, então $fz = fex = gex = gz$, então existe um morfismo único $u : Z \to E$ tal que $eu = z$. Mas $ex = z$ e $ey = z$, então se segue que $x = u = y$. $\Box $
+
+\begin{definition}[\cite{awodey2010}]
+    Para mapas $r$ e $s$, em qualquer categoria, $r$ é chamado de \emph{retração} de $s$ caso $r \circ s$ for um mapeamento identidade. Nessa situação, $s$ é chamado de \emph{seção} de $r$
+\end{definition}
+
+Exemplos de colimites
+
+Em \textbf{Set}, o colimite de um diagrama discreto consistindo de conjuntos $X_1, X_2, \dots$ é a \emph{união disjunta} $\sqcup_{i \in I} X_i$, construida a partir de funções injetivas de cada $X_i$ no conjunto coproduto $X =  \sqcup_{i \in I} X_i$. Se os conjuntos são disjuntos par a par, a união disjunta se torna a união padrão $\cup$.
+
+Em um poset, o colimite de um diagrama discreto é o seu \emph{supremo} (ou \emph{menor cota superior}) $\bigvee_{i \in I} p_i$.
+
+O dual de limites inversos são \emph{limites diretos}, que são o colimite do diagrama indexado pela categorial ordinal $\omega$. Ou seja, para o diagrama
+
+\[\begin{tikzcd}
+	{X_1} & {X_2} & {X_3} & {X_4} & \dots
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-4, to=1-5]
+\end{tikzcd}\]
+
+seu colimite é o limite direto $\underset{\to}{lim} X_n$, que define o diagrama de forma $\omega + 1$:
+
+\[\begin{tikzcd}
+	{X_1} & {X_2} & {X_3} & {X_4} & \dots \\
+	\\
+	&&& {\underset{\to}{lim} X_n}
+	\arrow[from=1-1, to=1-2]
+	\arrow[from=1-1, to=3-4]
+	\arrow[from=1-2, to=1-3]
+	\arrow[from=1-2, to=3-4]
+	\arrow[from=1-3, to=1-4]
+	\arrow[from=1-3, to=3-4]
+	\arrow[from=1-4, to=1-5]
+	\arrow[from=1-4, to=3-4]
+	\arrow[from=1-5, to=3-4]
+\end{tikzcd}\]
+
+O colimite de uma sequência de conjuntos formada por inclusões:
+
+\[\begin{tikzcd}
+	{X_1} & {X_2} & {X_3} & {X_4} & \dots
+	\arrow[hook, from=1-1, to=1-2]
+	\arrow[hook, from=1-2, to=1-3]
+	\arrow[hook, from=1-3, to=1-4]
+	\arrow[hook, from=1-4, to=1-5]
+\end{tikzcd}\]
+
+é a sua união $\bigcup_{n \geq 0} X_n$
+
+\begin{definition}[Coequalizador, \cite{awodey2010}]
+    Sejam duas setas paralelas $f, g : A \to B$ em uma categoria $\mathcal{C}$, um \emph{coequalizador} consiste de $Q$ e $q : B \to Q$ universais com a propriedade $qf = qg$ como no diagrama:
+    \[\begin{tikzcd}
+        A && B && Q \\
+        \\
+        &&&& Z
+        \arrow["f", shift left, from=1-1, to=1-3]
+        \arrow["g"', shift right, from=1-1, to=1-3]
+        \arrow["q", from=1-3, to=1-5]
+        \arrow["z"', from=1-3, to=3-5]
+        \arrow["u", dashed, from=1-5, to=3-5]
+    \end{tikzcd}\]
+
+    Ou seja, dado qualquer objeto $Z$ e $z : B \to Z$, se $zf = zg$, então existe um morfismo único $u : Q \to Z$ tal que $uq = z$
+\end{definition}
+
+Em \textbf{Set}, o coequalizador de duas funções $f, g : X \to Y$ é o \emph{quociente} de $Y$ pela menor relação de equivalência $\sim$ tal que para todo $x \in X$, $f(x) \sim g(x)$
+
+\begin{definition}[\cite{rosiak2022}]
+    $f: X \to Y$ é dito \emph{epimorfismo} (ou somente \emph{epi}) se para todo $B$ e morfismos $h, h' : Y \to B$,
+    \[\begin{tikzcd}
+        X && Y && B
+        \arrow["f", from=1-1, to=1-3]
+        \arrow["h", shift left, from=1-3, to=1-5]
+        \arrow["{h'}"', shift right, from=1-3, to=1-5]
+    \end{tikzcd}\]
+
+    $h \circ f = h' \circ f$ implica que $h = h'$
+\end{definition}
+
+Epimorfismos podem ser vistos como generalizações das funções sobrejetoras em \textbf{Set}.
+
+\begin{proposition}[\cite{awodey2010}]
+    se $q : B \to Q$ é um coequalizador de um par de setas, então $q$ é epi.
+\end{proposition}
+
+
+\begin{definition}[\cite{rosiak2022}]
+    Seja $\mathcal{C}$ uma categoria e seja $F : \mathcal{C} \to \textbf{Set}$ um funtor covariante. Então a \emph{categoria de elementos} de $F$ denotada $\int_{\mathcal{C}} F$ (ou somente $\int F$ se o contexto for claro) é definida:
+    \begin{itemize}
+        \item $Ob(\int F) = \{(c, x) | c \in \mathcal{C}, x \in F(c)\}$
+        \item $Hom_{\int F}((c,x), (c', x')) = \{f : c \to c' | F(f)(x) = x'\}$
+    \end{itemize} 
+
+    De forma dual, para o caso contravariante: para $F : \mathcal{C}^{op} \to \textbf{Set}$, a \emph{categoria de elementos} de $F$ denotada $\int_{\mathcal{C}^op} F$ (ou somente $\int F$) é definida por:
+    \begin{itemize}
+        \item $Ob(\int F) = \{(c, x) | c \in \mathcal{C}, x \in F(c)\}$
+        \item $Hom_{\int F}((c,x), (c', x')) = \{f : c \to c' | F(f)(x') = x\}$
+    \end{itemize} 
+    Associado com essa construção estão os funtores $\pi_F : \int F \to \mathcal{C}$, chamados de \emph{funtores de projeção}, que mandam cada objeto $(c, x) \in Ob(\int F)$ para o objeto $c \in Ob(\mathcal{C})$ ou $Ob(\mathcal{C}^{op})$ e cada morfismo $f : (c, x) \to (c', x')$ para o morfismo $f : c \to c'$.
+\end{definition}
+
+\begin{definition}
+    Para qualquer classe de diagramas $K : \mathcal{J} \to \mathcal{C}$ em $\mathcal{C}$, um funtor $F : \mathcal{D} \to \mathcal{C}$ \emph{preserva limites} se para qualquer diagrama $K$ e cone limite sobre $K$, a imagem desse cone sob a ação do funtor definite um cone limite sobre o diagrama composto $F \circ K : \mathcal{J} \to \mathcal{D}$.
+\end{definition}
+
+
+\begin{definition}[\cite{rosiak2022}]
+    Um funtor é dito (co)\emph{continuo} se ele preserva dos os (co)\emph{limites} pequenos
+\end{definition}
+
+\subsection{Categorias Cartesianas Fechadas}
+
+\subsubsection{Exponenciais}
+
+Primeiro, é necessário uma digreção dentro da categoria dos conjuntos.
+
+Seja a função entre conjuntos $$f(x, y) : A \times B \to C$$ escrita usando variáveis $x \in A$ e $y \in B$.
+
+Se $a \in A$ for mantido constante, então tem-se a função $$f(a, y) : B \to C$$ e então o elemento $$f(a, y) \in C^B$$ do conjunto $C^B$ de todas as funções de $B$ para $C$. 
+
+Se $a$ for variado, então pode-se criar outra função $$\bar{f} : A \to C^B$$ que leva como parâmetro $a$ para a função $f_a(y) : B \to C$.
+
+A relação entre essas funções pode ser determinada pela seguinte equação:
+
+$$\bar{f}(a)(b) = f(a, b)$$
+
+Ou seja, existe um isomorfismo entre conjuntos:
+
+$$Sets(A \times B, C) \cong Sets(A, C^B)$$
+
+Ou seja, existe uma correspondência bijetiva entre essas funções mediada por uma operação de \emph{avaliação} (\emph{evaluation}):
+
+$$eval : C^B \times B \to C$$
+
+dada por:
+
+$$eval(g, b) = g(b)$$
+
+É possível definir exponênciais em qualquer categoria na seguinte forma:
+
+\begin{definition}[\cite{awodey2010}]
+    Seja a categoria $\mathcal{C}$ que possui produtos binários. Um \emph{exponencial} de objetos $B$ e $C$ de $\mathcal{C}$ consiste em um objeto $$C^B$$ e uma seta $$\epsilon : C^B \times B \to C$$ tal que, para todo objeto $Z$ e seta $f : Z \times B \to C$ existe uma seta única $$\bar{f} : Z \times C^B$$ tal que $$\epsilon \circ (\bar{f} \times 1_B) = f$$ como no diagrama:
+    \[\begin{tikzcd}
+        {C^B} && {C^B \times B} && C \\
+        \\
+        Z && {Z \times B}
+        \arrow["\epsilon", from=1-3, to=1-5]
+        \arrow["{\bar{f}}", from=3-1, to=1-1]
+        \arrow["{\bar{f} \times 1_B}", from=3-3, to=1-3]
+        \arrow["f"', from=3-3, to=1-5]
+    \end{tikzcd}\]
+\end{definition}
+
+\subsubsection{Categorias Cartesianas Fechadas}
+
+\begin{definition}[\cite{awodey2010}]
+    Uma categoria $\mathcal{C}$ é dita ter \emph{todos os produtos finitos} se ele possui um objeto terminal e todos os produtos binários (e também produtos de qualquer cardinalidade finita). A categoria $\mathcal{C}$ possui \emph{todos os produtos pequenos} se todo conjunto de objetos em $\mathcal{C}$ possui produtos 
+\end{definition}
+
+Com isso, é possível definir categorias cartesianas fechadas da seguinte forma:
+
+\begin{definition}[\cite{awodey2010}]
+    Uma categoria é chamada \emph{cartesiana fechada} se possui todos os produtos finitos e exponenciais
+\end{definition}
+
 
 
 
