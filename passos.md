@@ -137,11 +137,14 @@ Parte III - Semântica categorica do cubo
 [x] Categorias novas de antigas  
 [x] Funtores (Explicar prefeixes)  
 [x] Transformações naturais  
-[ ] Adjunções
-[ ] Construções universais - Limites e Colimites  
+[x] Construções universais - Limites e Colimites  
 [ ] Categorias cartesianas fechadas  
+[ ] Exponenciais  
+[ ] Adjunções  
+[ ] Monadas  
 [ ] Estudo de caso 1: categoria simplice e conjuntos simpliciais  
 [ ] Estudo de caso 2: ações de prefeixes  
+[ ] Quebrar o capitulo de limites em outros capitulos ou subcapitulos (pullbacks, equalizers, etc)
 2. Semantica categorial da teoria dos tipos simples  
 [ ] A semântica categorial da teoria dos tipos simples  
 3. Teoria dos Topos  
