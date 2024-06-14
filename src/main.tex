@@ -7,6 +7,7 @@
 \usepackage{mathtools}
 \usepackage{amssymb}
 \usepackage{bussproofs}
+\usepackage{stackengine}
 % \usepackage{pagestyle/fitch}
 \usepackage{mathpartir}
 \usepackage{stmaryrd}
@@ -15,7 +16,12 @@
 \usepackage{tikz-cd}
 % \usepackage{pagestyle/quiver}
 
+\usepackage{newpxtext}
+\usepackage{euler}
+
+
 \usepackage[alf, abnt-repeated-title-omit=yes, abnt-emphasize=bf, abnt-etal-list=0]{abntex2cite}
+
 \citebrackets()
 
 \theoremstyle{definition}
@@ -67,7 +73,6 @@
         % PARTE 1
 
         \part{O Cubo Lambda}
-            \setcounter{section}{0}
             \renewcommand*{\theHsection}{chX.\the\value{section}}
 
             \subfile{sections/parte1/lambda.tex}
@@ -91,7 +96,6 @@
         % PARTE 3
 
         \part{Semântica Categorial das teorias do cubo lambda}
-            \setcounter{section}{0}
             \renewcommand*{\theHsection}{chX.\the\value{section}}
 
             \subfile{sections/parte3/cattheory.tex}
@@ -113,7 +117,6 @@
     \newpage
         % Apêndice Histórico
         \part{Apêndices}
-        \setcounter{section}{0}
 
             \subfile{sections/parte7/apendice.tex}
 

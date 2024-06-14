@@ -93,10 +93,10 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Propriedades   
 [ ] Verificar provas das propriedades em artigos de Barendregt  
 6.2 Lógica em \lambda C  
-[ ] absurdo e negação  
-[ ] Conjunção e disjunção  
-[ ] Exemplo  
-[ ] Lógica clássica  
+[x] absurdo e negação  
+[x] Conjunção e disjunção  
+[x] Exemplo  
+[x] Lógica clássica  
 [ ] Lógica predicativa  
 [ ] Exemplo de lógica predicativa  
 6.3 Calculo de construções indutivas  

@@ -30,7 +30,7 @@ A primeira premissa garante que $x$ seja um termo, ou seja que $\Pi x : A . B : 
 
 Logo essa regra de formação pode ter quatro formas possíveis a depender da escolha de $s_1$ e $s_2$:
 
-\begin{center}[]
+\begin{center}
     \begin{tabular}{|l|l|l|l|l|}
     \hline
     $x : A : s_1$ & $b : B : s_2$ & $(s_1, s_2)$         & $\lambda x : A . b$           & sistema                        \\ \hline
@@ -209,5 +209,484 @@ Finalmente, de um ponto de vista computacional, a questão que fica é saber se 
 Logo, é possível desenvolver um \emph{programa de computador} que resolve esses problemas automaticamente. Um desses programas é o \emph{Provador de Teoremas} \textbf{Coq}.
 
 A questão de Encontrar os termos só é decidível em $\lambda_{\to}$ e $\lambda \underline{\omega}$, mas indecidível nos outros sistemas.
+
+\subsection{A lógica no \texorpdfstring{$\lambda$C}{LC}}
+
+No capítulo anterior, sobre o sistema $\lambda P$, foi codificada uma lógica na teoria dos tipos que possuia como operadores a \emph{implicação} e o \emph{quantificador universal}. Como $\lambda P$ é parte de $\lambda C$, essa codificação pode ser mantida sem problemas.
+
+Para se ter uma lógica proposicional além de \emph{minima}, é necessário introduzir outros conectivos lógicos como a negação ($\neg$), a conjunção ($\wedge$) e a disjunção ($\vee$). Isso não pode ser feito em $\lambda P$ mas pode ser feito em $\lambda C$
+
+\subsubsection{Absurdo e negação na teoria dos tipos}
+
+Começando com a negação. É natural de se pensar a negação $\neg A$ como uma implicação $A \Rightarrow \bot$ que leva de $A$ para o "absurdo", chamado de \emph{contradição}. Logo $\neg A$ é lido como "$A$ implica no absurdo".
+
+Para isso, se torna necessário codificar o absurdo, que será codificado na seguinte forma: $$\bot \equiv \Pi \alpha : \ast . \alpha$$. Fica a cargo do leitor mostrar que esse tipo é válido em $\lambda C$. 
+
+Uma característica do absurdo é a chamada \emph{regra da explosão}, ou \emph{ex falso quodlibet} (do falso se segue qualquer coisa):
+
+\emph{Se $\bot$ é verdadeiro, então toda proposição é verdadeira}
+
+No sentido da teoria dos tipos, é a mesma coisa que dizer que:
+
+\emph{Se $\bot$ é habitado, qualquer proposição é habitada}
+
+Na interpretação construtiva, pode-se construir uma função:
+
+"Se $M$ é habitante de $\bot$, então existe uma função que mapeia uma proposição arbitrária $\alpha$ em um habitante desse mesmo $\alpha$"
+
+Essa função possui o tipo $\Pi \alpha : \ast . \alpha$ e se $f$ possui esse tipo, entao, pela aplicação, $fA : \alpha[\alpha := A] \equiv A$. Ou seja, $fA$ habita $A$ para qualquer tipo $A$ Então:
+
+"Se $M$ for um habitante de $\bot$, então existe uma função $f$ que habita $\Pi \alpha : \ast . \alpha$"
+
+De forma contrária, tendo $f$, então todas as proposições são verdadeiras, o que é absurdo, logo existe o absurdo.
+
+Em suma: $\bot$ é habitado, se e somente se, $\Pi \alpha : \ast . \alpha$ for habitado.
+
+A regra da eliminação de $\bot$ é feita da seguinte forma:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$\bot$}
+    \LeftLabel{($\bot$ - \emph{elim})}
+    \UnaryInfC{$A$}
+\end{prooftree}
+
+Na dedução natural, essa regra não aparece com esse nome específico, mas sim relacionado à negação.
+
+Para terminar, é necessário discutir a qual subsistema de $\lambda C$ $\bot$ pertence. No tipo $\Pi \alpha : \ast . \alpha$, como $\alpha : \ast : \square$, $s_1 = \square$ e $s_2 = \ast$.
+
+Tendo declarado o absurdo, se torna fácil definir a negação. $\neg A \equiv A \to \bot$ é abreviação de $\Pi x : A . \bot$. Como $A : \ast$ e $\bot : \ast$, então $(s_1, s_2) = (\ast, \ast)$. Como trata-se de um tipo que usa $\bot$, então seu subsistema mínimo é $\lambda 2$.
+
+É possível definir a regra da introdução do absurdo da seguinte forma:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$A$}
+    \AxiomC{$\neg A$}
+    \LeftLabel{($\bot$ - \emph{intro})}
+    \BinaryInfC{$\bot$}
+\end{prooftree}
+
+mas como $\neg A \equiv A \to \bot$, isso é o mesmo que:
+
+\begin{prooftree}
+    \def\fCenter{\mbox{\ $\vdash$\ }}
+    \AxiomC{$A$}
+    \AxiomC{$A \to \bot$}
+    \LeftLabel{($\bot$ - \emph{intro})}
+    \BinaryInfC{$\bot$}
+\end{prooftree}
+
+que é nada mais que uma repaginação da regra ($\Rightarrow$-\emph{elim}). Da mesma forma, as regras de introdução e eliminação da negação também são repaginações das regras de introdução e eliminação da implicação:
+
+\begin{center}
+    \AxiomC{$A$}
+    \AxiomC{$A \to \bot$}
+    \LeftLabel{($\neg$ - \emph{elim})}
+    \RightLabel{$\qquad$}
+    \BinaryInfC{$\bot$}
+    \DisplayProof
+    \AxiomC{$A$}
+    \AxiomC{$A \Rightarrow B$}
+    \LeftLabel{($\Rightarrow$ - \emph{elim})}
+    \BinaryInfC{$B$}
+    \DisplayProof
+
+    \hfil
+
+    \AxiomC{$[A]$}
+    \noLine
+    \UnaryInfC{$\vdots$}
+    \noLine
+    \UnaryInfC{$\bot$}
+    \LeftLabel{($\neg$-\emph{intro})}
+    \UnaryInfC{$\neg A$}
+    \DisplayProof
+    \AxiomC{$[A]$}
+    \noLine
+    \UnaryInfC{$\vdots$}
+    \noLine
+    \UnaryInfC{$B$}
+    \LeftLabel{$\qquad$($\neg$-\emph{intro})}
+    \UnaryInfC{$A \to B$}
+    \DisplayProof
+\end{center}
+
+\subsubsection{Conjunção e Disjunção na teoria dos tipos}
+
+\emph{I. Conjunção}
+
+A conjunção $A \land B$ é verdadeira se, e somente se, \emph{ambos} $A$ e $B$ são verdadeiros. Existe uma codificação da conjunção em $\lambda 2$ que é:
+
+$$A \land B \equiv \Pi C : \ast . (A \to B \to C) \to C$$
+
+chamada de \emph{codificação de segunda ordem} da conjunção, sendo mais geral que a codificação \emph{de primeira ordem}:
+
+$$A \land B \equiv (A \to \neq B)$$
+
+A codificação de segunda ordem é mais geral pois a codificação de primeira ordem só funciona na lógica clássica.
+
+Mas o que quer dizer de fato essa codificação? Lendo o $\Pi$ como um quantificador universal, pode-se ler como: "para todo $C$, ($A$ implica em $B$ implica em $C$) implica em $C$". Ou: "Se $A$ e $B$ juntos implicam em $C$, então $C$ é válido por si só".
+
+Essa codificação é chamada de \emph{segunda ordem} pois ela é generalizada sobre todas as proposições $C : \ast$ que são objetos de segunda ordem.
+
+As regras de inferência de $\land$ na dedução natural e na teoria dos tipos são as seguintes:
+
+\begin{center}
+    \AxiomC{$A$}
+    \AxiomC{$B$}
+    \LeftLabel{($\land$-\emph{intro})}
+    \BinaryInfC{$A \land B$}
+    \DisplayProof
+    \AxiomC{$A$}
+    \AxiomC{$B$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro})}
+    \BinaryInfC{$\Pi C : \ast . (A \to B \to C) \to C$}
+    \DisplayProof
+    
+    \hfill
+
+    \AxiomC{$A \land B$}
+    \LeftLabel{($\land$-\emph{elim-left})}
+    \UnaryInfC{$A$}
+    \DisplayProof
+    \AxiomC{$\Pi C : \ast . (A \to B \to C) \to C$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro-left})}
+    \UnaryInfC{$A$}
+    \DisplayProof   
+
+    \hfill
+    
+    \AxiomC{$A \land B$}
+    \LeftLabel{($\land$-\emph{elim-right})}
+    \UnaryInfC{$B$}
+    \DisplayProof
+    \AxiomC{$\Pi C : \ast . (A \to B \to C) \to C$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro-right})}
+    \UnaryInfC{$B$}
+    \DisplayProof 
+\end{center}
+
+Para provar que essas regras são válidas em $\lambda C$, é necessário encontrar um termo que obedeça a essas regras da seguinte forma:
+
+\begin{center}
+    \AxiomC{$\Gamma \vdash a : A$}
+    \AxiomC{$\Gamma \vdash b : B$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro-sec-tt})}
+    \BinaryInfC{$\Gamma \vdash ?_1 : \Pi C : \ast . (A \to B \to C) \to C$}
+    \DisplayProof
+
+    \AxiomC{$\Gamma \vdash c : \Pi C : \ast . (A \to B \to C) \to C$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro-sec-left-tt})}
+    \UnaryInfC{$\Gamma \vdash ?_2 : A$}
+    \DisplayProof   
+
+    \AxiomC{$\Gamma \vdash c : \Pi C : \ast . (A \to B \to C) \to C$}
+    \LeftLabel{$\qquad$($\land$-\emph{intro-sec-right-tt})}
+    \UnaryInfC{$\Gamma \vdash ?_3 : B$}
+    \DisplayProof   
+\end{center}
+
+Como exemplo, segue a derivação da regra de introdução:
+
+\begin{center}
+    \AxiomC{$\Gamma \vdash a : A$}
+    \AxiomC{$\Gamma \vdash b : B$}
+    \BinaryInfC{$\dots$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\Gamma \vdash ?_1 : \Pi C : \ast . (A \to B \to C) \to C$}
+    \DisplayProof
+\end{center}
+
+\begin{center}
+    \AxiomC{$\Gamma, C : \ast, z : (A \to B \to C) \vdash b : B$}
+    \AxiomC{$\Gamma, C : \ast, z : (A \to B \to C) \vdash a : A$}
+    \AxiomC{$\Gamma, C : \ast, z : (A \to B \to C) \vdash z : (A \to B \to C)$}
+    \LeftLabel{(\emph{appl})}
+    \BinaryInfC{$\Gamma, C : \ast, z : (A \to B \to C) \vdash za : B \to C$}
+    \LeftLabel{(\emph{appl})}
+    \BinaryInfC{$\Gamma, C : \ast, z : (A \to B \to C) \vdash zab : C$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma, C : \ast \vdash \lambda z : (A \to B \to C) . zab : (A \to B \to C) \to C$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma \vdash \lambda C : \ast . \lambda z : (A \to B \to C) . zab : \Pi C : \ast . (A \to B \to C) \to C$}
+    \DisplayProof
+\end{center}
+
+Com $\Gamma \equiv A : \ast, B : \ast, a : A, b : B$
+
+
+
+\emph{II. Disjunção}
+
+Para a disjunção também existe uma codificação de primeira e segunda ordem. A codificação de segunda ordem é:
+
+$$A \lor B \equiv \Pi C : \ast . (A \to C) \to (B \to C) \to C$$
+
+(A codificação de primeira ordem é $A \lor B \equiv \neg A \to B$, mas assim como na conjunção, ela só serve para a lógica clássica)
+
+Assim como na conjunção, essa codificação possui uma interpretação literal como:
+
+\emph{Para todo $C$, ($A \to C$ implica que ($B \to C$ implica em $C$))}
+
+Isso é o mesmo que dizer que:
+
+"Se $A$ implica em $C$ e $B$ implica em $C$, então $C$ se segue"
+
+Ou
+
+"Se $A$ ou $B$ implica em em $C$, então $C$ se segue"
+
+As regras de inferência de $\lor$ na dedução natural e na teoria dos tipos são as seguintes:
+
+\begin{center}
+    \AxiomC{$A$}
+    \LeftLabel{($\lor$-\emph{intro-left})}
+    \UnaryInfC{$A \lor B$}
+    \DisplayProof
+    \AxiomC{$A$}
+    \LeftLabel{$\qquad$($\lor$-\emph{intro-left})}
+    \UnaryInfC{$\Pi C : \ast . (A \to C) \to (B \to C) \to C$}
+    \DisplayProof
+    
+    \hfill
+
+    \AxiomC{$B$}
+    \LeftLabel{($\lor$-\emph{intro-right})}
+    \UnaryInfC{$A \lor B$}
+    \DisplayProof
+    \AxiomC{$B$}
+    \LeftLabel{$\qquad$($\lor$-\emph{intro-right})}
+    \UnaryInfC{$\Pi C : \ast . (A \to C) \to (B \to C) \to C$}
+    \DisplayProof
+
+    \hfill
+    
+    \AxiomC{$A \lor B$}
+    \AxiomC{$A \Rightarrow C$}
+    \AxiomC{$B \Rightarrow C$}
+    \LeftLabel{($\lor$-\emph{elim})}
+    \TrinaryInfC{$B$}
+    \DisplayProof
+    \AxiomC{$\Pi D : \ast . (A \to D) \to (B \to D) \to D$}
+    \AxiomC{$A \to C$}
+    \AxiomC{$B \to C$}
+    \LeftLabel{$\qquad$($\lor$-\emph{elim})}
+    \TrinaryInfC{$C$}
+    \DisplayProof 
+\end{center}
+
+Para as regras da dedução natural:
+
+As regras (\emph{intro}) são o mesmo que: se $A$ é verdadeira por si só, então $A \lor B$ também será. O mesmo para $B$.
+
+A regra (\emph{elim}) descreve bem o comportamento dito acima da implicação
+
+A derivação da (\emph{elim}) pode ser feita seguindo o seguinte termo: $$\lambda x : \Pi D : \ast . (A \to D) \to (B \to D) \to D . \lambda y : A \to C . \lambda z : B \to C . xCyz : C$$
+
+A árvore de derivação fica para ser construida pelo leitor.
+
+Uma nota importante é que os operadores lógicos vistos até então podem ser construidos quantificando em cima de qualquer proposição(-como-tipo), nesse caso eles se tornam:
+
+\begin{align*}
+    \neg &\equiv \lambda \alpha : \ast . (\alpha \to \bot) \\
+    \land &\equiv \lambda \alpha : \ast . \lambda \beta : \ast . \Pi \gamma : \ast (\alpha \to \beta \to \gamma) \to \gamma \\
+    \lor &\equiv \lambda \alpha : \ast . \lambda \beta : \ast . \Pi \gamma : \ast (\alpha \to \gamma) \to (\beta \to \gamma) \to \gamma 
+\end{align*}
+
+Exemplo:
+
+\begin{align*}
+    A \land B &\equiv (\lambda \alpha : \ast . \lambda \beta : \ast . \Pi \gamma : \ast (\alpha \to \beta \to \gamma) \to \gamma)AB \\
+              &\to_{\beta} (\lambda \beta : \ast . \Pi \gamma : \ast (A \to \beta \to \gamma) \to \gamma)B \\
+              &\to_{\beta} \Pi \gamma : \ast (A \to B \to \gamma) \to \gamma \\
+              &\equiv \Pi C : \ast (A \to B \to C) \to C \\
+\end{align*}
+
+Enquanto os outros operadores menos gerais estão em $\lambda 2$, esses mais gerais estão no sistema $\lambda \omega$
+
+\emph{III. Biimplicação}
+
+A Biimplicação, ou também "Se, e somente se", na lógica é o operador $\Leftrightarrow$ que não possui uma tipagem direta em $\lambda C$, mas pode ser construido usando a seguinte equivalência:
+
+$$A \Leftrightarrow B \equiv (A \Rightarrow B) \land (B \Rightarrow A)$$
+
+\subsubsection{Exemplo de Derivação}
+
+Para mostrar que a lógica funciona na teoria dos tipos, é importante demonstrar um exemplo de tautologia, como a seguinte:
+
+$$(A \lor B) \Rightarrow (\neg A \Rightarrow B)$$
+
+Como cada operador desse possui uma codificação na teoria dos tipos, essa tautologia pode ser reescrita na forma:
+
+
+$$(\Pi C : \ast . (A \to C) \to (B \to C) \to C) \to (A \to \bot) \to B$$
+
+Como $A$ e $B$ são proposições arbitrárias, elas ficam no contexto da derivação.
+
+Para dar um norte, a derivação na dedução natural dessa tautologia é a seguinte:
+
+\begin{prooftree}
+    \AxiomC{$[A \lor B]^1$}
+    \AxiomC{$[A]^3$}
+    \AxiomC{$[\neg A]^2$}
+    \LeftLabel{($\neg$-\emph{elim})}
+    \BinaryInfC{$\bot$}
+    \LeftLabel{($\bot$-\emph{elim})}
+    \UnaryInfC{$B$}
+    \AxiomC{$[B]^3$}
+    \LeftLabel{($\lor$-\emph{elim})}
+    \RightLabel{$3$}
+    \TrinaryInfC{$B$}
+    \LeftLabel{($\Rightarrow$-\emph{intro})}
+    \RightLabel{$2$}
+    \UnaryInfC{$\neg A \Rightarrow B$}
+    \LeftLabel{($\Rightarrow$-\emph{intro})}
+    \RightLabel{$1$}
+    \UnaryInfC{$(A \lor B) \Rightarrow (\neg A \Rightarrow B)$}
+\end{prooftree}
+
+Essa árvore pode dar uma noção de por onde começar
+
+Primeiro, é necessário um termo $c : (\Pi C : \ast . (A \to C) \to (B \to C) \to C)$ para ser o $A \lor B$. Também de um termo $n : A \to \bot$ para ser o $\neg A$.
+
+Mas a dúvida então fica em como encontrar o $B$. para isso fica claro pela dedução natural que o próximo passo seria eliminar o $\lor$ usando $B$ no lugar de $C$, logo seria necessário o tipo: $(A \to B) \to (B \to B) \to B$, gerado por $cB$. Dado esse tipo, só se torna necessário encontrar dois termos com tipos $A \to B$ e $B \to B$. O segundo é um termo identidade $\lambda v : B . v$ e o primeiro tem que ser um termo $\lambda u : A . M : A \to B$. 
+
+Para gerar o termo $M$ é necessário lembrar que o tipo absurdo $\bot$ é o mesmo que $\Pi \alpha : \ast . \alpha$ e que $(\Pi \alpha : \ast . \alpha)B \to_{\beta} B$. Logo, $M \equiv uvB$.
+
+Fica-se então com o seguinte termo:
+
+\begin{align*}
+    \lambda c : (\Pi C : \ast . (A \to C) \to (B \to C) \to C) . \lambda n : (A \to \bot) . cB(\lambda u : A . nuB)(\lambda v : B . v) \\  : (\Pi C : \ast . (A \to C) \to (B \to C) \to C) \to (A \to \bot) \to B
+\end{align*}
+
+
+A árvore de derivação completa (retirando a segunda premissa da abstração e fins que não são fins de verdade) está na próxima página:
+
+\newpage
+
+\begin{center}
+    \rotatebox{90}{
+        \AxiomC{$\Gamma \vdash c: \Pi C : \ast . (A \to C) \to (B \to C) \to C$}
+        \AxiomC{$\Gamma \vdash B: \ast$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma \vdash cB: (A \to B) \to (B \to B) \to B$}
+
+
+        \AxiomC{$\Gamma, u : A \vdash n : A \to \bot$}
+        \AxiomC{$\Gamma, u : A \vdash u : A$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma, u : A \vdash nu : \bot \equiv \Pi \alpha : \ast . \alpha$}
+        \AxiomC{$\Gamma, u : A \vdash B : \ast$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma, u : A \vdash nuB : B$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$\Gamma \vdash \lambda u : A . nuB : A \to B$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma \vdash cB(\lambda u : A . nuB) : (B \to B) \to B$}
+        \AxiomC{$\Gamma, v : B \vdash v : B$ }
+        \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma \vdash \lambda v : B . v : (B \to B)$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$A : \ast, B : \ast, c : (\Pi C : \ast . (A \to C) \to (B \to C) \to C), n (A \to \bot) \vdash cB(\lambda u : A . nuB)(\lambda v : B . v) : B$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$A : \ast, B : \ast, c : (\Pi C : \ast . (A \to C) \to (B \to C) \to C) \vdash \lambda n : (A \to \bot) . . cB(\lambda u : A . nuB)(\lambda v : B . v) : (A \to \bot) \to B$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{\stackanchor{$A : \ast, B : \ast \vdash \lambda c : (\Pi C : \ast . (A \to C) \to (B \to C) \to C) . \lambda n : (A \to \bot) . cB(\lambda u : A . nuB)(\lambda v : B . v) :$}{$(\Pi C : \ast . (A \to C) \to (B \to C) \to C) \to (A \to \bot) \to B$}}
+        \DisplayProof
+    }
+
+\end{center}
+
+\newpage
+
+\subsubsection{Lógica clássica em \texorpdfstring{$\lambda$C}{LC}}
+
+A lógica vista até então não é \emph{clássica}, mas sim \emph{intuicionista} ou \emph{construtivista}. Essa lógica é um pouco mais fraca que a lógica clássica, pois ela não possui a \emph{lei do terceiro excluido} (LEM) que diz que $A \lor \neg A$ é válido para qualquer $A$. Ela também não possui a lei da \emph{dupla negação} (DN) que diz que $\neq \neq A \Rightarrow A$ é válido para qualquer $A$.
+
+Para obter essa lógica clássica é necessário fazer uma extensão da lógica vista até então. Para isso, não é necessário introduzir ambas LEM e DN, pois uma implica na outra, dessa forma só será introduzida a LEM. 
+
+Mas como introduzir uma regra que não é derivável em $\lambda C$? para isso, é necessário assumi-la como \emph{suposição}, também chamado de \emph{postulado} ou \emph{axioma}, no contexto. A LEM será introduzida da seguinte forma:
+
+$$i_{LEM} = \Pi \alpha : \ast . \alpha \lor \neg \alpha$$
+
+Um teste inicial interessante é provar o que foi dito anteriormente que $\lambda C + i_{LEM}$ prova \emph{DN}.
+
+\begin{prooftree}
+    
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$ i_{LEM} \vdash ? : \Pi \beta : \ast . \neg \neg \beta \to \beta$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$ i_{LEM}, \beta : \ast \vdash ? : \neg \neg \beta \to \beta$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$ i_{LEM} \vdash \lambda \beta : \ast . ? : \Pi \beta : \ast . \neg \neg \beta \to \beta$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$ i_{LEM}, \beta : \ast, x : \neg \neg \beta \vdash ? : \beta$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$ i_{LEM}, \beta : \ast \vdash \lambda x : \neg \neg \beta . ? : \neg \neg \beta \to \beta$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$ i_{LEM} \vdash \lambda \beta : \ast . \lambda x : \neg \neg \beta . ? : \Pi \beta : \ast . \neg \neg \beta \to \beta$}
+\end{prooftree}
+
+Nessa etapa, é necessário descobrir um termo $M : \beta$. Mas tendo em vista que $i_{LEM}\beta \equiv \beta \lor \neg \beta \equiv \Pi \gamma : \ast . (\beta \to \gamma) \to (\neg \beta \to \gamma) \to \gamma$, é possível construir o tipo $i_{LEM}\beta \equiv\beta \equiv (\beta \to \beta) \to (\neg \beta \to \beta) \to \beta$.
+
+A primeira entrada desse tipo pode ser construida usando um termo que é uma identidade $\lambda u : \beta . u$, já o segundo pode ser construido pensando que $\neg \neg \beta \equiv (\neg \beta \to \bot)$. Sendo $x : \neg \neg \beta$, ao aplicar esse termo a um termo $z : \neg \beta$, tem-se $xz : \bot$, mas pela definição de $\bot$, $\bot\beta \to_{\beta} \beta$. logo $xz\beta : \beta$. Então o segundo termo é: $\lambda z : \neg \beta . xz\beta : \neg \beta \to \beta$.
+
+O termo $M$ então se torna $M \equiv i_{LEM}\beta\beta(\lambda y : \beta . y)(\lambda z : \neg \beta . xz\beta) : \beta$.
+
+A árvore final se torna:
+
+Obs: árvore incompleta; $\Gamma \equiv i_{LEM}, \beta : \ast, x : \neg \neg \beta$
+
+\newpage
+\begin{center}
+    \rotatebox{90}{
+        \AxiomC{$\vdots$}
+        \LeftLabel{(\emph{appl})}
+        \UnaryInfC{$\Gamma \vdash i_{LEM}\beta\beta : (\beta \to \beta) \to (\neg \beta \to \beta) \to \beta$}
+
+        \AxiomC{$\Gamma, y : \beta \vdash y : \beta \to \beta$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$\Gamma \vdash \lambda y : \beta . y : \beta \to \beta$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma \vdash i_{LEM}\beta\beta(\lambda y : \beta . y) : (\neg \beta \to \beta) \to \beta$}
+
+        \AxiomC{$\Gamma, z : \neg \beta  \vdash x : \neg \neg \beta$}
+        \AxiomC{$\Gamma, z : \neg \beta  \vdash z : \neg \beta$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma, z : \neg \beta  \vdash xz : \bot \equiv \Pi \alpha : \ast . \alpha$}
+        \AxiomC{$\Gamma, z : \neg \beta  \vdash \beta : \ast$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$\Gamma, z : \neg \beta  \vdash xz\beta : \beta$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$\Gamma \vdash \lambda z : \neg \beta . xz\beta : \beta$}
+        \LeftLabel{(\emph{appl})}
+        \BinaryInfC{$ i_{LEM}, \beta : \ast, x : \neg \neg \beta \vdash i_{LEM}\beta\beta(\lambda y : \beta . y)(\lambda z : \neg \beta . xz\beta) : \beta$}
+        \LeftLabel{(\emph{appl})}
+        \UnaryInfC{$ i_{LEM}, \beta : \ast, x : \neg \neg \beta \vdash i_{LEM}\beta\beta(\lambda y : \beta . y)(\lambda z : \neg \beta . xz\beta) : \beta$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$ i_{LEM}, \beta : \ast \vdash \lambda x : \neg \neg \beta . i_{LEM}\beta\beta(\lambda y : \beta . y)(\lambda z : \neg \beta . xz\beta) : \neg \neg \beta \to \beta$}
+        \LeftLabel{(\emph{abst})}
+        \UnaryInfC{$ i_{LEM} \vdash \lambda \beta : \ast . \lambda x : \neg \neg \beta . i_{LEM}\beta\beta(\lambda y : \beta . y)(\lambda z : \neg \beta . xz\beta) : \Pi \beta : \ast . \neg \neg \beta \to \beta$}
+        \DisplayProof
+    }
+
+\end{center}
+
+\newpage
+
+\subsubsection{Lógica de predicados em \texorpdfstring{$\lambda$C}{LC}}
+
+
+
 
 \end{document}
