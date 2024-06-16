@@ -686,7 +686,155 @@ Obs: árvore incompleta; $\Gamma \equiv i_{LEM}, \beta : \ast, x : \neg \neg \be
 
 \subsubsection{Lógica de predicados em \texorpdfstring{$\lambda$C}{LC}}
 
+Uma vez tendo definido as codificações relacionadas a lógica proposicional, se torna necessário codificar a \emph{lógica de predicados}. A lógica de predicados pode ser vista como uma extensão da lógica proposicional com o quantificador universal ($\forall$) e o quantificador existencial ($\exists$).
+Na discussão de $\lambda P$, foi construida a codificação de $\forall_{x \in S} P(x)$ como $\Pi x : S . Px$. O que falta seria a definição do quantificador existencial. Uma definição de \emph{primeira ordem} de $\exists$ seria simplesmente $\exists_{x \in S} P(x) \equiv \neg \forall_{x \in S} P(x)$, mas essa codificação só funciona na lógica clássica. Uma codificação mais geral seria a codificação de segunda ordem de $\exists$ na forma:
 
+$$\exists_{x \in S} P(x) \equiv \Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha)$$
+
+Traduzindo em palavras:
+
+"Para todo $\alpha$: se é sabido que para todo $x$ em $S$ se segue que $Px$ implica em $\alpha$, então $\alpha$"
+
+Não é imediatamente clara a relação entre essa codificação é o sentido do quantificador existencial, mas ela obecede as regras de inferencia de $\exists$.
+
+A regra da eliminação do existencial diz que:
+
+\begin{prooftree}
+    \AxiomC{$\exists_{x \in S} P(x)$}
+    \AxiomC{$\forall_{x \in S} (P(x) \Rightarrow A)$}
+    \LeftLabel{$\exists$-\emph{elim}}
+    \BinaryInfC{$A$}
+\end{prooftree}
+
+Essa regra é:
+\begin{itemize}
+    \item primeira premissa: se existe um $x$ no conjunto $S$ para o qual o predicado $P$ é válido,
+    \item segunda premissa: e para todo $x$ em $S$, se $P$ é válido para $x$ então $A$ é válida
+    \item conclusão: então $A$ é válido
+\end{itemize}
+
+A contraparte dessa regra na codificação mostrada anteriormente é:
+
+\begin{prooftree}
+    
+    \AxiomC{$\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha)$}
+    \AxiomC{$\Pi x : S . (Px \to A)$}
+    \LeftLabel{$\exists$-\emph{elim-sec}}
+    \BinaryInfC{$A$}
+\end{prooftree}
+
+O termo que prova essa regra é o seguinte:
+
+$$\lambda y : \Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) . \lambda z : \Pi x : S . (Px \to A) . yAz$$
+
+Abreviando $\Pi x : S . (Px \to \alpha)$ para $\phi (\alpha)$, então a regra expressa da seguinte forma: 
+
+"Se para todo $\alpha$ tem-se que $\phi(\alpha) \Rightarrow \alpha$ e $\phi(A)$, então $A$"
+
+Para que essa derivação seja correta, é necessário que $x \not\in |FV(A)$, pois pelo contrario a aplicação $yA$ seria ilegal.
+
+Já para a introdução de $\exists$ a regra de derivação é a seguinte:
+
+\begin{prooftree}
+
+    \AxiomC{$a \in S$}
+    \AxiomC{$P(a)$}
+    \LeftLabel{$\exists$-\emph{intro}}
+    \BinaryInfC{$\exists_{x \in S} P(x)$}
+\end{prooftree}
+
+sendo $a$ algum elemento fixo.
+
+A regra da introdução na teoria dos tipos fica:
+
+\begin{prooftree}
+
+    \AxiomC{$a : S$}
+    \AxiomC{$Pa$}
+    \LeftLabel{$\exists$-\emph{intro-sec}}
+    \BinaryInfC{$\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha)$}
+\end{prooftree}
+
+A árvore de derivação dessa regra é a seguinte:
+
+\begin{prooftree}
+
+    \AxiomC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast, v : (\Pi x : S . (Px \to \alpha)) \vdash v : (\Pi x : S . (Px \to \alpha))$}
+    \AxiomC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast, v : (\Pi x : S . (Px \to \alpha)) \vdash a : S$}
+    \LeftLabel{(\emph{appl})}
+    \BinaryInfC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast, v : (\Pi x : S . (Px \to \alpha)) \vdash va : (Pa \to \alpha) \to \alpha$}
+    \AxiomC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast, v : (\Pi x : S . (Px \to \alpha)) \vdash u : Pa$}
+    \LeftLabel{(\emph{appl})}
+    \BinaryInfC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast, v : (\Pi x : S . (Px \to \alpha)) \vdash vau : \alpha$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$S : \ast, P : S \to \ast, a : S, u : Pa, \alpha : \ast \vdash \lambda v : (\Pi x : S . (Px \to \alpha)) . vau$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$S : \ast, P : S \to \ast, a : S, u : Pa \vdash \lambda \alpha : \ast . \lambda v : (\Pi x : S . (Px \to \alpha)) . vau : \Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha)$}
+\end{prooftree}
+
+Uma representação alternativa do existencial é o seguinte:
+
+$$\exists \equiv \lambda S : \ast . \lambda P : S \to \ast . \Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha)$$
+
+Nesse caso, $\exists SP$ é a codificação na teoria dos tipos de $\exists_{x \in S} P(x)$
+
+\subsubsection{Exemplo de lógica de predicado em  \texorpdfstring{$\lambda$C}{LC}}
+
+A título de exemplo, será feita a derivação da seguinte tautologia:
+
+$$\neg \exists_{x \in S} P(x) \Rightarrow \forall_{y \in S} \neg P(y)$$
+
+Na codificação de segunda ordem em $\lambda C$ isso se torna:
+
+$$(\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \to \Pi y : S . (Py \to \bot)$$
+
+Sendo $\Gamma \equiv S : \ast, P : S \to \ast$, o problema se torna:
+
+\begin{prooftree}
+    
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\Gamma \vdash ? : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \to \Pi y : S . (Py \to \bot)$}
+\end{prooftree}
+
+Usando abstração nos primeiros passos:
+
+\begin{prooftree}
+    
+    \AxiomC{$?$}
+    \UnaryInfC{$\Gamma, u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot), y : S, v : Py \vdash ? : \bot$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma, u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot), y : S \vdash \lambda v : Py . ? : Py \to \bot$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma, u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \vdash \lambda y : S . \lambda v : Py . ? : \Pi y : S . (Py \to \bot)$}
+    \LeftLabel{(\emph{abst})}
+    \UnaryInfC{$\Gamma \vdash \lambda u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) . \lambda y : S . \lambda v : Py . ? : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \to \Pi y : S . (Py \to \bot)$}
+\end{prooftree}
+
+Agora a questão se torna querer encontrar esse termo que gere o absurdo $\bot$. Para isso, é necessário usar a negação em $u$ para gerar um absurdo. É necessário gerar um termo de tipo $\exists_{x \in S} P(x)$, como o seguinte:
+
+$$\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv : \exists_{x \in S} P(x)$$
+
+Tendo gerado esse tipo, é possível ver que a sua aplicação com $u$ gera o absurdo:
+
+$$u(\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv) : \bot$$
+
+\begin{center}
+    \rotatebox{90}{
+    
+            \AxiomC{$\Gamma' \vdash u : \exists_{x \in S} P(x) \to \bot$}
+            \AxiomC{$\Gamma' \vdash \lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv : \exists_{x \in S} P(x)$}
+            \LeftLabel{(\emph{appl})}
+            \BinaryInfC{$\Gamma' \vdash u(\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv) : \bot$}
+            \LeftLabel{(\emph{abst})}
+            \UnaryInfC{$\Gamma, u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot), y : S \vdash \lambda v : Py . u(\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv) : Py \to \bot$}
+            \LeftLabel{(\emph{abst})}
+            \UnaryInfC{$\Gamma, u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \vdash \lambda y : S . \lambda v : Py . u(\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv) : \Pi y : S . (Py \to \bot)$}
+            \LeftLabel{(\emph{abst})}
+            \UnaryInfC{$\Gamma \vdash \lambda u : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) . \lambda y : S . \lambda v : Py . u(\lambda \alpha : \ast . \lambda w : \Pi x : S . (Px \to \alpha) . wyv) : (\Pi \alpha : \ast . ((\Pi x : S . (Px \to \alpha)) \to \alpha) \to \bot) \to \Pi y : S . (Py \to \bot)$}
+            \DisplayProof
+    }
+\end{center}
 
 
 \end{document}
