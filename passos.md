@@ -97,13 +97,13 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Conjunção e disjunção  
 [x] Exemplo  
 [x] Lógica clássica  
-[ ] Lógica predicativa  
-[ ] Exemplo de lógica predicativa  
+[x] Lógica predicativa  
+[x] Exemplo de lógica predicativa  
 6.3 Calculo de construções indutivas  
 [ ] Tipos indutivos e CIC  
 
 
-7. O cálculo de definições
+7. O cálculo de definições  
 7.1 Definições  
 [ ] Definições    
 [ ] Definições indutivas e recursivas  
@@ -114,10 +114,19 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [ ] dando nomes a provas  
 [ ] prova geral e versão especializada  
 [ ] sentenças matemáticas  
-7.2 Extenção de \lambda C com definições
-[ ] ...  
+7.2 Extenção de \lambda C com definições  
+[ ] Extensão de \lambda C para \lambda D_0  
+[ ] Juizos com definições  
+[ ] Regras para definições    
+[ ] unfolding e \delta - conversão  
+[ ] Exemplos de \delta - conversão  
+[ ] Regras de derivação para \lambda D_0  
 7.3 \lambda D  
-[ ] \lambda D  
+[ ] definições descritivas x primitivas  
+[ ] axiomas e noções axiomáticas  
+[ ] Regras para definições primitivas  
+[ ] Propriedades de \lambda D  
+[ ] Normalização e confluência para \lambda D  
 
 Parte II - Construções paralelas ao cubo
 1. Extensões do Cálculo Lambda não tipado  
