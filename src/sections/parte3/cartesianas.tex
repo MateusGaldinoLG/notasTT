@@ -1,0 +1,120 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\section{Semântica Categorial da Teoria dos Tipos Simples}
+
+Essa seção é uma forma de escrever a semântica categorial da teoria dos tipos simples, mais especificamente $\lambda1_{(\times)}$, usando o raciocínio sobre categorias descrito por \cite{lambek1988} como \emph{sistema dedutivo} (em inglês, \emph{Deductive System}).
+
+Então, primeiro será definido esse sistema dedutivo junto com sua codificação das Categorias Cartesianas Fechadas e depois, em cima desse sistema, será feita a prova que $\lambda1_{(\times)}$ forma uma CCC.
+
+\subsection{O Sistema Dedutivo de Lambek}
+
+\subsubsection{O cálculo proposicional como um sistema dedutivo}
+
+Primeiro, é necessário começar com a definição de um sistema dedutivo:
+
+\begin{definition}[Sistema dedutivo, \cite{lambek1988}]
+    Um \emph{sistema dedutivo} é um grafo com:
+
+    \begin{enumerate}[label=(R1\alph*)]
+        \item uma seta específica
+    $$A \xrightarrow{1_A} A$$
+        \item uma operação binária entre setas
+        \begin{prooftree}
+            
+            \AxiomC{$A \xrightarrow{f} B$}
+            \AxiomC{$B \xrightarrow{g} C$}
+            \BinaryInfC{$A \xrightarrow{gf} C$}
+        \end{prooftree}
+        chamada de \emph{composição}
+    \end{enumerate}
+\end{definition}
+
+Na lógica, os objetos de um sistema dedutivo são chamados de \emph{formulas}, as setas de \emph{provas} (ou \emph{deduções}) e uma operação entre setas como uma \emph{regra de inferência}.
+
+A nomeclatura $Rx$ indica que essa regra será considerada a regra de número $x$ da exposição.
+
+\begin{definition}[Calculo de Conjunção, \cite{lambek1988}]
+    Um \emph{cálculo de conjunções} é um sistema dedutivo que possui somente o valor verdade $\top$ e o operador de conjunção $\land$. Essas duas novas entradas seguem junto as próximas regras:
+    \begin{enumerate}
+        \item[R2] $A \xrightarrow{\bigcirc_A } \bot$
+        \item[R3a] $A \land B \xrightarrow{\pi_1(A, B)} A$
+        \item[R3a] $A \land B \xrightarrow{\pi_2(A, B)} B$
+        \item[R4]
+            \AxiomC{$C \xrightarrow{f} A$}
+            \AxiomC{$C \xrightarrow{f} B$}
+            \BinaryInfC{$C \xrightarrow{\langle f, g \rangle} A \land B$}
+            \DisplayProof
+    \end{enumerate}
+\end{definition}
+
+Nessa definição, ao invés de $\pi_{A, B}$ e $\pi_{A, B}^{'}$, foi preferido usar a notação $\pi_1(A, B)$ e $\pi_2(A, B)$ por se assemelhar ao que foi visto de teoria das categorias até então.
+
+Exemplo: prova da comutatividade para a conjunção:
+
+\begin{prooftree}
+    \AxiomC{$A \land B \xrightarrow{\pi_2(A, B)} B$}
+    \AxiomC{$A \land B \xrightarrow{\pi_1(A, B)} A$}
+    \BinaryInfC{$A \land B \xrightarrow{\langle \pi_2(A, B), \pi_1(A, B) \rangle} B \land A$}
+\end{prooftree}
+
+Essa prova poderia simplesmente ser escrita, sem precisar da regra no formato de árvore como $\langle \pi_2(A, B), \pi_1(A, B) \rangle$ ou somente $\langle \pi_2, \pi_1 \rangle$ quando a origem está subentendida.
+
+Exemplo2: Associatividade da conjunção:
+
+A associatividade $\alpha_{A, B, C} : (A \land B) \land C \to A \land (B \land C)$ é dada por:
+
+$$\alpha_{A, B, C} \equiv \langle \pi_1(A, B)\pi_1(A \land B, C), \langle \pi_2(A, B)\pi_1(A\land B, C), \pi_2(A \land B, C) \rangle \rangle$$
+
+É possível compor operações e provas para obter regras derivativas de inferência, por exemplo:
+
+\begin{prooftree}
+    \AxiomC{$A \land C \xrightarrow{\pi_1(A, C)} A$}
+    \AxiomC{$A \xrightarrow{f} B$}
+    \BinaryInfC{$A \land C \to D$}
+    \AxiomC{$A \land C \xrightarrow{\pi_2(A, C)} C$}
+    \AxiomC{$C \xrightarrow{g} D$}
+    \BinaryInfC{$A \land C \to B$}
+    \BinaryInfC{$A \land C \xrightarrow{f \land g} B \land D$}
+\end{prooftree}
+
+Essa árvore de inferência descreve o mesmo que:
+
+$$f \land g = \langle f \pi_1(A, C), g \pi_2(A, C) \rangle$$
+
+ou simplesmente:
+
+\begin{prooftree}
+    \AxiomC{$A \xrightarrow{f} B$}
+    \AxiomC{$C \xrightarrow{g} D$}
+    \BinaryInfC{$A \land C \xrightarrow{f \land g} B \land D$}
+\end{prooftree}
+
+\begin{definition}[Cálculo proposicional positivo, \cite{lambek1988}]
+    Um \emph{cálculo proposicional intuicionistico positivo} é um cálculo de conjunção com a oepração binária adicional $\Rightarrow$ (implicação). Da implicação seguem mais duas regras:
+    \begin{enumerate}
+        \item[R4a] $(B \Rightarrow A) \land B \xrightarrow{\mathcal{E}(A, B)} A$
+        \item[R4b] \AxiomC{$C \land B \xrightarrow{h} A$}
+        \UnaryInfC{$C \xrightarrow{h^{\ast}} B \Rightarrow A$}
+        \DisplayProof
+    \end{enumerate}
+\end{definition}
+
+Uma escolha do autor dessas notas é reverter a escolha de Lambek de colocar a implicação sendo $B \Leftarrow A$. A escolha de Lambek foi feita para fazer uma associação com o conjunto $B^A$ de funções entre $A$ e $B$ (com o codomínio vindo primeiro e depois o domínio).
+
+É possível derivar, com essas duas regras, as seguintes outras duas regras:
+
+\begin{enumerate}
+    \item[R'4b] $C \xrightarrow{\eta(C, B)} B \Rightarrow (C \land B)$
+    \item[R'4C] \AxiomC{$D \xrightarrow{g} A$}
+    \UnaryInfC{$B \Rightarrow D \xrightarrow{1_B \Rightarrow g} B \Rightarrow A$}
+    \DisplayProof
+\end{enumerate}
+
+sendo
+
+$$\eta(C, B) \equiv 1_{C \land B}^{\ast}, \qquad (1_B \Rightarrow g) \equiv (g \mathcal{E}(C, D))^{\ast}$$
+
+
+\end{document}
