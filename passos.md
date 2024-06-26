@@ -39,12 +39,13 @@ Parte I - O Cubo Lambda
 [ ] Provar a redução do sujeito  
 [ ] [Fazer a ND fitch funcionar]  
 2.2. Extensões do STLC  
-[ ] Tipo unitário (1)  
-[ ] O tipo de produto [Currying] (A X B)  
-[ ] O tipo de produto disjunto  (A + B)  
-[ ] O tipo dos números naturais (N)  
-[ ] O tipo PROP  
-[ ] O Sistema T de Gödel finalmente  
+[x] Tipo unitário (1)  
+[x] O tipo de produto [Currying] (A X B)  
+[x] Tipo Vazio  
+[x] O tipo de produto disjunto  (A + B)  
+[x] O tipo dos números naturais (N)  
+[x] O tipo dos booleanos (Bool)  
+[ ] O Sistema T de Gödel    
 [ ] A Teoria dos Tipos simples de Church    
 2.3 Maneiras de construir a lógica  
 [ ] Proposições como um tipo (PROP)  
@@ -52,7 +53,11 @@ Parte I - O Cubo Lambda
 [ ] Lógica equacional  
 [ ] Lógica de predicados de primeira ordem  
 [ ] Lógica de predicados de ordem superior     
-2.4 Uma discussão sobre HOL  
+2.4 Modelos do Sistema T  
+[ ] Espaços de coerência  
+[ ] Funções estáveis  
+[ ] Espaços de coerência para cada tipo específico     
+2.5 Uma discussão sobre HOL  
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
 
 3. Cálculo Lambda Polimórfico  
@@ -63,7 +68,14 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Cálculo de sequêntes    
 [x] Propriedades    
 3.2 O Sistema F de Girard  
-[ ] Sistema F  
+[ ] O cálculo  
+[ ] Representações de tipos simples  
+[ ] Representações de tipos indutivos  
+[ ] Isomorfismo de Curry-Howard  
+[ ] Propriedades  
+3.3 Modelos do Sistema F  
+[ ] Espaços de coerência  
+
 
 4. Tipos dependentes de tipos  
 4.1 \lambda \omega fraco  
@@ -74,7 +86,7 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Aplicação e Abstração  
 [x] Regra da conversão  
 [x] Propriedades  
-4.2 O Sistema Fw de Girard  
+4.2 O Sistema Fw  
 [ ] O Sistema Fw  
 
 
@@ -132,6 +144,8 @@ Parte II - Construções paralelas ao cubo
 1.4. Interaction Combinators  
 [ ] Definições  
 [ ] Turing Completude  
+1.5 O cálculo pi  
+[ ] calculo para programas simultaneos
 2. Extensões a teoria dos tipos polimórfica  
 2.1. Sistema de Tipos de Hindley-Milner  
 [ ] Definição do sistema  
@@ -279,8 +293,9 @@ Parte VI - Lógica
 [ ] Definição  
 [ ] Cálculo de sequêntes  
 7. Lógica linear  
-[ ] Definição  
-[ ] Cálculo de sequêntes
+[ ] Cálculo de sequêntes linear  
+[ ] Redes de Provas  
+[ ] Eliminação do corte  
 8. Teorema da incompletude de Gödel  
 [ ] Definição  
 
