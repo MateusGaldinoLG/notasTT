@@ -45,7 +45,8 @@ Parte I - O Cubo Lambda
 [x] O tipo de produto disjunto  (A + B)  
 [x] O tipo dos números naturais (N)  
 [x] O tipo dos booleanos (Bool)  
-[ ] O Sistema T de Gödel    
+[x] O Sistema T de Gödel    
+[ ] Teorema da normalização e formas canônicas do Sistema T  
 [ ] A Teoria dos Tipos simples de Church    
 2.3 Maneiras de construir a lógica  
 [ ] Proposições como um tipo (PROP)  
