@@ -116,5 +116,89 @@ sendo
 
 $$\eta(C, B) \equiv 1_{C \land B}^{\ast}, \qquad (1_B \Rightarrow g) \equiv (g \mathcal{E}(C, D))^{\ast}$$
 
+De forma equivalente também:
+
+$h^{\ast} \equiv (1_B \Rightarrow h)\eta(C, B)$
+
+Outras duas regras de inferência derivadas são:
+
+\begin{center}
+    \AxiomC{$A \xrightarrow{f} B$}
+    \UnaryInfC{$T \xrightarrow{\lceil f \rceil} A \Rightarrow B$}
+    \DisplayProof
+    \AxiomC{$T \xrightarrow{g} A \Rightarrow B$}
+    \LeftLabel{$\qquad$}
+    \UnaryInfC{$A \xrightarrow{g^s} B$} 
+    \DisplayProof
+\end{center}
+
+$$\lceil f \rceil \equiv (f \pi_1(1, A))^{\ast} \qquad g^s \equiv \mathcal{E}(B, A)\langle g \bigcirc_A, 1_A \rangle$$
+
+\begin{definition}[Cálculo proposicional intuicionistico completo, \cite{lambek1988}]
+    Um cálculo (proposicional) intuicionistico completo possui, além das regras para o cálculo positivo, regras para a falsidade e a disjunção, ou seja a formula $\bot$ e a operação $\lor$, junto com as seguintes setas adicionais:
+    \begin{enumerate}
+        \item[R5] $\bot \xrightarrow{\square_A } A$
+        \item[R6a] $A \xrightarrow{\kappa (A, B)} A \lor B$
+        \item[R6b] $B \xrightarrow{\kappa' (A, B)} A \lor B$
+        \item[R6c] $(A \Rightarrow C) \land (B \Rightarrow C) \xrightarrow{\zeta^{C}(A, B)} (A \lor B) \Rightarrow C$
+    \end{enumerate}
+\end{definition}
+
+A partir da regra R6c é possível derivar a regra:
+
+\begin{enumerate}
+    \item[R'6c] \AxiomC{$A \xrightarrow{f} C$} \AxiomC{$B \xrightarrow{f} C$}
+                \BinaryInfC{$A \lor B \xrightarrow{[f, g]} C$}
+                \DisplayProof
+\end{enumerate}
+
+Na seguinte forma: $$[f, g] \equiv (\zeta^{C}(A, B) \langle \lceil f \rceil, \lceil g \rceil  \rangle)^s$$
+
+Visto pela árvore de derivação:
+
+\begin{definition}[Cálculo proposicional clássico, \cite{lambek1988}]
+    O calculo proposicional clássico parte do cálculo proposicional intuicionistico completo e adiciona a seguinte regra:
+    \begin{enumerate}
+        \item[R7] $(A \Rightarrow \bot) \Rightarrow \bot \to A$ 
+    \end{enumerate}
+\end{definition}
+
+\subsubsection{O Teorema da Dedução}
+
+O teorema da dedução usual fala que: de $A \land B \vdash C$ é possível deduzir $A \vdash B \Rightarrow C$. Esse resultado é incorporado em R4, com $\to$ no lugar de $\vdash$. Mas se contar a barra horizontal como um símbolo de dedução, é possível se perguntar sobre um teorema da dedução de ordem superior. 
+
+Para isso, é necessário introduzir a noção de sistema dedutivo derivado, $\mathcal{L}$.
+
+\begin{proposition}[Teorema da Dedução, \cite{lambek1988}]
+    Em um cálculo de conjunção, ou  positivo, ou intuicionistico ou clássico, para cada prova $\phi(x) : B \to C$ vindo da suposição $x : T \to A$, existe uma prova associada $f : A \land B \to C$ em $\mathcal{L}$ que não depende de $x$.
+\end{proposition}
+
+$f$ será denotado por $\kappa_{x \in A}\phi(x)$, onde $x \in A$ denota que $x$ é do tipo $A$.
+
+\emph{Prova}: Será dada uma prova para o cálculo positivo.
+
+Toda prova $\phi(x) : B \to C$ vinda da suposição $x : T \to A$, deve ter uma das cinco formas:
+
+\begin{enumerate}[label=(\roman*)]
+    \item $k : B \to C$, uma prova em $\mathcal{L}$
+    \item $x : T \to A$, com $B = T$ e $C = A$
+    \item $\langle \psi(x), \chi(x) \rangle$ onde $\psi(x) : B \to C'$ e $\chi(x) : B \to C''$, $C = C' \land C''$
+    \item $\chi(x)\psi(x)$, onde $\psi(x) : B \to D$ e $\chi : D \to C$
+    \item $\psi(x)^{\ast}$, onde $\psi(x) : B \land C' \to C''$, $C = C' \Rightarrow C''$
+\end{enumerate}
+
+para cada caso, a prova $f$ requerida é a seguinte:
+
+\begin{enumerate}[label=(\roman*)]
+    \item $\kappa_{x \in A} k = k \pi_2(A, B)$
+    \item $\kappa_{x \in A} x = \pi_1(A, T)$
+    \item $\kappa_{x \in A} \langle \psi(x), \chi(x) \rangle = \langle \kappa_{x \in A} \psi(x), \kappa_{x \in A} \chi(x) \rangle$
+    \item $\kappa_{x \in A}(\chi(x)\psi(x)) = \kappa_{x \in A} \chi(x) \langle \pi_1(A, B), \kappa_{x \in A} \psi(x) \rangle$
+    \item $\kappa_{x \in A}\psi(x)^{\ast} = (\kappa_{x \in A} \psi(x) \alpha_{A, B, C})$
+\end{enumerate}
+
+Isso termina a prova. $\qed$
+
+
 
 \end{document}
