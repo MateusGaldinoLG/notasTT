@@ -686,27 +686,831 @@ O fato do universo de funções legais possíveis ser reduzido bastante no ST$\l
 
 \subsection[Extensões ao STLC e as Teorias dos Tipos Simples]{Extensões ao ST$\lambda$C e as Teorias dos Tipos Simples}
 
-% "Cubo" de extensões não lógicas:
+Partindo do cálculo $\lambda$ não-tipado visto no capítulo anterior, sua tipagem natural é de fato a vista anteriormente usando somente tipos funcionais. Mas alguns comportamentos que os tipos deveriam ter acabam não sendo construidos ou sendo construidos de forma muito complicada e pouco natural. Alguns tipos adicionais são requeridos para construir uma teoria de tipos mais robusta.
 
-% \[\begin{tikzcd}
-% 	& {(\lambda 1_+)} && {\lambda1_{(\times, +)}} \\
-% 	{(\lambda 1)} && {\lambda1_{\times}} \\
-% 	& {(\lambda_+)} && {(\lambda_{(\times, +)})} \\
-% 	{\lambda_{\to}} && {(\lambda_{\times})}
-% 	\arrow[from=1-2, to=1-4]
-% 	\arrow[from=2-1, to=1-2]
-% 	\arrow[from=2-1, to=2-3]
-% 	\arrow[from=2-3, to=1-4]
-% 	\arrow[from=3-2, to=1-2]
-% 	\arrow[from=3-2, to=3-4]
-% 	\arrow[from=3-4, to=1-4]
-% 	\arrow[from=4-1, to=2-1]
-% 	\arrow[from=4-1, to=3-2]
-% 	\arrow[from=4-1, to=4-3]
-% 	\arrow[from=4-3, to=2-3]
-% 	\arrow[from=4-3, to=3-4]
-% \end{tikzcd}\]
+A construção original da teoria dos tipos simples feita em \cite{church1940} já é, por si só, mais complexa que a teoria vista aqui. Dessa forma, esse seção se preocupa em extender o ST$\lambda$C visto até então para de fato a Teoria dos Tipos Simples.
 
-% As extensões em parenteses são extensões que são construíveis mas não estudadas sozinhas.
+Nessa seção serão introduzidos um tipo novo por vez, discutindo suas motivações, regras de inferência e exemplos de derivação. No final, eles serão reunidos para discutir a teoria dos tipos simples.
+
+
+\subsubsection{Adendos sobre o tipo funcional}
+
+Uma pergunta possível de se fazer é se a definição 3.1 pode ser reescrita tendo em mente as regras de inferência, e a resposta é sim. Para isso, é necessária a seguinte notação: seja $\alpha$ um tipo simples, a notação desse fato seria $\alpha \in \mathbb{T}$, agora pode-se usar a regra de$$\alpha \text{ Type}$$. Logo, é possível reformular a definição 3.1 da seguinte forma:
+
+\begin{definition}
+    Os tipos simples possuem as seguintes regras de derivação:
+    \begin{enumerate}
+        \item \AxiomC{}
+              \RightLabel{para $\sigma \in \mathbb{V}$}
+              \UnaryInfC{$\vdash \sigma \text{ Type} $}
+              \DisplayProof
+        \item 
+        \AxiomC{$\vdash \sigma \text{ Type}$}
+        \AxiomC{$\vdash \tau \text{ Type}$}
+        \BinaryInfC{$\vdash \sigma \to \tau \text{ Type}$}
+        \DisplayProof
+    \end{enumerate}
+\end{definition}
+
+Outras formas de trabalhar com o conceito de tipos dessa forma serão introduzidos no próximo capítulo. Esse tipo de regra de inferência na teoria dos tipos simples serve para localizar de forma visual a formação dos tipos, por isso normalmente são chamadas de \emph{regras de formação}.
+
+Uma outra forma de generalizar a construção feita anteriormente do tipo funcional é pensar as regras de inferência introduzidas anteriormente, a (\emph{abst}) e (\emph{appl}), como regras de introdução (\emph{intro}) e eliminação (\emph{elim}), respectivamente. Essas regras serão colocadas aqui:
+
+\begin{center}
+    \AxiomC{$\Gamma, x : \alpha \vdash M : \beta$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda x : \alpha . M : \alpha \to \beta$ }
+    \DisplayProof
+    \AxiomC{$\Gamma \vdash M : \alpha \to \beta$}
+    \AxiomC{$\Gamma \vdash N : \alpha$}
+    \LeftLabel{$\quad$($\to$-elim)}
+    \BinaryInfC{$\Gamma \vdash MN : \beta$ }
+    \DisplayProof
+\end{center}
+
+
+Outras duas regras de inferência importantes para a construção feita aqui são construidas em cima da $\beta$-redução e da $\eta$-redução. Para lembrar, a $\beta$-redução de um termo $(\lambda x . M)N$ é o termo $M[N/x]$ e a $\eta$-redução do termo $\lambda x . Mx$ é o termo $M$. Essas duas reduções podem ser escritas equacionalmente: seja $=$ uma relação de igualdade entre termos de um mesmo tipo, então  
+
+\begin{center}
+    \AxiomC{$\Gamma, x : \alpha \vdash M : \beta$}
+    \AxiomC{$\Gamma \vdash N : \alpha$}
+    \LeftLabel{$\beta$}
+    \BinaryInfC{$\Gamma \vdash (\lambda x : \alpha . M)N = M[N/x] : \beta$ }
+    \DisplayProof
+    \AxiomC{$\Gamma \vdash M : \alpha \to \beta$}
+    \LeftLabel{$\quad \eta$}
+    \UnaryInfC{$\Gamma \vdash \lambda x : \alpha . Mx = M : \alpha \to \beta$}
+    \DisplayProof
+\end{center}
+
+
+Nas exposições dos novos tipos nesse capítulo, os tipos serão introduzidos na ordem vista anteriormente sempre que possível: formação, introdução, eliminação, $\beta$-redução e $\eta$-redução.
+
+
+\subsubsection{O tipo de produto e o tipo unitário ($\lambda 1_{\times}$)}
+
+Uma primeira extensão do ST$\lambda$C é a teoria dos tipos simples possuindo os tipos funcionais, tipos de produto e o tipo unitário.
+
+\emph{I. Tipo unitário}
+
+O tipo unitário, também chamado de tipo vazio, é um tipo postulado, ou seja sua formação se comporta mais ou menos como na definição 3.8(1) vista anteriormente:
+
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash \mathbb{1} \text{ Type}$}
+\end{prooftree}
+
+Sua regra de introdução é a seguinte:
+
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash () : \mathbb{1}$}
+\end{prooftree}
+
+O nome unitário é dado porque ele é somente habitado por um único termo denotado por $()$ ou por vezes $\langle \rangle$. Para postular que esse termo é único, é necessário ainda introduzir a seguinte regra:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash M : \mathbb{1}$}
+    \LeftLabel{$\eta$}
+    \UnaryInfC{$\Gamma \vdash M = () : \mathbb{1}$}
+\end{prooftree}
+
+Sua regra de eliminação vai ser introduzida aqui da seguinte forma:
+
+\begin{prooftree}
+    \AxiomC{$ \vdash c : C$}
+    \UnaryInfC{$ x : \mathbb{1} \vdash let () = x \text{ in } c : C$}
+\end{prooftree}
+
+Essa regra muda um pouco na teoria dos tipos dependentes mas isso será visto posteriormente.
+
+A regra que falta é a da $\beta$-redução:
+
+\begin{prooftree}
+    \AxiomC{$ \vdash () : \mathbb{1}$}
+    \LeftLabel{$\beta$}
+    \UnaryInfC{$\vdash (let () = () \text{ in } c) = c : C$}
+\end{prooftree}
+
+
+\emph{II. Tipos de Produtos}
+
+Os tipos de produtos são tipos que se comportam como pares ordenados. Sua notação de tipo é denotada pelo simbolo $\times$ como nos pares ordenados normalmente, sendo sua regra de formação:
+
+\begin{prooftree}
+    \AxiomC{$\vdash \sigma \text{ Type}$}
+    \AxiomC{$\vdash \tau \text{ Type}$}
+    \BinaryInfC{$\vdash \sigma \times \tau \text{ Type}$}
+\end{prooftree}
+
+Os elementos de um tipo $\sigma \times \tau$ são pares $\langle v, u\rangle$ formados por elementos $v : \sigma$ e $u : \tau$. Para eliminar esse tipo, é somente necessário pegar o primeiro elemento ou o segundo elemento do par e para isso são usados os operadores $\pi_1$ e $\pi_2$, respectivamente, chamados de \emph{projeções}.
+
+Logo, as suas regras de introdução e eleminação são:
+
+\begin{center}
+    \AxiomC{$\Gamma \vdash M : \sigma$}
+    \AxiomC{$\Gamma \vdash N : \tau$}
+    \LeftLabel{($\times$-intro)}
+    \BinaryInfC{$\Gamma \vdash \langle M, N \rangle : \sigma \times \tau$ }
+    \DisplayProof
+
+    \AxiomC{$\Gamma \vdash P : \sigma \times \tau$}
+    \LeftLabel{$\quad$($\times$-elim-$1$)}
+    \UnaryInfC{$\Gamma \vdash \pi_1 P : \sigma$ }
+    \DisplayProof
+    \AxiomC{$\Gamma \vdash P : \sigma \times \tau$}
+    \LeftLabel{$\quad$($\times$-elim-$2$)}
+    \UnaryInfC{$\Gamma \vdash \pi_2 P : \tau$ }
+    \DisplayProof
+\end{center}
+
+As suas regras de $\beta$-redução sãs as seguintes:
+
+\begin{center}
+    \AxiomC{$\Gamma \vdash \langle M, N \rangle : \sigma \times \tau$}
+    \LeftLabel{$\beta$}
+    \UnaryInfC{$\Gamma \vdash \pi_1 \langle M, N \rangle = M : \sigma$ }
+    \DisplayProof
+    \AxiomC{$\Gamma \vdash \langle M, N \rangle : \sigma \times \tau$}
+    \LeftLabel{$\quad\beta$}
+    \UnaryInfC{$\Gamma \vdash \pi_2 \langle M, N \rangle = N : \tau$ }
+    \DisplayProof
+\end{center}
+
+E a sua regra de $\eta$-redução é a seguinte:
+
+\begin{prooftree}
+    
+    \AxiomC{$\Gamma \vdash t : \sigma \times \tau$}
+    \LeftLabel{$\eta$}
+    \UnaryInfC{$\Gamma \vdash \langle \pi_1 t, \pi_2 t \rangle = t : \sigma \times \tau$}
+\end{prooftree}
+
+As regras de substituição para o tipo de produtos são as seguintes:
+
+$$(\pi_1 P)[L/v] \equiv \pi_1 (P[L/v])$$
+$$(\pi_2 P)[L/v] \equiv \pi_2 (P[L/v])$$
+$$\langle M, N \rangle [L/v] \equiv \langle M [L/v], N [L/v] \rangle$$
+
+
+\emph{3. Exemplo}
+
+Um exemplo básico do tipo de produto é a construção do seguinte tipo: $\sigma \times \tau \to \tau \times \sigma$. Ele significa basicamente que a operação de produto cartesiano é reflexiva e pode ser provado da seguinte forma:
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \UnaryInfC{$\Gamma \vdash ? : \sigma \times \tau \to \tau \times \sigma$}
+\end{prooftree}
+
+Usando a regra ($\to$-intro):
+
+\begin{prooftree}
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\Gamma, t : \sigma \times \tau \vdash ? : \tau \times \sigma$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda t : \sigma \times \tau . ? : \sigma \times \tau \to \tau \times \sigma$}
+\end{prooftree}
+
+Agora é necessário gerar um par onde o primeiro termo tem tipo $\tau$ e o segundo tem tipo $\sigma$.
+
+\begin{prooftree}
+    \AxiomC{$\Gamma, t : \sigma \times \tau \vdash \langle ? , ? \rangle : \tau \times \sigma$}
+    \LeftLabel{($\times$-intro)}
+    \UnaryInfC{$\Gamma, t : \sigma \times \tau \vdash \langle ? , ? \rangle : \tau \times \sigma$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda t : \sigma \times \tau . \langle ? , ? \rangle : \sigma \times \tau \to \tau \times \sigma$}
+\end{prooftree}
+
+Sabendo que o tipo de $\pi_1 t$ é $\sigma$ e o tipo de $\pi_2 t$ é $\tau$, sabe-se que $\langle \pi_2 t, \pi_1 t \rangle$ tem o tipo $\tau \times \sigma$ que é o tipo que se quer encontrar, logo:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma, t : \sigma \times \tau \vdash \langle \pi_2 t ,\pi_1 t \rangle : \tau \times \sigma$}
+    \LeftLabel{($\times$-intro)}
+    \UnaryInfC{$\Gamma, t : \sigma \times \tau \vdash \langle \pi_2, \pi_1 t \rangle : \tau \times \sigma$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda t : \sigma \times \tau . \langle  \pi_2, \pi_1 t \rangle : \sigma \times \tau \to \tau \times \sigma$}
+\end{prooftree}
+
+Uma prova para o leitor é mostrar que $(\alpha \times \beta) \times \gamma \to \alpha \times (\beta \times \gamma)$ é habitado. 
+
+Outro fato interessante que pode ser provado é o \emph{currying} que pode ser resumido no seguinte tipo: $((\alpha \times \beta) \to \gamma) \to (\alpha \to \beta \to \gamma)$. Isso mostra que caso a pessoa tenha uma função que pega um par e retorna um tipo, isso é o mesmo que uma função que pega cada elemento do par em um momento e retorna esse tipo.
+
+A sua construção é feita da seguinte forma:
+
+$\lambda f : ((\alpha \times \beta) \to \gamma) . \lambda x : \alpha . \lambda y : \beta . f\langle x, y \rangle$
+
+\subsubsection{O tipo de produto disjunto e tipo vazio ($\lambda 1_{(\times, +)}$)}
+
+\emph{I. O Tipo Vazio}
+
+Enquanto o tipo unitário é caracterizado pela característica de só possuir um único termo, enquanto o tipo vazio é caracterizado de forma análoga por ser um tipo que não possui nenhum termo.
+
+A sua regra de formação é a seguinte:
+
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash \emptyset \text{ Type}$}
+\end{prooftree}
+
+O tipo vazio, como seu próprio nome indica, não possui uma regra de introdução de termos.
+
+\emph{II. O Tipo produto disjunto}
+
+O tipo produto disjunto é uma formação na teoria dos tipos análoga à formação do produto disjunto na teoria dos conjuntos. Sua regra de formação é a seguinte:
+
+\begin{prooftree}
+    \AxiomC{$\vdash \sigma \text{ Type}$}
+    \AxiomC{$\vdash \tau \text{ Type}$}
+    \BinaryInfC{$\vdash \sigma + \tau \text{ Type}$}
+\end{prooftree}
+
+Sua regra de introdução, diferente do tipo de produto falado anteriormente, não depende da presença de dois termos, um para cada tipo no produto, mas somente de um dos dois termos:
+
+\begin{center}
+    \AxiomC{$\Gamma \vdash M : \sigma$}
+    \LeftLabel{($+$-intro-1)}
+    \UnaryInfC{$\Gamma \vdash \kappa M : \sigma + \tau$}
+    \DisplayProof
+    \AxiomC{$\Gamma \vdash N : \tau$}
+    \LeftLabel{($+$-intro-2)}
+    \UnaryInfC{$\Gamma \vdash \kappa' N : \sigma + \tau$}
+    \DisplayProof
+\end{center}
+
+Normalmente o operador $\kappa$ é chamado de $inl$ enquanto o operador $\kappa'$ é chamado de $inr$ na teoria dos tipos dependentes, mas aqui está sendo usada a notação de \cite{jacobs1999}. $\kappa$ é denominado de \emph{coprojeção}
+
+Sua regra de eliminação é a mais complexa introduzida aqui, sendo a seguinte:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash P : \sigma + \tau$}
+    \AxiomC{$\Gamma, x : \sigma \vdash Q : \rho$}
+    \AxiomC{$\Gamma, y : \tau \vdash R : \rho$}
+    \LeftLabel{($+$-elim)}
+    \TrinaryInfC{$\Gamma \vdash \text{unpack } P \text{ as } [\kappa x \text{ in } Q, \kappa'y \text{ in } R] : \rho$}
+\end{prooftree}
+
+A interpretação dessa regra é a seguinte: olhe para $P$, se $P$ está em $\sigma$ então faça $Q$ com $P$ sendo $x$, caso $P$ esteja em $\tau$, faça $R$ com $P$ como $y$.
+
+Para o unpack, as regras de $\beta$-redução se seguem da interpretação da eliminação:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash M : \sigma$}
+    \AxiomC{$\Gamma, x : \sigma \vdash Q : \rho$}
+    \AxiomC{$\Gamma, y : \tau \vdash R : \rho$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash \text{unpack } \kappa M \text{ as } [\kappa x \text{ in } Q, \kappa'y \text{ in } R] = Q[M/x] : \rho$}
+\end{prooftree}
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash N : \tau$}
+    \AxiomC{$\Gamma, x : \sigma \vdash Q : \rho$}
+    \AxiomC{$\Gamma, y : \tau \vdash R : \rho$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash \text{unpack } \kappa' N \text{ as } [\kappa x \text{ in } Q, \kappa'y \text{ in } R] = R[N/y] : \rho$}
+\end{prooftree}
+
+A regra de $\eta$ redução é a seguinte:
+
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash P : \sigma + \tau$}
+    \AxiomC{$\Gamma, z : \sigma + \tau \vdash R : \rho$}
+    \LeftLabel{$\eta$}
+    \BinaryInfC{$\Gamma \vdash \text{unpack } P \text{ as } [\kappa x \text{ in } R[(\kappa x)/z], \kappa'y \text{ in } R[(\kappa' y)/z]] = R[P/z] : \rho$}
+\end{prooftree}
+
+O operador unpack também pode ser chamado de \emph{match}, por ter essa noção de casar as coprojeções de $P$ para dois casos diferentes.
+
+\emph{III. Exemplo}
+
+Uma prova interessante é a que os coprodutos são distributivos em relação à produtos, ou seja $((\sigma \times \tau) + (\sigma \times \rho)) \to \sigma \times (\tau + \rho)$
+
+Para isso, é necessário construir a seguinte árvore de prova:
+
+\begin{prooftree}
+    
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\Gamma \vdash ? : ((\sigma \times \tau) + (\sigma \times \rho)) \to \sigma \times (\tau + \rho)$}
+\end{prooftree}
+
+Usando a abstração:
+
+\begin{prooftree}
+    
+    \AxiomC{$?$}
+    \LeftLabel{$?$}
+    \UnaryInfC{$\Gamma, u : (\sigma \times \tau) + (\sigma \times \rho) \vdash ? : \sigma \times (\tau + \rho)$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda u : (\sigma \times \tau) + (\sigma \times \rho) . ? : ((\sigma \times \tau) + (\sigma \times \rho)) \to \sigma \times (\tau + \rho)$}
+\end{prooftree}
+
+Ao "abrir" $u$, tem-se duas possibilidades:
+
+\begin{itemize}
+    \item $u$ é do tipo $\sigma \times \tau$, ou seja $\pi_1 u = \sigma$ e $\pi_2 u = \tau$, com $pi_1 u$ tem-se a primeira parte do tipo objetivo, já $\tau + \rho$ é possível ser gerado por $\kappa (\pi_2 u)$
+    \item $u$ é do tipo $\sigma \times \rho$, ou seja $\pi_1 u = \sigma$ e $\pi_2 u = \rho$, da mesma forma tem-se a primeira parte do tipo objetivo de cara, já $\tau + \rho$ é gerado por $\kappa' (\pi_2 u)$.
+\end{itemize}
+
+Logo o termo final é o seguinte:
+$$ \text{unpack } u \text{ as } [\kappa x \text{ in } \langle \pi_1 x, \kappa( \pi_2 x) \rangle, \kappa'y \text{ in } \langle \pi_1 y, \kappa'( \pi_2 y) \rangle] : \sigma \times (\tau + \rho)$$
+
+Logo a árvore final é:
+
+
+\begin{prooftree}
+    \AxiomC{$\Gamma \vdash u : (\sigma \times \tau) + (\sigma \times \rho)$}
+    \AxiomC{$\Gamma, x : (\sigma \times \tau)  \vdash  : \langle \pi_1 x, \kappa( \pi_2 x) \rangle : \sigma \times (\tau + \rho)$}
+    \AxiomC{$\Gamma, y : (\sigma \times \rho) \vdash \langle \pi_1 y, \kappa'( \pi_2 y) \rangle : \sigma \times (\tau + \rho)$}
+    \LeftLabel{($+$-elim)}
+    \TrinaryInfC{$\Gamma, u : (\sigma \times \tau) + (\sigma \times \rho) \vdash \text{unpack } u \text{ as } [\kappa x \text{ in } \langle \pi_1 x, \kappa( \pi_2 x) \rangle, \kappa'y \text{ in } \langle \pi_1 y, \kappa'( \pi_2 y) \rangle] : \sigma \times (\tau + \rho)$}
+    \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$\Gamma \vdash \lambda u : (\sigma \times \tau) + (\sigma \times \rho) . \text{unpack } u \text{ as } [\kappa x \text{ in } \langle \pi_1 x, \kappa( \pi_2 x) \rangle, \kappa'y \text{ in } \langle \pi_1 y, \kappa'( \pi_2 y) \rangle] : \sigma \times (\tau + \rho) : ((\sigma \times \tau) + (\sigma \times \rho)) \to \sigma \times (\tau + \rho)$}
+\end{prooftree}
+
+O resto da dedução da árvore fica como exercício para o leitor.
+
+\subsubsection{O Tipo dos Números Naturais}
+
+Foi visto na parte do cálculo $\lambda$ não tipado a codificação dos números naturais utilizando o método da codificação de Church. Esse tipo de codificação é útil caso se queira trabalhar com uma versão reduzida da teoria dos tipos e possui propriedades interessantes que serão exploradas na parte do Sistema F no próximo capítulo. Porém, uma de suas desvantagens é que muitas vezes os cálculos podem demandar muito, principalmente se essa codificação for utilizada em linguagens de programação. Dessa forma, um jeito mais fácil de desenvolver os números naturais é postulando-os da mesma forma que foi feito anteriormente.
+
+Primeiro, é necessário postular a existência de um tipo dos números naturais:
+
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash \mathbb{N} \text{ Type}$}
+\end{prooftree}
+
+A sua regra de introdução segue os axiomas de Peano sobre o número $0$ e a função sucessor $succ_{\mathbb{N}} : \mathbb{N} \to \mathbb{N}$ que leva um número $n$ ao seu sucessor $n + 1$. Na forma de regras de inferência:
+
+\begin{center}
+    \AxiomC{}
+    \UnaryInfC{$\vdash 0 : \mathbb{N}$}
+    \DisplayProof
+    \AxiomC{}
+    \LeftLabel{$\qquad$}
+    \UnaryInfC{$\vdash succ_{\mathbb{N}} : \mathbb{N} \to \mathbb{N}$}
+    \DisplayProof
+\end{center}
+
+Essa forma de definir a função sucessor é encontrada em por exemplo \cite{rijke2022}. Uma outra forma de definir o sucessor é a vista em \cite{pfanning2009} como:
+
+
+\begin{prooftree}
+    \AxiomC{$\vdash n : \mathbb{N}$}
+    \UnaryInfC{$\vdash S (n) : \mathbb{N}$}
+\end{prooftree}
+
+A regra de eliminação do tipo $\mathbb{N}$ é baseado no método da indução que diz o seguinte: Seja $\phi$ um predicado tal que
+
+\begin{enumerate}[label=(\arabic*)]
+    \item $\phi(0)$ é verdade, e
+    \item para todo número natural $n$, se $\phi(n)$ é verdadeiro, então $\phi(S(n))$ também o é
+\end{enumerate}
+
+Logo $\phi(n)$ é verdadeiro para todo número natural $n$. 
+
+Para a teoria dos tipos simples, o predicado $\phi$ se torna um tipo $P$ e sua regra de eliminação se torna:
+
+
+\begin{prooftree}
+    \AxiomC{$\Gamma, n : \mathbb{N} \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_S : \mathbb{N} \to P \to P$}
+    \LeftLabel{($\mathbb{N}$-elim)}
+    \TrinaryInfC{$\Gamma \vdash ind_{\mathbb{N}}(p_0, p_S) : \mathbb{N} \to P$}
+\end{prooftree}
+
+A interpretação dessa regra é a seguinte:
+
+\begin{itemize}
+    \item Premissa 1: Dado que de um termo $n : \mathbb{N}$ é possível derivar o tipo $P$
+    \item Premissa 2: Dado que $P$ é válido para $0$, tendo como prova $p_0$
+    \item Premissa 3: equivale à regra (2) para o predicado $\phi$ anterior
+    \item Conclusão: o termo $ind_{\mathbb{N}}(p_0, p_S)$ é a função que pega as duas provas da indução e gera o tipo $P$.
+\end{itemize}
+
+Como sua regra de eliminação está relacionada ao conceito de indução, o tipo $\mathbb{N}$ é chamado de um \emph{tipo indutivo}. Não só $\mathbb{N}$ é um tipo, indutivo, mas também outros tipos como o tipo unitário e o tipo dos booleanos, que será visto posteriormente, podem ser vistos como tipos indutivos.
+
+As regras de computação, para $\beta$-redução, são escritas uma para o caso base, $p_0$, e outra para o passo indutivo, $p_S$:
+
+\begin{center}
+    \AxiomC{$\Gamma, n : \mathbb{N} \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_S : \mathbb{N} \to P \to P$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash ind_{\mathbb{N}}(p_0, p_S, 0_{\mathbb{N}}) = p_0 : P$}
+    \DisplayProof
+
+
+    \AxiomC{$\Gamma, n : \mathbb{N} \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_S : \mathbb{N} \to P \to P$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash ind_{\mathbb{N}}(p_0, p_S, succ_{\mathbb{N}}(n)) = p_S(n, ind_{\mathbb{N}}(p_0, p_S, n)) : P$}
+    \DisplayProof
+\end{center}
+
+Exemplo:
+
+\begin{definition}[Adição, \cite{rijke2022}]
+    Definindo uma função $$add_{\mathbb{N}} : \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$$
+    que satisfaça a especificação:
+    $$add_{\mathbb{N}}(m, 0_{\mathbb{N}}) = m$$
+    $$add_{\mathbb{N}}(m, succ_{\mathbb{N}}(n)) = succ_{\mathbb{N}}(add_{\mathbb{N}}(m, n))$$
+    $add_{\mathbb{N}}(m, n)$ será denotado por $m + n$
+\end{definition}
+
+Para sua construção, é necessário usar a regra de eliminação para $P = \mathbb{N}$. Logo, as premissas se tornam:
+
+$$m : \mathbb{N} \vdash \mathbb{N}$$
+$$m: \mathbb{N} \vdash add-zero_{\mathbb{N}} (m) : \mathbb{N}$$
+$$m: \mathbb{N} \vdash add-succ_{\mathbb{N}} (m) : \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$$
+
+e sua conclusão é:
+
+$$m : \mathbb{N} \vdash add_{\mathbb{N}}(m) := ind_{\mathbb{N}}(add-zero_{\mathbb{N}} (m), add-succ_{\mathbb{N}} (m)) : \mathbb{N} \to \mathbb{N}$$
+
+O termo $add-zero_{\mathbb{N}} (m)$ é o próprio $m$, já para a adição do sucessor, é necessário saber qual o comportamento da soma para o sucesso, que é a seguinte:
+
+$$add_{\mathbb{N}}(m, succ_{\mathbb{N}}(n)) = succ_{\mathbb{N}}(add_{\mathbb{N}}(m, n))$$
+
+Logo, $add-succ_{\mathbb{N}}(m)$ é o mesmo que o sucessor da adição:
+
+$$add-succ_{\mathbb{N}}(m) := \lambda n . succ_{\mathbb{N}}$$
+
+A árvore de derivação desse termo é o seeguinte:
+
+\begin{prooftree}
+    \AxiomC{$\vdash \mathbb{N} \to \mathbb{N}$}
+    \AxiomC{$\vdash succ_{\mathbb{N}} : \mathbb{N} \to \mathbb{N}$}
+    % \LeftLabel{($\mathbb{N}$-intro)}
+    \BinaryInfC{$n : \mathbb{N} \vdash succ_{\mathbb{N}} : \mathbb{N} \to \mathbb{N}$}
+    % \LeftLabel{(weak)}
+    \UnaryInfC{$m : \mathbb{N}, n : \mathbb{N} \vdash succ_{\mathbb{N}} : \mathbb{N} \to \mathbb{N}$}
+    % \LeftLabel{($\to$-intro)}
+    \UnaryInfC{$m : \mathbb{N} \vdash \lambda n . succ_{\mathbb{N}} : \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$}
+    \UnaryInfC{$m : \mathbb{N} \vdash add-succ_{\mathbb{N}}(m) := \lambda n . succ_{\mathbb{N}} : \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$}
+\end{prooftree}
+
+
+A regra de inferência final se torna:
+
+\begin{prooftree}
+    \AxiomC{$\vdots$}
+    \UnaryInfC{$m : \mathbb{N} \vdash \mathbb{N} \text{ Type}$}
+    \AxiomC{$\vdots$}
+    \UnaryInfC{$m: \mathbb{N} \vdash add-zero_{\mathbb{N}} (m) := m : \mathbb{N}$}
+    \AxiomC{$\vdots$}
+    \UnaryInfC{$m: \mathbb{N} \vdash add-succ_{\mathbb{N}} (m) : \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$}
+    \TrinaryInfC{$m : \mathbb{N} \vdash ind_{\mathbb{N}}(add-zero_{\mathbb{N}} (m), add-succ_{\mathbb{N}} (m)) : \mathbb{N} \to \mathbb{N}$}
+    \UnaryInfC{$m : \mathbb{N} \vdash add_{\mathbb{N}}(m) := ind_{\mathbb{N}}(add-zero_{\mathbb{N}} (m), add-succ_{\mathbb{N}} (m)) : \mathbb{N} \to \mathbb{N}$}
+\end{prooftree}
+
+
+\subsubsection{O Tipo dos Booleanos}
+
+O tipo booleano é um tipo que possui dois elementos: um que corresponde ao valor verdadeiro na lógica proposicional e outro que corresponde ao valor falso.
+
+\begin{prooftree}
+    \AxiomC{}
+    \UnaryInfC{$\vdash Bool \text{ Type}$}
+\end{prooftree}
+
+Sua regra de introdução é:
+
+\begin{center}
+    \AxiomC{}
+    \LeftLabel{($bool$-intro)}
+    \UnaryInfC{$\vdash false : Bool$}
+    \DisplayProof
+    \AxiomC{}
+    \LeftLabel{$\qquad$($bool$-intro)}
+    \UnaryInfC{$\vdash true : Bool$}
+    \DisplayProof
+\end{center}
+
+O tipo dos booleanos é um tipo indutivo, logo sua eliminação segue uma forma parecida à regra dos naturais:
+
+\begin{prooftree}
+    \AxiomC{$\Gamma, b : Bool \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_1 : P$}
+    \LeftLabel{($Bool$-elim)}
+    \TrinaryInfC{$\Gamma \vdash ind_{Bool}(p_0, p_1) : Bool \to P$}
+\end{prooftree}
+
+Suas regras de $\beta$-redução são as seguintes:
+
+\begin{center}
+    \AxiomC{$\Gamma, b : Bool \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_S : Bool \to P \to P$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash ind_{Bool}(p_0, p_1, false) = p_0 : P$}
+    \DisplayProof
+
+    \hfill
+    \AxiomC{$\Gamma, b : Bool \vdash P \text{ Type}$}
+    \AxiomC{$\Gamma \vdash p_0 : P$}
+    \AxiomC{$\Gamma \vdash p_S : Bool \to P \to P$}
+    \LeftLabel{$\beta$}
+    \TrinaryInfC{$\Gamma \vdash ind_{Bool}(p_0, p_1, true) = p_1 : P$}
+    \DisplayProof
+\end{center}
+
+Exemplo
+
+Um exemplo é a função de negação, que pega $true$ e retorna $false$, e vice-versa. Essa função pode ser construida usando a regra da eliminação dos booleanos usando $P := Bool$:
+
+\begin{prooftree}
+    \AxiomC{$b : Bool \vdash Bool \text{ Type}$}
+    \AxiomC{$b : Bool \vdash false : Bool$}
+    \AxiomC{$b : Bool \vdash true : Bool$}
+    \LeftLabel{($Bool$-elim)}
+    \TrinaryInfC{$\vdash ind_{Bool}(true, false) : Bool \to Bool$}
+\end{prooftree}
+
+Pelas regras de $\beta$-redução é possível ver que essa construção está correta.
+
+\subsubsection{O Sistema T de Gödel}
+
+O \emph{Sistema T de Gödel} é uma teoria dos tipos baseada na chamada \emph{Interpretação da Dialectica} realizada por Gödel no seu artigo "Über eine bisher noch nicht benützte Erweiterung des finiten Standpunktes" (Sobre uma extensão do ponto de vista finitário ainda não utilizada) publicado na revista Dialectica em 1958 \cite{godel1980}.
+
+Nesse artigo, Gödel procura uma nova forma de provar a consistência da teoria dos números, usando como objetos primários construções abstratas como provas, proposições, etc. O sistema desenvolvido por Gödel utiliza uma construção de tipos próxima à construção feita por Alonzo Church, mas com algumas diferenças. Gödel não cita o cálculo $\lambda$ em seu artigo mas cita a teoria dos números intuicionista de Heyting.
+
+A primeira interpretação no cálculo $\lambda$ do sistema T de gödel foi realizada no artigo de W.W.Tait "Intensional Interpretations of Functionals of Finite type" (Interpretações intensionais de funcionais de tipo finito) de 1967 \cite{tait1967}.
+
+Uma formulação mais contemporânea do Sistema T de Gödel é feita em \cite{girard1989} e será a usada aqui.
+
+\begin{definition}[Tipos do Sistema T de Gödel, \cite{girard1989}]
+    \hfill
+    \begin{enumerate}
+        \item Tipos atômicos $T_1, T_2, \dots, T_n$ são tipos
+        \item Se $U$ e $V$ são tipos, então $U \times V$ e $U \to V$ são tipos
+        \item O tipo $Int$ é o tipo dos números inteiros
+        \item O tipo $Bool$ é o tipo dos booleanos
+    \end{enumerate}
+\end{definition}
+
+Já os termos são definidos da seguinte forma:
+
+\begin{definition}[Termos do Sistema T, \cite{girard1989}]
+    \hfill
+    \begin{enumerate}
+        \item As variáveis $x_0^T, \dots, x_n^T, \dots$ são termos de tipo $T$
+        \item Se $u$ e $v$ são termos de tipos $U$ e $V$, respectivamente, $\langle u, v \rangle$ é um termo de tipo $U \times V$
+        \item Se $t$ é um termo de tipo $U \times V$, então $pi^1 t$ e $\pi^2 t$ são termos de tipo $U$ e $V$, respectivamente
+        \item Se $v$ é um termo de tipo $V$ e $x_n^U$ é uma variável de tipo $U$, então $\lambda x^U_n . v$ é um termo de tipo $U \to V$
+        \item Se $t$ e $u$ são termos de tipos $U \to V$ e $U$ respectivamente, então $tu$ é um termo do tipo $V$
+        \item ($Int$-introdução)
+        \begin{itemize}
+            \item $O$ é uma constante de tipo $Int$
+            \item se $t$ tem tipo $Int$, $St$ tem tipo $Int$
+        \end{itemize}
+        \item ($Int$-eliminação) se $u$, $v$ e $t$ possuem tipo $U$, $U \to (Int \to U)$ e $Int$, então $Ruvt$ tem tipo $U$
+        \item ($Bool$-introdução) $T$ e $F$ são constantes de tipo $Bool$
+        \item ($Bool$-eliminação) se $u$, $v$ e $t$ possuem tipo $U$, $U$ e $Bool$, então $Duvt$ tem tipo $U$
+    \end{enumerate}
+\end{definition}
+
+As duas definições anteriores preservam a notação de Girard, mas salvo excessões essa notação não será mantida, por quebrar a continuidade da notação feita até então. 
+
+O leitor que viu as extensões até então vai perceber que o Sistema T de Gödel é uma extensão da ST$\lambda$C que possui os tipos $\times, \mathbb{N}$ e $Bool$. A diferença é a nomeclatura ($Int$ no lugar de $\mathbb{N}$) e as regras de eliminação para os tipos indutivos, pois, pela interpretação de  \cite{girard1989}, $R$ é o operador de recursão e $D$ é interpretado como "se ... então ... senão".
+
+\begin{definition}[Regras de Conversão, \cite{girard1989}]
+    \hfill
+    \begin{enumerate}
+        \item $RuvO \to_{\beta} u$
+        \item $Ruv(St) \to_{\beta} v(Ruvt)t$
+        \item $DuvT \to_{\beta} u$
+        \item $DuvF \to_{\beta} v$
+    \end{enumerate}
+\end{definition}
+
+
+
+Exemplos de booleanos:
+
+\begin{enumerate}
+    \item $neg(u) = DFTu$
+    \item $disj(u, v) = DTvu$
+    \item $conj(u, v) = DvFu$
+\end{enumerate}
+
+Exemplos de inteiros:
+
+\begin{enumerate}
+    \item $add(x, y) = Rx(\lambda z^{Int} . \lambda z'^{Int} . Sz)y$
+\end{enumerate}
+
+
+\begin{theorem}[Teorema da Normalização Forte, \cite{girard1989}]
+    No sistema T, todas as sequências de redução são finitas e resultam na mesma forma normal
+\end{theorem}
+
+\emph{Prova}: ver \cite{girard1989} seção 7.2
+
+
+\subsubsection{A teoria simples de tipos de Church}
+
+A teoria simples de tipos é a primeira formulação da teoria dos tipos simples em cima do cálculo $\lambda$ não tipado, realizado no artigo "A formulation of the simple theory of types" (Uma formulação da teoria simples de tipos) \cite{church1940}. Nessa teoria, Church construi um sistema axiomático de tipos em cima do cálculo $\lambda$. Nessa seção será feito um esforço de exposição dessa teoria como em seu primeiro artigo, apontando as suas diferenças em relação às formulações atuais da teoria dos tipos simples.
+
+Para começar, a teoria simples de tipos de Church é um sistema axiomático, logo ele não faz uso de regras de inferência como foi feito anteriormente. 
+
+As seguintes seções seguem a ordem do artigo original
+
+\emph{I. Hierarquia de Tipos}
+
+Nessa primeira parte, Church desenvolve a sintaxe dos \emph{simbolos de tipos}:
+
+\begin{quote}
+    "A classe de \emph{símbolos de tipos} é descrita pelas regras que $\iota$ e $o$ são cada um simbolos de tipos e que se $\alpha$ e $\beta$ são simbolos de tipos, então $(\alpha\beta)$ são simbolos de tipos." \cite[p. 56]{church1940}
+\end{quote}
+
+Letras gregas são usadas para variáveis de tipos (a exceção de $\iota$, $o$ e $\lambda$) e os tipos $\alpha\beta$ são associativos a esquerda.
+
+A interpretação dos tipos é a seguinte:
+
+\begin{quote}
+    "Na interpretação da teoria, subíndices devem indicar que o tipo da variável é constante, $o$ sendo o tipo das proposições, $\iota$ o tipo dos individuos e $(\alpha\beta)$ sendo o tipo de funções com uma variável para os quais a faixa da variável independente compreende o tipo $\beta$ e a faixa da variável dependente é contida no tipo $\alpha$"
+    \cite[p. 57]{church1940}
+\end{quote}
+
+Logo, é possível ver que $\alpha\beta$ corresponde ao tipo $\beta \to \alpha$ definido nas seções anteriores. $o$ não corresponde exatamente ao tipo dos booleanos, sendo normalmente tratado como o tipo $PROP$, enquanto $\iota$ representa variáveis individuais específicas.
+
+Exemplo: O tipo $o\iota\iota$ é o mesmo que $\iota \to \iota \to o$.
+
+\emph{II. Formulas bem formadas}
+
+Uma vez definida a construção dos tipos, Church define a linguagem, da seguinte forma:
+
+\begin{quote}
+    "Os \emph{simbolos primitivos} são dados pela seguinte lista infinita:
+
+    $$\lambda, (, ), N_{oo}, A_{ooo}, \Pi_{o(o\alpha)}, \iota_{\alpha(o\alpha)}, a_{\alpha}, b_{\alpha}, \dots, z_{\alpha}, \bar{a}_{\alpha}, \bar{b}_{\alpha}, \dots$$ "
+    \cite[p. 57]{church1940}
+\end{quote}
+
+
+$N_{oo}, A_{ooo}, \Pi_{o(o\alpha)},$ e $\iota_{\alpha(o\alpha)}$ (Atualmente, $N : o \to o, A: o \to o \to o, \Pi : (\alpha \to o) \to o$ e $\iota : (\alpha \to o) \to \alpha$) são chamados de \emph{constantes} e o resto de \emph{variáveis}.
+
+A definição de formulas bem formadas é a seguinte:
+
+\begin{quote}
+    "(1) uma formula consistindo de um símbolo único próprio é uma formula bem-formada e possui tipo indicado pelo subíndice; (2) se $x_{\beta}$ é uma variável com subíndice $\beta$ e $M_{\alpha}$ é uma formula bem-formada com tipo $\alpha$, então $(\lambda x_{\beta} M_{\alpha})$ é uma formula bem formada de tipo $\alpha\beta$; (3) se $F_{\alpha\beta}$ e $A_{\beta}$ são formulas bem-formadas de tipos $\alpha\beta$ e $\beta$, respectivamente, então $(F_{\alpha\beta}A_{\beta})$ é uma formula bem-formada de tipo $\alpha$"
+    \cite[p. 57]{church1940}
+\end{quote}
+
+Essa definição constroi o início da $\beta$-redução, que será definida na pŕoxima parte.
+
+Church usa a notação $\to$ no artigo da mesma forma que hoje em dia se usa $\equiv$ ou $:=$, como uma notação para "é uma abreviação de" e através disso ele constroi os operadores da lógica, a codificação de Church para os números naturais e os combinadores
+
+Os operadores da lógica são os seguintes:
+
+\begin{align*}
+    & [\sim A_o ] \to N_{oo}A_o \\
+    & [A_o \lor B_o] \to A_{ooo} A_o B_o \\
+    & [A_o B_0] \to [\sim [[\sim A_o] \lor [\sim B_o]]] \\
+    & [A_o \supset B_o] \to [[\sim A_o] \lor B_o] \\
+    & [A_o \equiv B_o] \to [[A_o \supset B_o][B_o \supset A_o]] \\
+    & [(x_{\alpha}A_o)] \to \Pi_{o(o\alpha)}(\lambda x_{\alpha} A_o) \\
+    & [(\exists x_{\alpha} A_o)] \to [\sim [(x_{\alpha})[\sim A_o]]] \\
+    & [(, x_{\alpha}A_o)] \to \iota_{\alpha(o\alpha)}(\lambda x_{\alpha} A_o) \\
+\end{align*}
+
+Interpretação de cada linha
+
+\begin{itemize}
+    \item $N : o \to o$ é um operador de negação, tal que $\neg A := NA : o$;
+    \item $A : o \to o \to o$ é um operador de disjunção, tal que $A' \lor B' := AA'B' : o$
+    \item A codificação do operador de conjunção é feito usando a lei de De Morgan, tal que $A \land B := \neg (\neg A \lor \neg B) : o$
+    \item A codificação do operador de implicação é feito também em cima da disjunção $A \Rightarrow B := (\neg A) \lor B : o$
+    \item A codificação da biimplicação é feito da forma normal, $A \Leftrightarrow B := (A \Rightarrow B) \land (B \Rightarrow A) : o$
+    \item A codificação do quantificador universal é feito usando $\Pi : (\alpha \to o) \to o$, sendo $\forall (x : \alpha) A := \Pi (\lambda x : \alpha . A) : o$
+    \item A codificação do quantificador existencial é feito a partir do quantificador universal $\exists (x : \alpha) A := \neg (\forall (x : \alpha) \neg A) : o$
+    \item O último quantificador é um operador de seleção próximo ao axioma da escolha, que pega um termo de cada tipo, construido no Principia Mathematica
+\end{itemize}
+
+A relação de igualdade entre dois termos é construido dentro de $o$, usando $Q$:
+
+\begin{align*}
+    & Q_{o\alpha\alpha} \to \lambda x_{\alpha} \lambda y_{\alpha}[(f_{o\alpha})[f_{o\alpha}x_{\alpha} \supset f_{o\alpha}y_{\alpha}]] \\
+    & [A_{\alpha} = B_{\alpha}] \to Q_{o\alpha\alpha}A_{\alpha}B_{\alpha} \\
+    & [A_{\alpha} \neq  B_{\alpha}] \to [\sim(A_{\alpha} = B_{\alpha})] \\
+\end{align*}
+
+Interpretação de cada linha:
+
+\begin{itemize}
+    \item $Q : \alpha \to \alpha \to o$ é um termo que para dois termos de tipo $\alpha$ ele retorna a proposição que mapeia todas as funções que são válidas para ambos os termos
+    \item $A = B := QAB : o$
+    \item $A \neq B := \neg (A = B) : o$
+\end{itemize}
+
+A construção dos combinadores $\textbf{I}$ e $\textbf{K}$ são os mesmos:
+
+\begin{align*}
+    & I_{\alpha\alpha} \to \lambda x_{\alpha} x_{\alpha} \\
+    & K_{\alpha\beta\alpha} \to \lambda x_{\alpha}\lambda y_{\beta} x_{\alpha} \\
+\end{align*}
+
+Uma notação adotada por Church é usar $\alpha'$ como $((\alpha\alpha)(\alpha\alpha))$, ou $(\alpha \to \alpha) \to \alpha \to \alpha$, $\alpha''$ como $((\alpha'\alpha')(\alpha'\alpha'))$, etc.
+
+A codificação dos numerais é a, assim chamada codificação de Church:
+
+\begin{align*}
+    & 0_{\alpha'} \to \lambda f_{\alpha \alpha} \lambda x_{\alpha} x_{\alpha} \\
+    & 1_{\alpha'} \to \lambda f_{\alpha \alpha} \lambda x_{\alpha} (f_{\alpha\alpha}x_{\alpha}) \\
+    & 2_{\alpha'} \to \lambda f_{\alpha \alpha} \lambda x_{\alpha} (f_{\alpha\alpha}(f_{\alpha\alpha}x_{\alpha})) \\
+    & 3_{\alpha'} \to \lambda f_{\alpha \alpha} \lambda x_{\alpha} (f_{\alpha\alpha}(f_{\alpha\alpha}(f_{\alpha\alpha}x_{\alpha}))) \\
+    & \dots \\
+    & S_{\alpha'\alpha'} \to \lambda n_{\alpha'} \lambda f_{\alpha \alpha} \lambda x_{\alpha} f_{\alpha\alpha}(n_{\alpha'}f_{\alpha\alpha}x_{\alpha}) \\
+    & N_{o \alpha'} \to \lambda n_{\alpha '}[(f_{o \alpha'}) f_{o \alpha'} 0_{\alpha'} \supset [[(x_{\alpha'})[f_{o \alpha'} x_{\alpha'} \supset f_{o \alpha'}(S_{\alpha' \alpha} x_{\alpha'})]] \supset f_{o \alpha'}n_{\alpha'}]] \\
+    & \omega_{\alpha'' \alpha' \alpha'} \to \lambda y_{\alpha'} \lambda z_{\alpha'} \lambda f_{\alpha'\alpha'} \lambda g_{\alpha'} \lambda h_{\alpha\alpha} \lambda x_{\alpha} (y_{\alpha'} (f_{\alpha'\alpha'} g_{\alpha'} h_{\alpha\alpha})(z_{\alpha'}(g_{\alpha'}h_{\alpha\alpha})x_{\alpha})) \\
+    & \langle A_{\alpha'}, B_{\alpha'} \rangle \to \omega_{\alpha'' \alpha' \alpha'} A_{\alpha'} B_{\alpha'} \\
+    & P_{\alpha'\alpha'''} \to \lambda n_{\alpha'''} (n_{\alpha'''} (\lambda p_{\alpha''} \langle S_{\alpha' \alpha'} (p_{\alpha''}(K_{\alpha'\alpha'\alpha'}I_{\alpha'}) 0_{\alpha'}), p_{\alpha''}(K_{\alpha'\alpha'\alpha'}I_{\alpha'}) 0_{\alpha'} \rangle) \langle 0_{\alpha'}, 0_{\alpha'} \rangle, (K_{\alpha'\alpha'\alpha'}0_{\alpha'})I_{\alpha'}) \\
+    & T_{\alpha''\alpha'} \to \lambda x_{\alpha'} [(, x_{\alpha''})[(N_{o \alpha''}x_{\alpha''})[x_{\alpha''}S_{\alpha'\alpha'}0_{\alpha'} = x_{\alpha'}]]]  \\
+    & P_{\alpha'\alpha'} \to \lambda x_{\alpha'} (P_{\alpha'\alpha'''}(T_{\alpha'''a''}(T_{\alpha''a'}x_{\alpha'}))) \\
+\end{align*}
+
+Interpretação
+
+\begin{itemize}
+    \item Os números são os mesmos introduzidos na exposição da codificação de church no capítulo anterior, a diferença é que eles agora possuem o tipo $\alpha'$, que é o mesmo que $(\alpha \to \alpha) \to \alpha \to \alpha$
+    \item $S : \alpha' \to \alpha'$ é a função sucessor, vista também anteriormente
+    \item $N : \alpha' \to o$ denota a proposição "é um número natural (de tipo $\alpha'$)" (é equivalênte ao principio da indução)
+    \item $T : \alpha' \to \alpha''$ transforma um número de tipo $\alpha'$ para outro de tipo $\alpha''$
+    \item $P : \alpha''' \to \alpha'$ é a função predecessor que pega um número de tipo $\alpha'''$ e retorna seu predecessor de tipo $\alpha'$
+    \item $P : \alpha' \to \alpha'$ é a função predecessor de mesmo tipo.
+\end{itemize}
+
+ Um dos problemas de usar essa codificação na teoria dos tipos simples é que para cada tipo $\alpha$ existem números, $S$ e $N$, existem duas formas de burlar isso de formas diferentes: ou usando a teoria dos tipos polimórfica (Isso será introduzido na exposição do Sistema F) ou tendo formas de transformar um número de um tipo em um número de outro tipo. Essa segunda forma é o caminho de Church, mas essa forma depende do axioma da escolha e não é construtivista. 
+
+\emph{III. Regras de Inferência}
+
+As regras de inferência introduzidas nesse capítulo são as seguintes:
+
+\begin{quote}
+    "As regras de inferência (ou regras de procedimento) são as seis seguintes:
+    \begin{enumerate}[label=\Roman*]
+        \item Para substituir uma parte $M_{\alpha}$ de uma formula pelo resultado de substituir $y_{\beta}$ por $x_{\beta}$ por todo $M_{\alpha}$, dado que $x_{\beta}$ não é uma variável livre em $M_{\alpha}$ e $y_{\beta}$ não ocorre em $M_{\alpha}$.
+        \item Para substituir qualquer parte $((\lambda_{\beta}M_{\alpha})N_{\beta})$ de uma formula com o resultado de substituir $N_{\beta}$ por $x_{\beta}$ por todo $M_{\alpha}$, dado que as variáveis ligadas de $M_{\alpha}$ são distintas tanto de $x_{\beta}$ e das variáveis livres de $N_{\beta}$
+        \item Onde $A_{\alpha}$ é o resultado de substituir $N_{\beta}$ por $x_{\beta}$ através de $M_{\alpha}$, substituir qualquer parte $A_{\alpha}$ de uma formula por $((\lambda_{\beta}M_{\alpha})N_{\beta})$, dado que as variáveis ligadas de $M_{\alpha}$ são distintas tanto de $x_{\beta}$ quando das variáveis livres de $N_{\beta}$
+        \item De $F_{o \alpha} x_{\alpha}$ para inferir $F_{o \alpha} A_{\alpha}$, dado que $x_{\alpha}$ não é uma variável livre de $F_{o \alpha}$
+        \item De $A_o \supset B_o$ e $A_o$, inferir $B_o$
+        \item De $F_{o \alpha} x_{\alpha}$ inferir $\Pi_{o(o\alpha)}F_{o \alpha}$ dado que $x_{\alpha}$ não é uma variável livre de $F_{o \alpha}$
+        "
+        \cite[pag. 60]{church1940}
+    \end{enumerate}
+\end{quote}
+
+A regra I é equivalênte à $\alpha$-conversão, a II e a III correspondem a $\beta$-redução, IV corresponde a $\alpha$-conversão no tipo $o$, V é o modus ponens e VI é uma regra de introdução do quantificador universal
+
+\emph{IV. Axiomas formais}
+
+Os axiomas formas são as seguintes formulas:
+
+\begin{enumerate}
+    \item $p \lor p \supset p$
+    \item $p \supset p \lor q$
+    \item $p \lor q \supset q \lor p$
+    \item $p \supset q \supset (r \lor p \supset r \lor q)$
+    \item[$5^{\alpha}$] $\Pi_{o(o\alpha)}f_{o\alpha} \supset f_{o\alpha}x_{\alpha}$
+    \item[$6^{\alpha}$] $(x_\alpha)[p \lor f_{o\alpha}x_{\alpha}] \supset p \lor \Pi_{o(o\alpha)}f_{o\alpha}$
+    \item[7] $(\exists x_{\iota})(\exists y_{\iota}) x_{\iota} \neq y_{\iota} $
+    \item[8] $N_{o \iota'}x_{\iota'} \supset N_{o \iota'}y_{\iota'} \supset (S_{\iota'\iota}x_{\iota'} = S_{\iota'\iota}y_{\iota'} \supset x_{\iota'} = y_{\iota'})$
+    \item[$9^{\alpha}$] $f_{o \alpha} x_{\alpha} \supset (y_{\alpha}) [f_{o \alpha}y_{\alpha} \supset x_{\alpha} = y_{\alpha}] \supset f_{o \alpha} (\iota_{\alpha(o \alpha)} f_{o \alpha})$
+    \item[$10^{\alpha\beta}$] $(x_{\beta})[f_{\alpha\beta} x_{\beta} = g_{\alpha\beta} x_{\beta}] \supset f_{\alpha\beta} = g_{\alpha\beta}$ 
+    \item[$11^{\alpha}$] $f_{o \alpha} x_{\alpha} \supset f_{o \alpha} (\iota_{\alpha(o \alpha)} f_{o \alpha})$
+\end{enumerate}
+
+Interpretação:
+
+Os axiomas 1-4 são suficientes para formar o cálculo proposicional e os axiomas 1-$6^{\alpha}$ formam o cálculo lógico funcional. Para construir a teoria dos números elementares é necessário adicionar a 1-$6^{\alpha}$ os axiomas $7, 8$ e $9^{\alpha}$. Para construir a análise real clássica é necessário usar $10^{\alpha\beta}$ (Axioma da extencionalidade) e $11^{\alpha}$ (Axioma da escolha)
+
+\emph{V. Teorema da dedução}
+
+VII - Teorema da dedução
+
+- Regras de igualdade
+- 21 equivale a regra eta
+
+
+\emph{VI. Postulados de Peano para aritmética}
+
+VIII - 
+
+\emph{VII. Propriedades de T}
+
+\emph{VIII. definição da recursão primitiva}
+
+
+\subsection{Modelos da teoria dos tipos simples}
+
+
+
+
 
 \end{document}
