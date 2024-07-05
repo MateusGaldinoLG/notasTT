@@ -70,7 +70,7 @@ Essa regra define basicamente que, sendo $M$ um termo de tipo $A$ em um contexto
     \end{prooftree}
 \end{definition}
 
-\subsubsection[O Sistema Lambda2]{O Sistema $\lambda 2$}
+\subsubsection{O Sistema \texorpdfstring{$\lambda 2$}{L2}}
 
 A sintaxe de $\lambda2$ segue de forma análoga a $\lambda_{\sigma}$, sendo descrita pela seguinte BNF: $$\mathbb{T}2 = \mathbb{V} | (\mathbb{T}2 \to \mathbb{T}2) | (\Pi\mathbb{V} : \ast . \mathbb{T}2) $$
 
@@ -224,7 +224,7 @@ primeiro dois absts seguidos para $f$ e $x$:
 
 O resto da Derivação fica como exercício para o leitor
 
-\subsubsection[Propriedades do l2]{Propriedades de $\lambda2$}
+\subsubsection{Propriedades de \texorpdfstring{$\lambda 2$}{L2}}
 
 A definição de $\alpha$-conversão deve ser acomodada para lidar com tipos $\Pi$:
 
@@ -271,6 +271,349 @@ Os lemmas definidos no capítulo 2 também podem ser utilizados aqui:
     Se $\Gamma \vdash M : \sigma$ e $\Gamma'$ é uma permutação de $\Gamma$ e um contexto de $\lambda2$ válido, então $\Gamma'$ também é um contexto e $\Gamma' \vdash M : \sigma$.
 \end{lemma}
 
-\subsection[O sistema F de Girard]{O Sistema $\mathcal{F}$ de girard}
+\subsection{O Sistema \texorpdfstring{$\mathcal{F}$}{F} de girard}
+
+O sistema $\mathcal{F}$ de Girard possui tipagem igual a tipagem na subseção anterior, com tipos $\Pi$ e abstração em tipos.
+
+Em \cite{girard1989}, Girard utiliza a notação de $\Lambda$ no lugar do $\lambda$ quando for feita abstração no tipo. Para exemplificar, o termo que dado um tipo gera uma função identidade é a seguinte:
+
+$$\lambda \alpha : \ast . \lambda x : \alpha . x : \Pi \alpha : \ast . \alpha \to \alpha$$
+
+Na notação de \cite{girard1989}:
+
+$$\Lambda \alpha . \lambda x^{\alpha} . x^{\alpha} : \Pi \alpha . \alpha \to \alpha$$
+
+Alguns pontos:
+
+\begin{itemize}
+    \item O $\lambda$ que abstrai o tipo se torna $\Lambda$
+    \item A notação de tipagem do termo vira um superíndice
+    \item A notação que $\alpha$ é um tipo não é utilizada no tipo
+\end{itemize}
+
+Girard aponta que o sistema $\mathcal{F}$ cobre problemas encontrados no Sistema $T$ de Gödel, pois enquanto último postula tipos, o outro constrói os tipos em cima de termos, realizando a codificação de Church.
+
+Nessa subseção, serão expostos esses tipos na forma de \cite{girard1989}.
+
+\subsubsection{Tipos Simples}
+
+\emph{I. Booleanos}
+
+O tipo dos booleanos é definido como:
+
+$$Bool \equiv \Pi X : \ast . X \to X \to X$$
+
+Os termos $T$ e $F$ são termos que habitam o tipo $Bool$:
+
+$$T \equiv \lambda X : \ast . \lambda x : X . \lambda y : Y . x \qquad F \equiv \lambda X : \ast . \lambda x : X . \lambda y : Y . y$$
+
+Sejam $u : U$, $v : U$ e $t : Bool$, define-se $Duvt : U$ como:
+
+$$Duvt \equiv tUuv$$
+
+$Duvt$ é equivalente ao "if $\dots$ then $\dots$ else" presente em linguagens de programação, é possível atestar isso pois:
+
+\begin{align*}
+    DuvT & \equiv (\lambda X : \ast . \lambda x : X . \lambda y : X . x)Uuv \\
+         & \to_{\beta} (\lambda x : U . \lambda y : U . x)uv \\
+         & \to_{\beta} (\lambda y : U . u)v \\
+         & \to_{\beta} u \\
+\end{align*}
+
+e
+
+\begin{align*}
+    DuvF & \equiv (\lambda X : \ast . \lambda x : X . \lambda y : X . y)Uuv \\
+         & \to_{\beta} (\lambda x : U . \lambda y : U . y)uv \\
+         & \to_{\beta} (\lambda y : U . y)v \\
+         & \to_{\beta} v \\
+\end{align*}
+
+A função $neg(b)$ que leva de $T$ para $F$ e de $F$ para $T$ pode ser construida da seguinte forma: $neg(b) \equiv DFTb$\\
+
+\emph{II. Produtos de Tipos}
+
+Dados dois tipos $U$ e $V$, o seu produto $U \times V$ é definido como:
+
+$$U \times V \equiv \Pi X : \ast . (U \to V \to X) \to X$$
+
+Seja $u : U$ e $v : V$, o termo de tipo $U \times V$ é:
+
+$$\langle u, v \rangle \equiv \lambda X : \ast . \lambda x : U \to V \to X . xuv$$
+
+Suas projeções são definidas como:
+
+$$\pi^1 t \equiv tU(\lambda x : U . \lambda y : V . x) \qquad \pi^2 t \equiv tV(\lambda x : U . \lambda y : V . y)$$
+
+Para provar isso, será cálculado $\pi^1 \langle u, v \rangle$ e $\pi^2 \langle u, v \rangle$:
+
+\begin{align*}
+    \pi^1 \langle u, v \rangle & \equiv (\lambda X : \ast . \lambda x : U \to V \to X . xuv)U(\lambda x : U . \lambda y : V . x) \\
+                               & \to_{\beta} (\lambda x : U \to V \to U . xuv)(\lambda x : U . \lambda y : V . x) \\
+                               & \to_{\beta} (\lambda x : U . \lambda y : V . x)uv \\
+                               & \to_{\beta} (\lambda y : V . u)v \\
+                               & \to_{\beta} u \\
+\end{align*}
+
+\begin{align*}
+    \pi^2 \langle u, v \rangle & \equiv (\lambda X : \ast . \lambda x : U \to V \to X . xuv)V(\lambda x : U . \lambda y : V . y) \\
+                               & \to_{\beta} (\lambda x : U \to V \to V . xuv)(\lambda x : U . \lambda y : V . y) \\
+                               & \to_{\beta} (\lambda x : U . \lambda y : V . y)uv \\
+                               & \to_{\beta} (\lambda y : V . y)v \\
+                               & \to_{\beta} v \\
+\end{align*}
+
+Um problema é que $\langle \pi^1 t, \pi^2 t \rangle \to_{\beta} t$ não é uma redução válida.\\
+
+\emph{III. Tipo Vazio}
+
+O tipo vazio é definido da seguinte forma:
+
+$$Emp \equiv \Pi X : \ast . X$$ com $\epsilon_U t \equiv tU$
+
+Esse tipo é escolhido como tipo vazio pois não é habitado no Sistema $\mathcal{F}$\\
+
+\emph{IV. Tipo Soma}
+
+Sejam $U$ e $V$, é possível construir o tipo de soma disjunta da seguinte forma:
+
+$$U + V \equiv \Pi X : \ast . (U \to X) \to (V \to X) \to X$$
+
+Seja $u : U$ e $v : V$, é possível definir $\iota^1 u$ e $\iota^2 u$ de tipo $U + V$ da seguinte forma:
+
+$$\iota^1 u \equiv \lambda X : \ast . \lambda x : U \to V . \lambda y : V \to X . xu \qquad \iota^2 v \equiv \lambda X : \ast . \lambda x : U \to V . \lambda y : V \to X . yv$$
+
+Sejam $u : U$, $v : U$ e $t : R + S$, então é possível definir $\delta xuyvt$ de tipo $U$ como:
+
+$$\delta xuyvt \equiv tU(\lambda x : U . u)(\lambda y : V . v)$$
+
+Calculando $\delta xuyv (\iota^1 r)$:
+
+\begin{align*}
+    \delta xuyv (\iota^1 r) & \equiv (\lambda X : \ast . \lambda x : R \to X . \lambda y : S \to X . xr)U(\lambda x : R . u)(\lambda y : S . v) \\
+                            & \to_{\beta} (\lambda x : R \to U . \lambda y : S \to U. xr)(\lambda x : R . u)(\lambda y : S . v) \\
+                            & \to_{\beta} (\lambda y : S \to U. (\lambda x : R . u)r)(\lambda y : S . v) \\
+                            & \to_{\beta} (\lambda x : R . u)r \\
+                            & \to_{\beta} u[r/x] \\
+\end{align*}
+
+de forma similar $\delta xuyv (\iota^2 s) \to_{\beta} v[s/y]$\\
+
+\emph{V. Tipo Existencial}
+
+Seja $V$ um tipo e $X$ uma variável de tipo, então:
+
+$$\Sigma X . V \equiv \Pi Y : \ast . (\Pi X : \ast . (V \to X)) \to Y$$
+
+Se $U$ é um tipo e $v : V[U / X]$, então $\langle U, v \rangle$ é definido como de $\Sigma X . V$:
+
+$$\langle U, v \rangle \equiv \lambda Y : \ast . \lambda x : (\Pi X : \ast . V \to Y) . xUv$$
+
+A eliminação de $\Sigma$ é: se $w : W$ e $t : \Sigma X . V$, $X$ sendo uma variável de tipo, $x$ um termo de tipo $V$ e as únicas ocorrências livres  de $X$ estão no tipo de $x$, é possível formar $\nabla X xwt$ de tipo $W$:
+
+$$\nabla X xwt \equiv tW(\lambda X : \ast . \lambda x : V . w)$$
+
+Calculando $(\nabla X xwt)\langle U, v \rangle$:
+
+\begin{align*}
+    (\nabla X xwt)\langle U, v \rangle & \equiv (\lambda Y : \ast . \lambda x : (\Pi X : \ast . V \to Y) . xUv)W(\lambda X : \ast . \lambda x : V . w) \\
+                                       & \to_{\beta} (\lambda x : (\Pi X : \ast . V \to W) . xUv)(\lambda X : \ast . \lambda x : V . w) \\
+                                       & \to_{\beta} (\lambda X : \ast . \lambda x : V . w)Uv \\
+                                       & \to_{\beta} (\lambda x : U . w)v \\
+                                       & \to_{\beta} w[U / X][v / x]
+\end{align*}
+
+\subsubsection{Estruturas Livres}
+
+Para generalizar a construção de tipos em $\mathcal{F}$, é necessário definir estruturas livres:
+
+Seja $\Theta$ uma coleção de expressões formais geradas por:
+\begin{itemize}
+    \item alguns atomos $c_1, \dots, c_k$
+    \item algumas funções que permitam construir novos $\Theta$-termos de termos antigos. O caso mais simples sãs as funções unárias de $\Theta$ para $\Theta$, mas também é possível imaginar funções de vários argumentos de $\Theta, \Theta, \dots, \Theta$ para $\Theta$. Essas funções então possuem tipo $\Theta \to \Theta \to \dots \to \Theta \to \Theta$. Incluindo o caso $0$-ésimo (constantes), tem-se funções de $n$ argumentos, com $n$ possívelmente igual a $0$
+\end{itemize}
+
+De forma geral:
+
+\begin{definition}[\cite{girard1989}]
+    A estrutura $\Theta$ será descrita por meio de um número finito de funções (\emph{construtores}) $f_1, \dots, f_n$ respectivamente de tipos $S_1, \dots, S_n$. O tipo $S_i$ deve por si mesmo ser da forma particular:
+    $$S_i = T_1^{i} \to T_2^{i} \to \dots \to T_k^{i} \to \Theta$$
+    Com $\Theta$ ocorrendo somente de forma positiva em $T_j^i$
+\end{definition}
+
+Todo elemento de $\Theta$ é representado de forma \emph{única} por uma sucessão de aplicações de $f_i$.
+
+Para representar $\Theta$, o seguinte tipo é suficiente:
+
+$$T = \Pi X : \ast . S_1 \to S_2 \to \dots \to S_n \to X$$
+
+Sejam $x_1, \dots x_k$ argumentos de $f_i$, como $X$ ocorre positivamente em $T_j^i$, a função canônica $h_i$ de tipo $T \to X$ é definida por:
+
+$$h_i x = x X y_1 \dots y_n$$
+
+com $y_i : S_i[T/X]$. Induz uma função $T_j^i[h_i]$ de $T_j^i[T/X]$ para $T_j^i$, dependente de $X, y_1, \dots, y_n$. Essa função pode ser definida formalmente, mas não será feita aqui.
+
+Finalmente, 
+
+$$f_i x_1 \dots x_k = \lambda X : \ast . \lambda y_1 : S_1 \dots \lambda y_n : S_n . y_i t_1 \dots t_k$$
+
+\subsubsection{Tipos Indutivos}
+
+
+\emph{I. Inteiros}
+
+O que \cite{girard1989} chama de inteiros, é o tipo dos números naturais, definidos por duas funções: $O$ de tipo inteiro e $S$ dos inteiros para inteiros, que dá $S_1 = X$ e $S_2 = X \to X$, então:
+
+$$Int \equiv \Pi X : \ast . X \to (X \to X) \to X$$
+
+O inteiro $n$ é representado por:
+
+$$\bar{n} = \lambda X : \ast . \lambda x : X . \lambda y : X \to X . y (y (y \dots (y x)\dots))$$
+
+Ao trocar $S_1$ por $S_2$, é possível desenvolver um tipo variante
+
+$$Int' \equiv \Pi X : \ast . (X \to X) \to (X \to X)$$
+
+As funções básicas são:
+
+$$O \equiv \lambda X : \ast . \lambda x : X . \lambda y : X \to X . x \qquad St \equiv \lambda X : \ast . \lambda x : X . \lambda y : X \to X . y(tXxy)$$
+
+Logo $O = \bar{0}$ e $S\bar{n} \to_{\beta} \overline{n + 1}$
+
+O operador de indução é o \emph{Iterador} $It$ que pega um objeto de tipo $U$, uma função de tipo $U \to U$ e retorna um termo de tipo $U$.
+
+$$It u f t = tUuf$$
+
+Nos dois casos:
+
+\begin{align*}
+    It u f O & = (\lambda X : \ast . \lambda x : X . \lambda y : X \to X . x) U u f \\
+             & \to_{\beta} (\lambda x : U . \lambda y : U \to U . x) uf \\
+             & \to_{\beta} (\lambda y : U \to U . u) f \\
+             & \to_{\beta} u \\
+    It u f (S t) & = (\lambda X : \ast . \lambda x : X . \lambda y : X \to X . y (t X xy)) U u f \\
+    & \to_{\beta} (\lambda x : U . \lambda y : U \to U . y (t U xy)) uf \\
+    & \to_{\beta} (\lambda y : U \to U . y (t U uy)) f \\
+    & \to_{\beta} f (t U uf) \\
+    & \to_{\beta} f (It u f t) \\
+\end{align*}
+
+Ou seja, o iterator repete a aplicação da função $f$ $\bar{n}$ vezes. Mas não é verdadeiro que $It u f \overline{n + 1} \to_{\beta} f (It u f \bar{n})$, mesmo que ambos sejam reduzíveis a $f ( f ( f \dots (f u) \dots))$.
+
+Como o sistema $\mathcal{F}$ satisfaz a propriedade de Church-Rosser, é possível dizer que $It u f \overline{n + 1}$ e $f (It u f \bar{n})$ são equivalentes, notado por $It u f \overline{n + 1} \sim f (It u f \bar{n})$
+
+Uma construção possível em cima da iteração é a recursão, para isso é necessário definir um termo auxiliar:
+
+$$g = \lambda x : U \times Int . \langle f (\pi^1 x)(\pi^2 x), S \pi^2 x \rangle$$
+
+Em particular $g \langle u, \bar{n} \rangle \to_{\beta} \langle f u \bar{n}, \overline{n + 1} \rangle$. Logo se $It \langle u, \bar{0} \rangle g \bar{n} \sim \langle t_n, \bar{n} \rangle$, então:
+
+$$It \langle u, \bar{0} \rangle g \overline{n + 1} \sim g (It \langle u, \bar{0} \rangle g \bar{n}) \sim g \langle t_n, \bar{n} \rangle \sim \langle f t_n \bar{n}, \overline{n + 1} \rangle$$
+
+Logo, é possível definir a recursão como: $R u f t \equiv \pi^1 (It \langle u, \bar{0} \rangle gt)$, onde:
+
+$$R u f \bar{0} \sim u \qquad R u f \overline{n + 1} \sim f (R u f \bar{n}) \bar{n}$$
+
+\emph{II. Listas}
+
+Seja $U$ um tipo, seria interessante formar um tipo $\text{List} U$, que possui como objetos sequências finitas $(u_1, \dots u_n)$ de tipo $U$. Esse tipo possui duas funções:
+
+\begin{itemize}
+    \item a sequência vazia $() : \text{List} U$. Então $S_1 = X$
+    \item a função que mapeia cada objeto $u : U$ e uma sequência $(u_1, \dots u_n)$ para a sequência $(u, u_1, \dots u_n)$. Então $S_2 = U \to X \to X$ 
+\end{itemize}
+
+Logo obtem-se:
+
+\begin{align*}
+    \text{List } U & \equiv \Pi X : \ast . X \to (U \to X \to X) \to X \\
+    \text{nil}     & \equiv \lambda X : \ast . \lambda x : X . \lambda y : U \to X \to X . x \\
+    \text{cons } u t     & \equiv \lambda X : \ast . \lambda x : X . \lambda y : U \to X \to X . yu(tXxy) \\
+\end{align*}
+
+A sequência $(u_1, \dots u_n)$ é dada por:
+
+$$\lambda X : \ast . \lambda x : X . \lambda y : U \to X \to X . y u_1 (y u _2 \dots (y u_n x) \dots)$$
+
+que é o mesmo que:
+
+$$\lambda X : \ast . \lambda x : X . \lambda y : U \to X \to X . \text{cons } u_1 (\text{cons } u _2 \dots (\text{cons } u_n \text{nil }) \dots)$$
+
+Como a construção de lista é similar a dos números naturais, é possível construir um iterador de listas da seguinte forma:
+
+Seja $W$ um tipo, $w : W$, $f : U \to W \to W$, então para $t : \text{List } U$ o termo $It w f t : W$ é definida como:
+
+$$It w f t \equiv t W w f$$
+
+satisfazendo:
+
+$$\text{It } w f \text{ nil } \to_{\beta} w \qquad \text{It } w f (\text{ Cons } u t) \to_{\beta} f u (\text{It } w f t)$$
+
+Exemplos:
+
+\begin{itemize}
+    \item $\text{It } \text{ nil } \text{ cons } t \to_{\beta} t$ para todo $t$ da forma $(u_1, \dots u_n)$
+    \item Se $W = \text{ List } V$, onde $V$ é um tipo outro, e $f = \lambda x : U . \lambda y :  \text{ List } W . \text{ cons } (g x) y$ onde $g : U \to V$, então: $$ \text{It } \text{ nil } f (u_1, \dots u_n) \to_{\beta} (g u_1, \dots g u_n)$$
+\end{itemize}
+
+O leitor com maior familiaridade com programação funcional reconhecerá o segundo exemplo como a construção de \emph{fold} em linguagens como Haskell
+
+O recursor para listas é dado por:
+
+\begin{align*}
+    R v f \text{ nil } & \sim v \\
+    R v f (u_1, \dots u_n) & \sim f u_1 (u_2, \dots u_n) (R v f (u_2, \dots u_n))
+\end{align*}
+
+\emph{III. Árvores Binárias}
+
+Árvores binárias finitas são construidas com duas funções:
+
+\begin{itemize}
+    \item uma árvore consistindo de somente sua raiz, então $S_1 = X$
+    \item uma árvore construida a partir de duas árvores, então $S_2 = X \to X \to X$
+\end{itemize}
+
+\begin{align*}
+    \text{Bintree }    & \equiv \Pi X : \ast . X \to (X \to X \to X) \to X \\
+    \text{nil }        & \equiv \lambda X : \ast . \lambda x : X . \lambda y : X \to X \to X . x \\
+    \text{couple } u v & \equiv \lambda X : \ast . \lambda x : X . \lambda y : X \to X \to X . y (uXxy) (vXxy) \\
+\end{align*}
+
+Iteração para as árvores binárias é dada por:
+
+$$\text{It } wft \equiv tWwf$$
+
+com $W$ sendo um tipo, $w : W$, $f : W \to W \to W$ e $t : \text{ Bintree}$. Sendo:
+
+$$\text{It } wf \text{ nil } \to_{\beta} w \qquad \text{It } wf \text{ couple } uv \to_{\beta} f (\text{It } wf u)(\text{It } wf v)$$
+
+\emph{IV. Árvores de tipo U}
+
+Existem duas funções:
+
+\begin{itemize}
+    \item a árvore consistindo de sua raiz, $S_1 = X$
+    \item a construção de uma árvore de uma família $(t_u)_{u \in U}$ de árvores, então $S_2 = (U \to X) \to X$
+\end{itemize}
+
+
+\begin{align*}
+    \text{Tree } U    & \equiv \Pi X : \ast . X \to ((U \to X) \to X) \to X \\
+    \text{nil }       & \equiv \lambda X : \ast . \lambda x : X . \lambda y : (U \to X) \to X . x \\
+    \text{collect } f & \equiv \lambda X : \ast . \lambda x : X . \lambda y : (U \to X) \to X . y (\lambda z : U . fzXxy) \\
+\end{align*}
+
+O iterador (transfinito) é definido por:
+
+$$\text{It } wht \equiv tWwh$$
+
+Para $W$ sendo um tipo, $w : W$, $h : (U \to W) \to W$ e $t : \text{ Tree}$. Ele satisfaz:
+
+$$\text{It } w h \text{ nil } \to_{\beta} w \qquad \text{It } w h (\text{ collect } f) \to_{\beta} h (\lambda x : U . \text{ It } w h (fx))$$
+
+\subsection{Modelos do Sistema \texorpdfstring{$\mathcal{F}$}{F}}
+
+
 
 \end{document}
