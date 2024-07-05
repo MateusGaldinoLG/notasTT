@@ -69,11 +69,9 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Cálculo de sequêntes    
 [x] Propriedades    
 3.2 O Sistema F de Girard  
-[ ] O cálculo  
-[ ] Representações de tipos simples  
-[ ] Representações de tipos indutivos  
-[ ] Isomorfismo de Curry-Howard  
-[ ] Propriedades  
+[x] O cálculo  
+[x] Representações de tipos simples  
+[x] Representações de tipos indutivos  
 3.3 Modelos do Sistema F  
 [ ] Espaços de coerência  
 
