@@ -55,8 +55,8 @@ Parte I - O Cubo Lambda
 [ ] Lógica de predicados de primeira ordem  
 [ ] Lógica de predicados de ordem superior     
 2.4 Modelos do Sistema T  
-[ ] Espaços de coerência  
-[ ] Funções estáveis  
+[x] Espaços de coerência  
+[x] Funções estáveis  
 [ ] Espaços de coerência para cada tipo específico     
 2.5 Uma discussão sobre HOL  
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
@@ -69,11 +69,9 @@ https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calcul
 [x] Cálculo de sequêntes    
 [x] Propriedades    
 3.2 O Sistema F de Girard  
-[ ] O cálculo  
-[ ] Representações de tipos simples  
-[ ] Representações de tipos indutivos  
-[ ] Isomorfismo de Curry-Howard  
-[ ] Propriedades  
+[x] O cálculo  
+[x] Representações de tipos simples  
+[x] Representações de tipos indutivos  
 3.3 Modelos do Sistema F  
 [ ] Espaços de coerência  
 
