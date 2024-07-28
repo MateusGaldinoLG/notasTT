@@ -55,8 +55,8 @@ Parte I - O Cubo Lambda
 [ ] Lógica de predicados de primeira ordem  
 [ ] Lógica de predicados de ordem superior     
 2.4 Modelos do Sistema T  
-[ ] Espaços de coerência  
-[ ] Funções estáveis  
+[x] Espaços de coerência  
+[x] Funções estáveis  
 [ ] Espaços de coerência para cada tipo específico     
 2.5 Uma discussão sobre HOL  
 https://mathoverflow.net/questions/322020/how-can-the-simply-typed-lambda-calculus-be-turing-incomplete-yet-stronger-than
