@@ -1509,6 +1509,263 @@ VIII -
 
 \subsection{Modelos da teoria dos tipos simples}
 
+Uma forma de dar significado às funções do cálculo $\lambda$ foi utilizando modelos matemáticos. Como visto anteriormente nesse capítulo, outra forma, a que Church escolheu primeiramente, foi desenvolver uma teoria de tipos que podesse definir o domínio e contradomínio das funções do cálculo $\lambda$. Como visto, os modelos desenvolvidos para o cálculo $\lambda$ não tipado ganham força com o modelo de Scott $D_{\infty}$ que é construido em cima da teoria dos domínios e de CPOs.
+
+Um problema que surge tendo tomado o ST$\lambda$C como a extensão que dava significado ao cálculo $\lambda$ é que ele da significado \emph{interno} ao cálculo, mas não possui força para desenvolver seu significado \emph{externo}. Ou seja, é possível construir a matemática dentro da teoria dos tipos simples, mas não é possível definir a teoria dos tipos simples dentro dela mesma. Para isso, diversos modelos \emph{semânticos} (ou seja, externos) foram construidos, alguns usando a Teoria das Categorias, como será visto na Parte III dessas notas, e outros usando intuições vindas dos modelos da teoria dos domínios de Scott.
+
+O modelo definido nessa subseção será um apontado por \cite{girard1989} que utiliza uma estrutura chamada de \emph{espaços de coerência} (Coherence spaces, em inglês) ou \emph{espaços coerêntes} (espace cohérent ou coherent space) para tratar dos tipos.
+
+\subsubsection{Espaços de Coerência}
+
+Primeiro, é necessário definir esses espaços de coerência:
+
+\begin{definition}[Espaços de Coerência, \cite{girard1989}]
+    Um \emph{espaço de coerência} $\mathcal{A}$ é um conjunto que satisfaz:
+    \begin{itemize}
+        \item (Fechamento abaixo) se $a \in \mathcal{A}$ e $a' \subset a$ então $a' \in \mathcal{A}$
+        \item (Completude binária) se $M \subset \mathcal{A}$ e para todo $a_1, a_2 \in M$, com $a_1 \cup a_2 \in \mathcal{A}$, então $\bigcup M \in \mathcal{A}$
+    \end{itemize}
+\end{definition}
+
+Em particular, tem-se que o conjunto vazio está em $\mathcal{A}$, $\varnothing  \in \mathcal{A}$
+
+Espaços de coerência podem ser considerados \emph{algebricamente} como "domínios".
+
+Exemplos:
+
+\begin{itemize}
+    \item O espaço de coerência $\mathcal{B}ool$ na forma:
+    \[\begin{tikzcd}
+	{\{t\}} && {\{f\}} \\
+	& \varnothing
+	\arrow[no head, from=1-1, to=2-2]
+	\arrow[no head, from=1-3, to=2-2]
+\end{tikzcd}\]
+    \item o espaço de coerência $\mathcal{I}nt$ na forma:
+\[\begin{tikzcd}
+	{\{0\}} & {\{1\}} & {\{2\}} & \dots \\
+	\varnothing
+	\arrow[no head, from=1-1, to=2-1]
+	\arrow[no head, from=1-2, to=2-1]
+	\arrow[no head, from=1-3, to=2-1]
+\end{tikzcd}\]
+\end{itemize}
+
+\begin{definition}[\cite{girard1989}]
+    Seja $|\mathcal{A}| \equiv \bigcup \mathcal{A} = \{\alpha : \{\alpha\} \in \mathcal{A}\}$. Os elementos de $|\mathcal{A}|$ são chamados de \emph{tokens} e é a \emph{relação de coerência modulo } $\mathcal{A}$ entre tokens é definida como:
+    $$\alpha \stackrel{\frown}{\smile} \alpha' \quad \text{ iff } \quad \{\alpha, \alpha'\} \in \mathcal{A} $$
+\end{definition}
+
+Essa relação é reflexiva e simétrica, então $| \mathcal{A} |$ equipada com $\stackrel{\frown}{\smile}$ é um grafo, chamado de \emph{teia} de $|\mathcal{A}|$.
+
+De uma teia é possível recuperar um espaço de coerência usando:
+
+$$a \in \mathcal{A} \Leftrightarrow a \subset |\mathcal{A}| \land \forall \alpha_1, \alpha_2 \in a (\alpha_1 \stackrel{\frown}{\smile} \alpha_2 (mod \mathcal{A}))$$
+
+Logo, um ponto $a$ de $\mathcal{A}$ forma um subgrafo completo, também chamado de um \emph{clique}.
+
+Na interpretação de modelo dos espaços de coerência, um tipo é equivalente a um espaço de coerência $\mathcal{A}$ e um termo desse tipo é um ponto em $\mathcal{A}$.
+
+Para trabalhar com pontos de forma eficiente, é necessário introduzir uma noção de aproximação:
+
+\begin{definition}[Aproximante, \cite{girard1989}]
+    Um \emph{aproximante} $a \in \mathcal{A}$ é qualquer subconjunto $a'$ de $a$. Existem suficientes aproximantes finitos, ou seja:
+    \begin{itemize}
+        \item $a$ é a união do conjunto de seus aproximantes finitos
+        \item O conjunto $I$ de aproximantes finitos é \emph{direcionado}, ou seja:
+        \begin{enumerate}
+            \item $I$ não é vazio ($\varnothing \in I$)
+            \item Se $a', a'' \in I$, é possível encontrar $a \in I$ tal que $a', a'' \subset a$ (simplesmente $a = a' \cup a''$)
+        \end{enumerate}
+    \end{itemize}
+\end{definition}
+
+\subsubsection{Funções Estáveis}
+
+Tendo definido o que são espaços de coerência, é importante definir como relacionar os espaços de coerência entre si:
+
+\begin{definition}[Função Estável, \cite{girard1989}]
+    Dados dois espaços de coerência $\mathcal{A}$ e $\mathcal{B}$, uma função $F : \mathcal{A} \to \mathcal{B}$ é dita \emph{estável} se:
+    \begin{enumerate}
+        \item $a' \subset a \in \mathcal{A} \Rightarrow F(a') \subset F(a)$
+        \item (União direta) $F(\bigcup_{i \in I}^{\uparrow} a_i) = \bigcup_{i \in I}^{\uparrow} F(a_i)$
+        \item (\textbf{St}) $a_1 \cup a_2 \in \mathcal{A} \Rightarrow F(a_1 \cap  a_2) = F(a_1) \cap F(a_2)$
+    \end{enumerate}
+\end{definition}
+
+A primeira condição diz que $F$ preserva aproximações. Já a segunda condição mostra que $F$ é contínua, ou seja $$F(a) = \bigcup^{\uparrow} \{ F(a_o) : a_o \subset a, a_o \text{ finite} \}$$. A terceira condição é análoga à condição de estabilidade de Berry. 
+
+Essa definição se torna mais clara sendo tomada do ponto de vista categorial, onde $\mathcal{A}$ e $\mathcal{B}$ são categorias, pois $F$ se torna um funtor que preserva limites diretos (união direta) e pullbacks (St).
+
+Exemplos:
+
+Algumas funções estáveis $F$ de $Int$ para $Int$
+
+
+\begin{itemize}
+    \item Função constante: se $F(\varnothing) = \{ n \}$, então $F(a) = \{ n \}$ para todo $a \in Int$
+    \item Se $F(\varnothing) = \varnothing$, então considere a função parcial $f$ definida exatamente nos inteiros $n$ tais que $F(\{ n \}) \neq \varnothing$, nesse caso $F(\{ n \}) = \{ f(n) \}$
+\end{itemize}
+
+Essas duas funções são importantes pois:
+
+\begin{itemize}
+    \item No primeiro caso, tira-se as constantes $\dot{n} (a) = \{n\}$. Já no segundo
+    \item No segundo caso, tira-se as funções $\tilde{f}(\varnothing) = \varnothing$, $\tilde{f}(\{m\}) = \{n\}$
+\end{itemize}
+
+É possível construir funções $F_n : Bool \to Bool \to Bool$ que se comportam como a disjunção, no caso $F_n(\{\alpha\}, \{\beta\}) = \{\alpha \lor \beta\}$ para cada combinação de verdadeiro ou falso de $\alpha$ e $\beta$.
+
+$\{\alpha\}$ e $\{\beta\}$ podem possuir três valores: $\{t\}, \{f\}$ ou $\varnothing$, logo existem nove possibilidades:
+
+\begin{itemize}
+    \item Os valores que se espera pela definição (onde nenhum dos dois é vazio) são:
+    \begin{enumerate}
+        \item $F_1(\{t\}, \{t\}) = F_1(\{t\}, \{f\})  = F_1(\{f\}, \{t\})  = \{t\}$ 
+        \item $F_1(\{f\}, \{f\}) = \{ f \}$ 
+    \end{enumerate}
+    \item Para $F_1(\{t\}, \varnothing)$, $F_1(\{t\}, \varnothing) = \{t\}$ ou $F_1(\{t\}, \varnothing) = \varnothing$ é indiferente
+    \item $F_1(\{f\}, \varnothing) = F_1(\varnothing, \{f\}) = \varnothing$, pois $F_1(\{f\}, \varnothing) \subset F_1(\{f\}, \{t\}) = \{t\}$ e $F_1(\varnothing, \{f\}) \subset F_1(\{t\}, \{f\}) = \{t\}$
+    \item $F_1 (\varnothing, \varnothing) = \varnothing$ 
+\end{itemize}
+
+Outra solução seria considerar $F_2(a, b) = F_1(b, a)$
+
+A primeira solução pode ser enxugada da seguinte forma:
+
+\begin{itemize}
+    \item $F_1(\{t\}, \{t\}) = F_1(\{t\}, \{f\})  = F_1(\{f\}, \{t\})  = \{t\}$ 
+    \item $F_1(\{f\}, \{f\}) = \{ f \}$ 
+    \item $\varnothing$ caso contrário
+\end{itemize}
+
+\subsubsection{Produto entre Espaços de coerência}
+
+Para definir a semântica do tipo produto, é necessário definir uma forma de relacionar dois espaços de coerência.
+
+Para isso, é necessário primeiro generalizar a definição de função estável para funções com dois espaços de coerênia como domínio:
+
+\begin{definition}
+    Uma função de dois argumentos, mapeando $\mathcal{A}$ e $\mathcal{B}$ para $\mathcal{C}$ é \emph{estável} quando:
+    \begin{enumerate}
+        \item Se $a' \subset a \in \mathcal{A}$ e $b' \subset b \in \mathcal{B}$, então $F(a', b') \subset F(a, b)$
+        \item $F(\bigcup_{i \in I}^{\uparrow} a_i, \bigcup_{j \in J}^{\uparrow} b_j) = \bigcup_{(i, j) \in I \times J}^{\uparrow} F(a_i, b_j)$
+        \item se $a_1 \cup a_2 \in \mathcal{A}$ e $b_1 \cup b_2 \in \mathcal{B}$, então $F(a_1 \cap a_2, b_1 \cap b_2) = F(a_1, b_1) \cap F(a_2, b_2)$
+    \end{enumerate}
+\end{definition}
+
+Também é possível generalizar essa definição para funções que recebem $n$ argumentos (fica como exercício para o leitor). A terceira condição mostra que para que $F$ seja estável em dois argumentos, $F$ em cada argumento precisa ser estável por si só. Para evitar essa generalização, é interessante definir \emph{produtos (diretos)} de espaços de coerência, denotados $\mathcal{A} \& \mathcal{B}$:
+
+\begin{definition}[Produto de dois espaços de coerência, \cite{girard1989}]
+    Se $\mathcal{A}$ e $\mathcal{B}$ são dois espaços de coerênica, então o produto deles $\mathcal{A} \& \mathcal{B}$ é dado por:  
+    $$| \mathcal{A} \& \mathcal{B} | = |\mathcal{A}| + |\mathcal{B}| = \{1\} \times |\mathcal{A}| \cup \{2\} \times |\mathcal{B}|$$
+
+    Satisfazendo:
+    \begin{align*}
+        (1, \alpha) & \stackrel{\frown}{\smile} (1, \alpha') \quad (\text{mod } \mathcal{A} \& \mathcal{B}) \quad \text{iff } \alpha \stackrel{\frown}{\smile} \alpha' (\text{mod } \mathcal{A}) \\
+        (2, \beta) & \stackrel{\frown}{\smile} (2, \beta') \quad (\text{mod } \mathcal{A} \& \mathcal{B}) \quad \text{iff } \beta \stackrel{\frown}{\smile} \beta' (\text{mod } \mathcal{B}) \\
+        (1, \alpha) & \stackrel{\frown}{\smile} (2, \beta) \quad (\text{mod } \mathcal{A} \& \mathcal{B}) \quad \text{para todo } \alpha \in |\mathcal{A}| \text{ e }  \beta \in |\mathcal{B}|  \\
+    \end{align*}
+\end{definition}
+
+Os pontos de $\mathcal{A} \& \mathcal{B}$ podem ser escritos unicamente como $\{1\} \times a \cup \{2\} \times b$ com $a \in \mathcal{A}$ e $b \in \mathcal{B}$
+
+Dada uma função $F$ de $\mathcal{A}$ e $\mathcal{B}$ para $\mathcal{C}$, é possível definir uma função $G$ de $\mathcal{A} \& \mathcal{B}$ para $\mathcal{C}$ como:
+
+$$G(\{1\} \times a \cup \{2\} \times b) = F(a, b)$$
+
+\subsubsection{Espaço Funcional}
+
+Na perspectiva de tipos como espaços de coerência, o produto de espaços de coerência é equivalente ao tipo produto. Para definir o tipo funcional $A \to B$, seria necessario desenvolver um espaço de coerência que descreva o conjunto de funções estáveis $\mathcal{A} \to \mathcal{B}$. Para isso, é necessário definir o \emph{traço} entre funções estáveis.
+
+\begin{lemma}[\cite{girard1989}]
+    Seja $F$ uma função estável de $\mathcal{A}$ para $\mathcal{B}$ e sejam $a \in \mathcal{A}$ e $\beta \in F(a)$, então:
+    \begin{itemize}
+        \item é possível encontrar $a_0 \subset a$ tal que $\beta \in F(a_0)$
+        \item se $a_0$ é escolhido como o mínimo da inclusão entre as soluções de (i), então $a_0$ é o \emph{menor} e é, particularmente, \emph{único}.
+    \end{itemize}
+\end{lemma}
+
+\emph{Prova}:
+\begin{itemize}
+    \item Seja $a = \bigcup^{\uparrow}_{i \in I} a_i$, onde os $a_i$ são subconjuntos finitos de $a$. Então $F(a) = \bigcup^{\uparrow}_{i \in I} F(a_i)$, e se $\beta \in F(a)$, $\beta \in F(a_{i_0})$ para algum $i_0 \in I$
+    \item Seja $a_0$ mínimo e seja $a' \subset a$ tal que $\beta \in F(a')$. Então $(a_0 \cup a') \subset a \in \mathcal{A}$, então $a_0 \cup a' \in \mathcal{A}$ e $\beta \in F(a_0) \cap F(a') = F(a_0 \cap a')$. Como $a_0$ é mínimo, isso faz com que $a_0 \subset a_0 \cup a'$, então $a_0 \subset a'$ e $a_0$ é de fato o menor. $\qed$
+\end{itemize}
+
+\begin{definition}[Traço, \cite{girard1989}]
+    O \emph{traço} $\mathcal{T}r(F)$ é o conjunto de pares $(a_0, \beta)$ tal que:
+    \begin{itemize}
+        \item $a_0$ é um ponto finito de $\mathcal{A}$ e $\beta \in |\mathcal{B}|$
+        \item $\beta \in F(a_0)$
+        \item se $a' \subset a_0$ e $\beta \in F(a')$, então $a' = a_0$
+    \end{itemize}
+\end{definition}
+
+$\mathcal{T}r(F)$ determina $F$ unicamente pela formula:
+
+$$(\text{App}) \qquad F(a) := \{\beta | \exists a_0 \subset a (a_0, \beta) \in \mathcal{T}r(F)\}$$
+
+\begin{proposition}[\cite{girard1989}]
+    Enquanto $F$ varia entre as funções estáveis de $\mathcal{A}$ a $\mathcal{B}$, seus traços dão pntos em um espaço de coerência, escrito $\mathcal{A} \to \mathcal{B}$
+\end{proposition}
+
+\emph{Prova}: Seja o espaço de coerência $\mathcal{C}$ dado por $|\mathcal{C}| = \mathcal{A}_{fin} \times |\mathcal{B}|$ ($\mathcal{A}_{fin}$ é o conjunto de pontos finitos de $\mathcal{A}$) onde $(a_1, \beta_1) \stackrel{\frown}{\smile} (a_2, \beta_2) \quad (\text{mod } \mathcal{C})$ se:
+\begin{itemize}
+    \item $a_1 \cup a_2 \in \mathcal{A} \Rightarrow \beta_1 \stackrel{\frown}{\smile} \beta_2 (\text{mod } \mathcal{B})$
+    \item $a_1 \cup a_2 \in \mathcal{A} \land a_1 \neq a_2 \Rightarrow \beta_1 \neq \beta_2 (\text{mod } \mathcal{B})$
+\end{itemize}
+
+Se $F$ é estável, então $\mathcal{T}r(F)$ é um subconjunto de $|\mathcal{C}|$ por construção. É necessário verificar o modulo de coerência em $\mathcal{C}$ de $(a_1, \beta_1)$ e $(a_2, \beta_2) \in \mathcal{T}r(F)$:
+\begin{itemize}
+    \item Se $a_1 \cup a_2 \in \mathcal{A}$, então $\{\beta_1, \beta_2\} \subset F(a_1 \cup a_2)$ então $\beta_1 \stackrel{\frown}{\smile} \beta_2 (\text{mod } \mathcal{B})$
+    \item Se $\beta_1 = \beta_2$ e $a_1 \cup a_2 \in \mathcal{A}$, então o lema aplicado a $\beta_1 \in F(a_1 \cup a_2)$ dá que $a_1 = a_2$
+\end{itemize}
+
+Por outro lado, seja $f$ um ponto de $\mathcal{C}$. A função entre $\mathcal{A}$ e $\mathcal{B}$ é definida pela formula:
+$$(\text{App}) \qquad F(a) := \{\beta | \exists a_0 \subset a (a_0, \beta) \in f\}$$
+
+Dessa forma:
+\begin{itemize}
+    \item $F$ é monótona
+    \item Se $a = \bigcup^{\uparrow}_{i \in I} a_i$, então $F(a) = \bigcup^{\uparrow}_{i \in I} F(a_i)$ por monotonicidade. Por outro lado, se $\beta \in F(a)$, então existe um $a' \subset a$ finito tal que $\beta \in F(a')$, mas como $a' \subset \bigcup^{\uparrow}_{i \in I} a_i$, tem-se que $a' \subset a_k$ para algum $k$, então $\beta \in F(a_k)$ e a inclusão contrária é estabelecida
+    \item Se $a_1 \cup a_2 \in \mathcal{A}$, então $F(a_1 \cap a_2) \subset F(a_1) \cap F(a_2)$ por monotonicidade. De forma contrária, se $\beta \in F(a_1) \cap F(a_2)$, então $(a_1', \beta), (a_2', \beta) \in f$ para alguns $a_1' \subset a_1$ e $a_2' \subset a_2$ apropriados. Mas $(a_1', \beta)$ e $(a_2', \beta)$ são coerentes e $a_1' \cup a_2' \subset a_1 \cup a_2 \in \mathcal{A}$, então $a'_1 = a'_2$, com $a'_1 \subset a_1 \cap a_2$ e $\beta \in F(a_1 \cap a_2)$
+    \item $F(a)$, para $a \in \mathcal{A}$, é um subconjunto de $|\mathcal{B}|$ e é necessário mostrar sua coerência. Agora, sejam $\beta', \beta'' \in F(a)$, isso significa que $(a', \beta'), (a'', \beta'') \in f$ para $a', a'' \subset a$ apropriados. Mas então $a' \subset a'' \subset a \in \mathcal{A}$, então $(a', \beta')$ e $(a'', \beta'')$ são coerentes, $\beta' \stackrel{\frown}{\smile} \beta'' (\text{mod } \mathcal{B})$ $\qed$
+\end{itemize}
+
+Sendo $\mathcal{A} \to \mathcal{B}$ um espaço de coerência, ele é naturalmente ordenado por inclusão, pela seguinte relação de ordem:
+
+$$F \leq_B G \qquad \text{sse} \qquad  \mathcal{T}r(F) \subset \mathcal{T}r(G)$$
+
+\begin{proposition}
+    A \emph{ordem de Berry} $\leq_B$ é dada por:
+
+    $$F \leq_B G \qquad \text{sse} \qquad  \forall a, a' \in \mathcal{A} (a' \subset a \Rightarrow F(a') = F(a) \cap G(a'))$$
+\end{proposition}
+
+\emph{Prova}: Se $F \leq_B G$, então $F(a) \subset G(a)$ para todo $a$. Seja $(a, \beta) \in \mathcal{T}r(F)$, então $\beta \in F(a) \subset G(a)$. É necessário provar que $(a, \beta) \in \mathcal{T}r(G)$. Seja $a' \subset a$ tal que $\beta \in G(a')$, então $\beta \in F(a) \cap G(a') = F(a')$, que faz com que $a' = a$
+
+Por outro lado, se $\mathcal{T}r(F) \subset \mathcal{T}r(G)$, é fácil ver que $F(a) \subset G(a)$ para todo $a$. De forma particular se $a' \subset a$, então $F(a') \subset F(a) \cap G(a')$. Agora se $\beta \in F(a) \cap G(a')$, é possível encontrar $a_0 \subset a$ e $a'_0 \subset a_0$ tais que:
+
+$$(a_0, \beta) \in \mathcal{T}r(F)$$
+
+e
+
+$$(a'_0, \beta) \in \mathcal{T}r(G)$$
+
+Então $(a_0, \beta)$ e $(a'_0, \beta)$ são coerentes, e como $a_0 \cup a_0' \subset a \in \mathcal{A}$, tem-se que $a_0 = a_0'$ e $\beta \in F(a_0') = F(a_0) \subset F(a')$ $\qed$
+
+
+\subsubsection{A semântica do Tipo Soma}
+
+\subsubsection{linearização}
+
+\subsubsection{A semântica linearizada do tipo soma}
+
+\subsubsection{A semântica do tipo unitário e Produtos Tensoriais}
+
+\subsubsection{A semântica denotacional da teoria dos tipos simples}
+
+
 
 
 
