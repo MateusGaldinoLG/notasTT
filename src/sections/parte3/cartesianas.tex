@@ -199,6 +199,121 @@ para cada caso, a prova $f$ requerida é a seguinte:
 
 Isso termina a prova. $\qed$
 
+\subsubsection{Categorias Cartesianas Fechadas representadas equacionalmente}
 
+A definição de sistemas dedutivos vista até então faz com que seja possível definir categorias da seguinte forma:
+
+\begin{definition}[Categoria, \cite{lambek1988}]
+    Uma \emph{categoria} é um sistema dedutivo onde as seguinte equações são válidas:
+    \begin{enumerate}
+        \item[E1] $f 1_A = f$, $1_B f = f$, $(hg)f = h(gf)$ 
+    \end{enumerate}
+    para todo $f: A \to B$, $g : B \to C$ e $h : C \to D$
+\end{definition}
+
+O uso da igualdade nesse caso é o mesmo que impor relações de equivalência entre as provas.
+
+\begin{definition}[Categoria cartesiana, \cite{lambek1988}]
+    Uma \emph{categoria cartesiana} é tanto uma categoria quando um cálculo de conjunção que satisfaz as seguintes equações:
+    \begin{enumerate}
+        \item[E2] $f = \bigcirc_A$, para todo $f : A \to T$
+        \item[E3a] $\pi_1(A, B)\langle f, g \rangle = f$
+        \item[E3b] $\pi_2(A, B)\langle f, g \rangle = g$
+        \item[E3c] $\langle \pi_1(A, B) h, \pi_2(A, B) h \rangle = h$ para todo $f : C \to A$, $g : C \to B$ e $h : C \to A \land B$   
+    \end{enumerate}
+\end{definition}
+
+A equação E2 coloca $T$ como objeto terminal. Nas categorias normalmente $T$ é escrito como $1$, o que será feito a partir de agora. Outra forma equivalente de escrever E2 é:
+
+\begin{enumerate}
+    \item[E'2] $1_1 = \bigcirc_1, \bigcirc_B f = \bigcirc_A$ para todo $f : A \to B$
+\end{enumerate}
+
+A equação E3 faz a construção do produto cartesiano, com suas projeções, que é normalmente denotado por $A \land B \equiv A \times B$
+
+\begin{proposition}
+    Como consequência de E3, se segue a lei distributiva:
+    $$\langle f, g \rangle h = \langle fh, gh \rangle$$
+    para todo $f : C \to A$, $g : C \to B$ e $h : D \to C$
+\end{proposition}
+
+\emph{Prova}: de forma equacional:
+
+\begin{align*}
+    \langle f, g \rangle h & = \langle \pi_1(\langle f, g \rangle h), \pi_2(\langle f, g \rangle h) \rangle \\
+    & = \langle \pi_1(\langle f, g \rangle) h, \pi_2(\langle f, g \rangle) h \rangle \\
+    & = \langle f h, g h \rangle \qed \\
+\end{align*}
+
+\begin{proposition}
+    A operação de produto $\times : \mathcal{A} \times \mathcal{A} \to \mathcal{A}$ é um funtor
+\end{proposition}
+
+\emph{Prova}: primeiro, provando equacionalmente a identidade:
+
+\begin{align*}
+    1_A \times 1_C & = \langle 1_A \pi_1(A, C), 1_C \pi_2(A, C) \rangle \\
+    & = \langle \pi_1(A, C), \pi_2(A, C) \rangle \\
+    & = \langle \pi_1(A, C) 1_{A \times C}, \pi_2(A, C) 1_{A \times C} \rangle \\
+    & = 1_{A \times C}
+\end{align*}
+
+Para a distribuição:
+
+\begin{align*}
+    (f \times g)(f' \times g') & = \langle f \pi_1, g \pi_2 \rangle \langle f' \pi_1, g' \pi_2 \rangle \\
+    & = \langle f \pi_1  \langle f' \pi_1, g' \pi_2 \rangle, g \pi_2  \langle f' \pi_1, g' \pi_2 \rangle \rangle \\
+    & = \langle f f' \pi_1, g g' \pi_2 \rangle \\
+    & = f f' \times g g' \\ \qed
+\end{align*}
+
+\begin{definition}[Categoria cartesiana fechada, \cite{lambek1988}]
+    Uma categoria cartesiana fechada é uma categoria cartesiana $\mathcal{A}$ com uma estrutura adicional R4 que satisfaz as equações adicionais:
+    \begin{enumerate}
+        \item[E4a] $\mathcal{E}_{A, B} \langle h^{\ast} \pi_1(C, B), \pi_2(C, B) \rangle = h$
+        \item[E4b] $(\mathcal{E}_{A, B} \langle k \pi_1(C, B), \pi_2(C, B) \rangle)^{\ast} = k$
+    \end{enumerate}
+    Para todo $h : C \land B \to A$ e $k : C \to B \Rightarrow A$
+\end{definition}
+
+Logo, uma categoria cartesiana fechada é um cálculo proposicional intuicionistico positivo que satisfaz as equações E1-E4
+
+Sendo $C \land B \equiv C \times B$ e $B \Rightarrow A \equiv A^B$, as equações E4 garantem que o mapeamento:
+
+$$Hom(C \times B, A) \xrightarrow{\ast} Hom(C, A^B)$$
+
+é uma correspondência um para um.
+
+Disso, pode-se tirar a propriedade universal da seta $\mathcal{E}_{A, B} : A^B \times B \to A$ onde dada uma seta $h : C \times B \to A$ existe uma seta única $h^{\ast} : C \to A^B$ tal que $$\mathcal{E}_{A, B}(h^{\ast} \times 1_B) = h$$
+
+Outra equação útil é a seguinte:
+
+$$h^{\ast} k = (h \langle k \pi_1(D, B), \pi_2(D, B) \rangle)^{\ast}$$
+
+onde $h : A \times B \to C$ e $k : D \to A$.
+
+Prova:
+
+\begin{align*}
+    h^{\ast} k & = (\mathcal{E}_{A, B} \langle h^{\ast} k \pi_1, \pi_2 \rangle) \\
+               & = (\mathcal{E}_{A, B} \langle h^{\ast} \pi_1, \pi_2 \rangle \langle k \pi_1, \pi_2 \rangle) \\
+               & = (h \langle k \pi_1(D, B), \pi_2(D, B) \rangle)^{\ast}
+\end{align*}
+
+Outra bijeção importante é 
+
+$$Hom(A, B) \cong Hom(1, B^A)$$
+
+A estrutura da demonstração dessa propriedade é parecida com o que já foi feito anteriormente: sejam $f : A \to B$ e $g : 1 \to B^A$, o operador $\lceil f \rceil : 1 \to B^A$ e o operador $g^s : A \to B$ tais que:
+
+$$\lceil f \rceil \equiv (f \pi_1(1, A))^{\ast} \qquad g^s \equiv \mathcal{E}_{B, A}\langle g \bigcirc_A, 1_A \rangle$$
+
+tendo então que 
+
+$$\lceil f \rceil^s = f \qquad \lceil g^s \rceil = g$$
+
+% \subsubsection{Categorias Cartesianas Fechadas com coprodutos, equacionalmente}
+
+% \subsubsection{Objetos de números naturais}
 
 \end{document}

@@ -168,6 +168,10 @@ Parte III - Semântica categorica do cubo
 [x] Construções universais - Limites e Colimites  
 [x] Exponenciais  
 [ ] Categorias cartesianas fechadas  
+[ ] CCCs livres (Lambek cap 1 - 4)  
+[ ] BCCCs  
+[ ] Categorias Polinomiais (Lambek cap 1 - 5)  
+[ ] Categorias de Kleisli  
 [ ] Adjunções  
 [ ] Monadas  
 [ ] Estudo de caso 1: categoria simplice e conjuntos simpliciais  
