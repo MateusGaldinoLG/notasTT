@@ -219,10 +219,6 @@ Parte IV - As várias teorias homotópicas de tipos
 [ ] Tipos Pi revisitados  
 [ ] Tipos Sigma  
 [ ] Universos  
-[ ] Proposições como Tipos  
-[ ] Apêndice I - Provando axiomas em MLTT  
-[ ] Apêndice II - Agda  
-[ ] Apêndice III - A história da teoria dos tipos de Martin-Löf  
 2. Teoria homotópica dos tipos de 1ª geração - HoTT conforme o livro  
 [ ] Motivação: A correspondência de Curry-Howard-Voevodsky    
 [ ] O Axioma da Univalência  
@@ -307,7 +303,9 @@ Parte VI - Lógica
 8. Teorema da incompletude de Gödel  
 [ ] Definição  
 
-Apêndice Histórico  
+Apêndices
+1. Apêndice de Topologia  
+2. Apêndice Histórico
 [ ] Fazer cronograma das publicações
 
 Coisas que precisam ser feitas a nível estético/literário:  
