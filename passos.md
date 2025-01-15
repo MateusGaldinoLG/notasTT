@@ -216,8 +216,10 @@ Parte IV - As várias teorias homotópicas de tipos
 1. Teoria dos Tipos Dependentes novamente, no estilo de Martin-Löf  
 [ ] Intuicionismo e Construtivismo  (Interpretação BHK)  
 [ ] Dedução natural e cálculo de sequêntes revisitados  
-[ ] Tipos Pi revisitados  
-[ ] Tipos Sigma  
+[x] Tipos Pi revisitados  
+[x] Tipos indutivos  
+[x] Tipo Sigma  
+[x] Tipo identidade    
 [ ] Universos  
 2. Teoria homotópica dos tipos de 1ª geração - HoTT conforme o livro  
 [ ] Motivação: A correspondência de Curry-Howard-Voevodsky    

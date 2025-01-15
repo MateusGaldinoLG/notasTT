@@ -488,4 +488,243 @@ $$ind_{\times} : \Pi_{x : A}\Pi_{y : B}P(x, y) \to (\Pi_{z : A \times B} P(z))$$
 
 Os seus mapas projetivos também são definidos de forma similar aos mapas do tipo $\Sigma$. Usando a interpretação de proposições como tipos, $A \times B$ é a \emph{conjunção}.
 
+\textbf{O Tipo dos booleanos}
+
+Outro tipo indutivo é o tipo dos booleanos:
+
+\begin{definition}[\cite{rijke2022}]
+    O tipo dos booleanos é o tipo indutivo $bool$ que vem equipado com:
+    \begin{align}
+        false : bool && true : bool
+    \end{align}
+\end{definition}
+
+O princípio indutivo dos booleanos fala que para qualquer família de tipos $P(x)$ indexada por $x : bool$ existe um termo
+
+$$ind-bool : P(false) \to (P(true) \to \Pi_{x : bool} P(x))$$
+
+para o qual são válidas as seguintes regras de computação:
+
+$$ind-bool(p_0, p_1, false) := p_0$$
+$$ind-bool(p_0, p_1, true) := p_1$$
+
+\textbf{O Tipo das listas}
+
+\begin{definition}[\cite{rijke2022}]
+    Para qualquer tipo $A$, é possível definir o tipo $list(A)$ de listas de elementos de $A$ como tipo indutivo com construtores
+    $$nil : list(A)$$
+    $$cons : A \to (list(A) \to list(A))$$
+\end{definition}
+
+O princípio indutivos das listas em $A$ fala que para qualquer família de tipos $P(x)$ indexada por $x : list(A)$ existe um termo:
+
+$$ind-list-A : P(nil) \to (\Pi_{l : list A} P(cons (A, l)) \to \Pi_{x : list}P(x))$$
+
+com as regras de computação:
+
+$$ind-list-A (p_{nil}, p_{cons}, nil) := p_{nil}$$
+$$ind-list-A (p_{nil}, p_{cons}, cons (A, l)) := p_{cons}$$
+
+\subsection{O Tipo identidade}
+
+Usando a interpretação de tipos como proposições, para provar uma proposição $P$ é necessário formar um elemento $p$ que seja do tipo $P$, na forma $p : P$. De forma similar, para provar a igualdade de dois termos $x, y : A$, é necessário demonstrar que existe um elemento $p$ tal que $p : x = y$. Dessa forma, se torna necessário desenvolver um tipo que permita trabalhar com essas igualdades. Esse tipo será, como alguns outros vistos até então, um tipo indutivo.
+
+\begin{definition}[\cite{rijke2022}]
+    Considere um tipo $A$ e $a : A$. Então é possível definir o \textbf{tipo identidade} de $A$ em $a$ como uma família indutiva de tipos $a =_A x$ indexada por $x : A$, com o construtor
+    $$refl_a : a =_A a$$
+    O princípio indutivo do tipo identidade postula que para qualquer família de tipos $P(x, p)$ indexada por $x : A$ e $p : a =_A x$, existe uma função
+    $$ind-eq_a : P(a, refl_a) \to \Pi_{x : A}\Pi_{p: a=_A x} P(x, p)$$
+    satisfazendo $$ind-eq(u, a, refl_a) = u$$ dado $u : P(a, refl_a)$
+\end{definition}
+
+Um elemento do tipo $a =_A x$ é chamado de \textbf{identificação} de $a$ com $x$, por vezes também chamado de \textbf{caminho} de $a$ para $x$. O princípio indutivo dos tipos identidade é por vezes chamado de \textbf{eliminação da identificação} ou \textbf{indução de caminho}.
+
+
+\subsubsection{Operações básicas}
+
+Uma vez definido o tipo identidade, é interessante mostrar que as identidades podem ser \emph{concatenadas} e \emph{invertidas}, que correspondem à transitividade e a simetria do tipo identidade.
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $A$ um tipo. A operação de \textbf{concateção} é definida como:
+    $$concat : \Pi_{x, y, z : A}(x = y) \to ((y = z) \to (x = z))$$
+\end{definition}
+
+também é possível escrever $p \centerdot q$ para $concat(p, q)$.
+
+Para construir esse termo: primeiro, construa a função
+
+$$f(x) : \Pi_{y  :A} (x = y) \to \Pi_{z : A} (y = z) \to (x = z)$$
+
+para qualquer $x : A$. Para isso, usando o princípio de indução para tipos identidade, é suficiente construir a função
+
+$$f(x, x, refl_x) : \Pi_{z  :A} (x = z) \to (x = z)$$
+
+Essa função é a mesma coisa que $\lambda z . id_{x = z}$ com $id_{x = z} : x = z$. Dessa forma:
+
+$$f(x) := ind-eq_x(\lambda z . id) : \Pi_{y  :A} (x = y) \to \Pi_{z : A} (y = z) \to (x = z)$$
+
+Por fim, seja $p : x = y$ e $q : y = z$, tem-se que:
+
+$$concat_{x, y, z} (p, q) := f(x, y, p, z, q)$$
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $A$ um tipo. A \textbf{operação de inversão} é:
+    $$inv : \Pi_{x, y : A} (x = y) \to (y = x)$$
+\end{definition}
+
+Na maioria das vezes, se escreve $p^{-1}$ para $inv(p)$
+
+Pelo princípio da indução para tipos indutivos, para construir a inversão é suficiente construir
+
+$$inv(refl_x) : x = x$$
+
+para qualquer $x : A$. Nesse caso $inv(refl_x) := refl_x$
+
+Uma pergunta interessante que surge da concatenação é se ela é associativa, ou seja se é possível identificar
+
+$$(p \centerdot q) \centerdot r \text{  e  } p \centerdot (q \centerdot r)$$
+
+para quaisquer $p : x = y$, $q : y = z$ e $r : z = w$ de tipo $A$.
+
+Na teoria dos tipos, isso é o mesmo que perguntar se existe um termo
+
+$$assoc(p, q, r) : (p \centerdot q) \centerdot r = p \centerdot (q \centerdot r)$$
+
+Pelo princípio da indução para tipos indutivos, é suficiente mostrar que 
+
+$$Pi_{z : A}\Pi_{q : x = z}Pi_{w : A}\Pi_{r : z = w} (refl_x \centerdot q) \centerdot r = refl_x \centerdot (q \centerdot r)$$
+
+Pela regra da computação do tipo identidade, $refl_x \centerdot q = q$, ou seja:
+
+$$(refl_x \centerdot q) \centerdot r = q \centerdot r$$
+
+De forma similar tem-se que $refl_x \centerdot (q \centerdot r) = q \centerdot r$ e os dois lados são iguais.
+
+Ou seja: $assoc(refl_x, q, r) := refl_{q \centerdot r}$
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $A$ um tipo. É possível definir operações unitárias à esquerda e a direita que atribuem a cada $p : x = y$ as identificações:
+    $$ left-unit(p) : refl_x \centerdot p = p$$
+    $$right-unit(p) : p \centerdot refl_x = p$$
+    respectivamente.
+\end{definition}
+
+Pela eliminação da identificação, é suficiente construir
+$$ left-unit(refl_x) : refl_x \centerdot refl_x = refl_x$$
+$$right-unit(refl_x) : refl_x \centerdot refl_x = refl_x$$
+
+Em ambos os casos tem-se $refl_{refl_x}$
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $A$ um tipo, é possível definir operações de inversão à esquerda e à direita da seguinte forma:
+    $$ left-inv(p) : p^{-1} \centerdot p = refl_y$$
+    $$right-inv(p) : p \centerdot p^{-1} = refl_x$$
+\end{definition}
+
+Pela eliminação da identificação, é suficiente construir
+
+
+$$ left-inv(refl_x) : refl_x^{-1} \centerdot refl_x = refl_y$$
+$$right-inv(refl_x) : refl_x \centerdot refl_x^{-1} = refl_x$$
+
+Usando a regra da computação:
+
+$$refl_x^{-1} \centerdot refl_x = refl_x \centerdot refl_x = refl_x$$
+
+dessa forma $$left-inv(refl_x) := refl_{refl_x}$$
+
+De forma similar:
+
+$$refl_x \centerdot refl_x^{-1} = refl_x \centerdot refl_x = refl_x$$
+
+e $$right-inv(refl_x) := refl_{refl_x}$$
+
+\subsubsection{identificação em funções}
+
+Usando o princípio de indução do tipo identidade é possível mostrar que toda função preserva identificações:
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $f : A \to B$ uma função. A \textbf{ação em caminhos} de $f$ é definida como a operação:
+    $$ap_f : \Pi_{(x, y : A)} (x = y) \to (f(x) = f(y))$$
+    Além disso, existem operações
+    $$ap-id_A : \Pi_{(x, y : A)}\Pi_{(p: x = y)} p = ap_{id_A}(p)$$
+    $$ap-comp(f, g) \Pi_{(x, y : A)}\Pi_{(p: x = y)} ap_g(ap_f(p)) = ap_{g \circ f}(p)$$
+\end{definition}
+
+Para fazer a construção é necessário mostrar que cada uma dessas vale para a reflexividade. No primeiro caso,
+
+
+$$ap_f (refl_x) := refl_{f(x)}$$
+
+Já para $ap-id_A$:
+
+$$ap-id_A(refl_x) := refl_{refl_x}$$
+
+E para $ap-comp(f, g)$:
+
+$$ap-comp(f, g, refl_x) := refl_{refl_{g(f(x))}}$$
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $f : A \to B$ uma função. Existem identificações:
+    $$ap-refl(f, x) : ap_f(refl_x) = refl_{f(x)}$$
+    $$ap-inv(f, p) : ap_f(p^{-1}) = ap_f(p)^{-1}$$
+    $$ap-concat(f, p, q) : ap_f(p \centerdot q) = ap_f(p) \centerdot ap_f(q)$$
+    para todo $p: x = y$ e $q : x = y$
+\end{definition}
+
+Para construir $ap-refl(f, x)$ é simples ver que $ap_f(refl_x) = refl_{f(x)}$, então:  
+$$ap-refl(f, x) := refl_{refl_{f(x)}}$$
+
+Para construir $ap-inv(f, p)$, usando a reflexividade como $p$, fica como:
+
+$$ap-inv(f, refl_x) := refl_{ap_f(refl_x)}$$
+
+Para consturir $ap-concat(f, p, q)$ é necessário somente usar a eliminação em $p$:
+
+$$ap-concat(f, refl_x, q) := refl_{ap_f(q)}$$
+
+\subsubsection{Transport}
+
+Dada uma identificação $p : x = y$ em um tipo base $A$, é possível transportar qualquer elemento $b : B(x)$ para a fibra $B(y)$
+
+\begin{definition}[\cite{rijke2022}]
+    Seja $A$ um tipo e seja $B$ uma família de tipos sobre $A$. A operação de \textbf{transporte} seja construida como:
+    $$tr_B : \Pi_{x, y : A}(x = y) \to (B(x) \to B(y))$$
+\end{definition}
+
+Para construir $tr_B$ é usada indução sobre $p : x =_A y$, tomando
+$$tr_B (refl_x) := id_{B(x)}$$
+
+Logo, é possível ver que a teoria dos tipos de Martin-Lof não distingue entre elementos identificados $x$ e $y$, pois para qualquer família de tipos $B$ sobre $A$ é possível obter um elemento de $B(y)$ dos elementos de $B(x)$. Através do transporte é possível desenvolver uma ação entre caminhos em cima de uma função dependente:
+
+\begin{definition}[\cite{rijke2022}]
+    Dada uma função dependete $f : \Pi_{a : A} B(a)$ e uma identificação $p : x =_A y$, é possível construir:
+    $$apd_f(p) : tr_B(p, f(x)) = f(y)$$
+\end{definition}
+
+A identificação $apd_f(p)$ é construida pelo princípio indutivo do tipo identidade de forma:
+
+$$apd_f(refl_x) : tr_B(refl_x, f(x)) = f(x)$$
+
+e
+
+$$apd_f(refl_x) := refl_{f(x)}$$
+
+\subsubsection{unicidade de refl}
+
+O tipo identidade é uma \emph{família} indutiva de tipos. $refl$ só é único em relação ao elemento que se quer identificar. Dessa forma, somente o par $(a, refl_a)$ pode ser único no tipo de todos os pares
+
+$$(x, p) : \Sigma_{x ; A} a = x$$
+
+\begin{proposition}[\cite{rijke2022}]
+    Considere um elemento $a : A$. Então existe uma identificação
+    $$(a, refl_a) = y$$
+    no tipo $\Sigma_{x ; A} a = x$ para qualquer $y : \Sigma_{x ; A} a = x$
+\end{proposition}
+
+\emph{Prova}: pelo princípio indutivo de $\Sigma$, é suficiente mostrar que existe uma identificação $$(a, refl_a) = (x, p)$$ para qualquer $x : A$ e $p : a = x$. Pelo princípio indutivo do tipo identidade é suficiente mostrar, por sua vez, que
+$$(a, refl_a) = (a, refl_a)$$
+Essa identificação é obtida por reflexividade \qed
+
+
 \end{document}
